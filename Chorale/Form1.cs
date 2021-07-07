@@ -19,7 +19,7 @@ namespace Chorale
 
         private void button1_Click(object sender, EventArgs e)
         {
-            mus.notation.test();
+             MessageBox.Show(mus.notation.test());
         }
     }
 }
