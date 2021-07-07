@@ -1,0 +1,13 @@
+﻿Doubling:
+    'no validation except total
+
+Interval Voiding:
+    'presumes root 11-24
+    'may use 7th
+    'improvements to 3,3
+	
+Rules back for known character...
+
+voice:
+
+    'better validation - name colon
