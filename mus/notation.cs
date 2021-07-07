@@ -1,6 +1,4 @@
-﻿//In process of importing this file.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -16,8 +14,8 @@ namespace mus
 
         public static string test()
         {
-            
-            string jsonString = JsonSerializer.Serialize("ff");
+            SimpleDistance g = SimpleDistance.Unison_0;
+            string jsonString = JsonSerializer.Serialize(g);
             return jsonString;
         }
 
@@ -43,7 +41,7 @@ namespace mus
             Third_Inversion_d
         }
 
-        public enum QualityP : int
+        public enum QualityPf : int
         {
             _5Diminished = -5,
             _4Diminished = -4,
@@ -114,7 +112,6 @@ namespace mus
                 default:
                     {
                         throw new ArgumentException();
-                        break;
                     }
             }
         }
@@ -161,7 +158,6 @@ namespace mus
                 default:
                     {
                         throw new ArgumentException();
-                        break;
                     }
             }
         }
@@ -227,7 +223,6 @@ namespace mus
                 default:
                     {
                         throw new NotImplementedException();
-                        break;
                     }
             }
         }
