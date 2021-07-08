@@ -14,726 +14,594 @@ namespace mus
 
         public static string test()
         {
-            SimpleDistance g = SimpleDistance.Unison_0;
+            int g = 0;
             string jsonString = JsonSerializer.Serialize(g);
             return jsonString;
         }
 
-        #region Done
-
-        // unison to 7th
-        public enum SimpleDistance : int
+        #region Okay
+        
+        public static int mod(int b, int a)
         {
-            Unison_0 = 0,
-            _Second_1 = 1,
-            _Third_3 = 2,
-            Fourth_5 = 3,
-            Fifth_7 = 4,
-            _Sixth_8 = 5,
-            _Seventh_10 = 6
-        }
-
-        public enum Inversion : int
-        {
-            Root_Position_,
-            First_Inversion_b,
-            Second_Inversion_c,
-            Third_Inversion_d
-        }
-
-        public enum QualityPf : int
-        {
-            _5Diminished = -5,
-            _4Diminished = -4,
-            _3Diminished = -3,
-            _2Diminished = -2,
-            _Diminished = -1,
-            _Perfect = 0,
-            _Augmented = 1,
-            _2Augmented = 2,
-            _3Augmented = 3,
-            _4Augmented = 4,
-            _5Augmented = 5
-        }
-
-        public enum QualityMi : int
-        {
-            _4Diminished = -4,
-            _3Diminished = -3,
-            _2Diminished = -2,
-            _Diminished = -1,
-            _Minor = 0,
-            _Major = 1,
-            _Augmented = 2,
-            _2Augmented = 3,
-            _3Augmented = 4,
-            _4Augmented = 5
-        }
-
-        private static string GetDegreeName(SimpleDistance Degree)
-        {
-            switch (Degree)
+            int result = a % b;
+            if (result >= 0)
             {
-                case SimpleDistance.Fifth_7:
-                    {
-                        return "Dominant";
-                    }
-
-                case SimpleDistance.Fourth_5:
-                    {
-                        return "Subdominant";
-                    }
-
-                case SimpleDistance.Unison_0:
-                    {
-                        return "Tonic";
-                    }
-
-                case SimpleDistance._Second_1:
-                    {
-                        return "Supertonic";
-                    }
-
-                case SimpleDistance._Seventh_10:
-                    {
-                        return "LeadingNone";
-                    }
-
-                case SimpleDistance._Sixth_8:
-                    {
-                        return "Submediant";
-                    }
-
-                case SimpleDistance._Third_3:
-                    {
-                        return "Mediant";
-                    }
-
-                default:
-                    {
-                        throw new ArgumentException();
-                    }
+                return result;
+            }
+            else if (b >= 0)
+            {
+                return result + b;
+            }
+            else
+            {
+                return result - b;
             }
         }
 
-        private static string GetDegreeSymbol(SimpleDistance Degree)
+        public static class Degree
         {
-            switch (Degree)
+
+            public static int Semis(int offset)
             {
-                case SimpleDistance.Fifth_7:
-                    {
-                        return "V";
-                    }
+                switch (offset)
+                {
+                    case 0:
+                        {
+                            return 0;
+                        }
+                    case 1:
+                        {
+                            return 1;
+                        }
+                    case 2:
+                        {
+                            return 3;
+                        }
+                    case 3:
+                        {
+                            return 5;
+                        }
+                    case 4:
+                        {
+                            return 7;
+                        }
+                    case 5:
+                        {
+                            return 8;
+                        }
+                    case 6:
+                        {
+                            return 10;
+                        }
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
+            }
 
-                case SimpleDistance.Fourth_5:
-                    {
-                        return "IV";
-                    }
+            public static bool IsConsonant(int offset)
+            {
+                return offset == 0 || offset == 3 || offset == 4;
+            }
 
-                case SimpleDistance.Unison_0:
-                    {
-                        return "I";
-                    }
+            public static string English(int offset)
+            {
+                switch (offset)
+                {
+                    case 0:
+                        {
+                            return "Tonic";
+                        }
+                    case 1:
+                        {
+                            return "Supertonic";
+                        }
+                    case 2:
+                        {
+                            return "Mediant";
+                        }
+                    case 3:
+                        {
+                            return "Subdominant";
+                        }
+                    case 4:
+                        {
+                            return "Dominant";
+                        }
+                    case 5:
+                        {
+                            return "Submediant";
+                        }
+                    case 6:
+                        {
+                            return "Subtonic";
+                        }
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
+            }
 
-                case SimpleDistance._Second_1:
-                    {
-                        return "II";
-                    }
+            public static string Roman(int offset)
+            {
+                switch (offset)
+                {
+                    case 0:
+                        {
+                            return "I";
+                        }
+                    case 1:
+                        {
+                            return "II";
+                        }
+                    case 2:
+                        {
+                            return "III";
+                        }
+                    case 3:
+                        {
+                            return "IV";
+                        }
+                    case 4:
+                        {
+                            return "V";
+                        }
+                    case 5:
+                        {
+                            return "VI";
+                        }
+                    case 6:
+                        {
+                            return "VII";
+                        }
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
+            }
 
-                case SimpleDistance._Seventh_10:
-                    {
-                        return "VII";
-                    }
+            public static string Tone(int offset)
+            {
+                switch (offset)
+                {
+                    case 0:
+                        {
+                            return "Root";
+                        }
+                    case 1:
+                        {
+                            return "Second";
+                        }
+                    case 2:
+                        {
+                            return "Third";
+                        }
+                    case 3:
+                        {
+                            return "Fourth";
+                        }
+                    case 4:
+                        {
+                            return "Fifth";
+                        }
+                    case 5:
+                        {
+                            return "Sixth";
+                        }
+                    case 6:
+                        {
+                            return "Seventh";
+                        }
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
+            }
 
-                case SimpleDistance._Sixth_8:
-                    {
-                        return "VI";
-                    }
-
-                case SimpleDistance._Third_3:
-                    {
-                        return "III";
-                    }
-
-                default:
-                    {
-                        throw new ArgumentException();
-                    }
+            public static string Interval(int offset)
+            {
+                switch (offset)
+                {
+                    case 0:
+                        {
+                            return "Unison";
+                        }
+                    case 1:
+                        {
+                            return "Second";
+                        }
+                    case 2:
+                        {
+                            return "Third";
+                        }
+                    case 3:
+                        {
+                            return "Fourth";
+                        }
+                    case 4:
+                        {
+                            return "Fifth";
+                        }
+                    case 5:
+                        {
+                            return "Sixth";
+                        }
+                    case 6:
+                        {
+                            return "Seventh";
+                        }
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
             }
         }
 
-        private static string GetDistanceName(SimpleDistance Distance)
+        public static string QualityName()
         {
-            string str = Distance.ToString();
-            if (str.StartsWith("_"))
-                str = str.Substring(1);
-            return str.Substring(0, str.LastIndexOf('_'));
-        }
-
-        public static string GetToneName(SimpleDistance Distance)
-        {
-            return GetDistanceName(Distance).Replace("Unison", "Root");
-        }
-
-        private static string GetOrdinalSuffix(int n)
-        {
-            if (n < 0)
-                throw new ArgumentException();
-            n = n % 100;
-            if (n == 11 || n == 12 || n == 13)
-                return "th";
-            if (n % 10 == 1)
-                return "st";
-            if (n % 10 == 2)
-                return "nd";
-            if (n % 10 == 3)
-                return "rd";
-            return "th";
-        }
-
-        private static string GetAccidental(int alt)
-        {
-            switch (alt)
-            {
-                case -2:
-                    {
-                        return "𝄫";
-                    }
-
-                case -1:
-                    {
-                        return "♭";
-                    }
-
-                case 0:
-                    {
-                        return string.Empty;
-                    }
-
-                case 1:
-                    {
-                        return "♯";
-                    }
-
-                case 2:
-                    {
-                        return "𝄪";
-                    }
-
-                default:
-                    {
-                        throw new NotImplementedException();
-                    }
-            }
-        }
-
-        //// unison to 7th
-        //// added by possible octave removal
-        //// negated by unison or octave
-        //// subtracted in order a+-b
-        //// compared by number then quality
-        //// no error scrutiny, complete, test 1 method - 
-        //[StructLayout(LayoutKind.Explicit, Size = 8)]
-        //public struct SimpleInterval : IEquatable<SimpleInterval>, IComparable<SimpleInterval>
+            throw new NotImplementedException();
+            
+        //public enum QualityPf : int
         //{
-        //    [FieldOffset(0)]
-        //    public SimpleDistance Number;
-        //    [Ignored]
-        //    [FieldOffset(4)]
-        //    public QualityP QualityP;
-        //    [Ignored]
-        //    [FieldOffset(4)]
-        //    public QualityMi QualityMi;
-        //    [FieldOffset(4)]
-        //    public int Quality;
+        //    _5Diminished = -5,
+        //    _4Diminished = -4,
+        //    _3Diminished = -3,
+        //    _2Diminished = -2,
+        //    _Diminished = -1,
+        //    _Perfect = 0,
+        //    _Augmented = 1,
+        //    _2Augmented = 2,
+        //    _3Augmented = 3,
+        //    _4Augmented = 4,
+        //    _5Augmented = 5
+        //}
 
-        //    public SimpleInterval(SimpleDistance Number, int pSemiTones)
-        //    {
-        //        this.Number = Number;
-        //        string sNumber = this.Number.ToString();
-        //        Quality = pSemiTones - Conversions.ToInteger(sNumber.Substring(sNumber.LastIndexOf('_') + 1));
-        //    }
+        //public enum QualityMi : int
+        //{
+        //    _4Diminished = -4,
+        //    _3Diminished = -3,
+        //    _2Diminished = -2,
+        //    _Diminished = -1,
+        //    _Minor = 0,
+        //    _Major = 1,
+        //    _Augmented = 2,
+        //    _2Augmented = 3,
+        //    _3Augmented = 4,
+        //    _4Augmented = 5
+        //}
 
-        //    public SimpleInterval(int Quality, SimpleDistance Number)
-        //    {
-        //        this.Number = Number;
-        //        this.Quality = Quality;
-        //    }
+        }
 
-        //    public SimpleInterval(SimpleDistance pNumber, QualityP pQualityP)
+        public static char AccidentalSymbol()
+        {
+            throw new NotImplementedException();
+        //private static string GetAccidental(int alt)
+        //{
+        //    switch (alt)
         //    {
-        //        Number = pNumber;
-        //        QualityP = pQualityP;
-        //    }
-
-        //    public SimpleInterval(SimpleDistance pNumber, QualityMi pQualityM)
-        //    {
-        //        Number = pNumber;
-        //        QualityMi = pQualityM;
-        //    }
-
-        //    public int SemiTones
-        //    {
-        //        get
-        //        {
-        //            string sNumber = Number.ToString();
-        //            return Quality + Conversions.ToInteger(sNumber.Substring(sNumber.LastIndexOf('_') + 1));
-        //        }
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        return QualityName + " " + GetDistanceName(Number);
-        //    }
-
-        //    public string QualityName
-        //    {
-        //        get
-        //        {
-        //            if (TypedPerfect)
+        //        case -2:
         //            {
-        //                return QualityP.ToString().Substring(1);
+        //                return "𝄫";
         //            }
-        //            else
+
+        //        case -1:
         //            {
-        //                return QualityMi.ToString().Substring(1);
+        //                return "♭";
         //            }
-        //        }
-        //    }
 
-        //    public bool TypedPerfect
-        //    {
-        //        get
-        //        {
-        //            return !(Number.ToString()[0] == '_');
-        //        }
-        //    }
+        //        case 0:
+        //            {
+        //                return string.Empty;
+        //            }
 
-        //    public override int GetHashCode()
-        //    {
-        //        return ((int)Number >> 16 | (int)Number << 16) ^ Quality;
-        //    }
+        //        case 1:
+        //            {
+        //                return "♯";
+        //            }
 
-        //    public static bool operator ==(SimpleInterval a, SimpleInterval b)
-        //    {
-        //        return a.Number == b.Number && a.Quality == b.Quality;
-        //    }
+        //        case 2:
+        //            {
+        //                return "𝄪";
+        //            }
 
-        //    public static bool operator !=(SimpleInterval a, SimpleInterval b)
-        //    {
-        //        return !(a == b);
-        //    }
-
-        //    public static SimpleInterval operator -(SimpleInterval a)
-        //    {
-        //        if (a.Number == SimpleDistance.Unison_0)
-        //            return new SimpleInterval(-a.Quality, SimpleDistance.Unison_0);
-        //        return new SimpleInterval((SimpleDistance)Conversions.ToInteger(7 - (int)a.Number), 12 - a.SemiTones);
-        //    }
-
-        //    public static SimpleInterval operator +(SimpleInterval a, SimpleInterval b)
-        //    {
-        //        if ((int)a.Number + (int)b.Number > 6)
-        //        {
-        //            return new SimpleInterval((SimpleDistance)Conversions.ToInteger((int)a.Number + (int)b.Number - 7), a.SemiTones + b.SemiTones - 12);
-        //        }
-        //        else
-        //        {
-        //            return new SimpleInterval((SimpleDistance)Conversions.ToInteger((int)a.Number + (int)b.Number), a.SemiTones + b.SemiTones);
-        //        }
-        //    }
-
-        //    public static SimpleInterval operator -(SimpleInterval a, SimpleInterval b)
-        //    {
-        //        return a + -b;
-        //    }
-
-        //    public bool Equals(SimpleInterval other)
-        //    {
-        //        return (this) == other;
-        //    }
-
-        //    public override bool Equals(object obj)
-        //    {
-        //        return obj is SimpleInterval && (SimpleInterval)obj == (this);
-        //    }
-
-        //    public int CompareTo(SimpleInterval other)
-        //    {
-        //        int CompareToRet = default;
-        //        CompareToRet = ((int)Number).CompareTo((int)other.Number);
-        //        if (CompareToRet == 0)
-        //            CompareToRet = Quality.CompareTo(other.Quality);
-        //        return CompareToRet;
-        //    }
-
-        //    public static bool operator <(SimpleInterval left, SimpleInterval right)
-        //    {
-        //        return left.CompareTo(right) < 0;
-        //    }
-
-        //    public static bool operator >(SimpleInterval left, SimpleInterval right)
-        //    {
-        //        return left.CompareTo(right) > 0;
-        //    }
-
-        //    public static bool operator <=(SimpleInterval left, SimpleInterval right)
-        //    {
-        //        return left.CompareTo(right) <= 0;
-        //    }
-
-        //    public static bool operator >=(SimpleInterval left, SimpleInterval right)
-        //    {
-        //        return left.CompareTo(right) >= 0;
+        //        default:
+        //            {
+        //                throw new NotImplementedException();
+        //            }
         //    }
         //}
 
-        //// unison upwards
-        //// added exactly
-        //// compared by number then quality
-        //public struct CompoundInterval : IEquatable<CompoundInterval>, IComparable<CompoundInterval>
+        }
+        
+        // compared by...
+        public struct Interval : IEquatable<Interval>, IComparable<Interval>
+        {
+            
+        //private static string GetOrdinalSuffix(int n)
         //{
-        //    public int Octaves0;
-        //    public SimpleInterval Interval;
-
-        //    public CompoundInterval(SimpleInterval pInterval)
-        //    {
-        //        Interval = pInterval;
-        //    }
-
-        //    public CompoundInterval(SimpleInterval Interval, int Octaves0)
-        //    {
-        //        this.Interval = Interval;
-        //        this.Octaves0 = Octaves0;
-        //    }
-
-        //    public CompoundInterval(int pDistance, int pSemiTones)
-        //    {
-        //        if (pDistance < 0)
-        //            throw new ArgumentOutOfRangeException();
-        //        while (pDistance >= 7)
-        //        {
-        //            pDistance -= 7;
-        //            Octaves0 += 1;
-        //            pSemiTones -= 12;
-        //        }
-
-        //        Interval = new SimpleInterval((SimpleDistance)Conversions.ToInteger(pDistance), pSemiTones);
-        //    }
-
-        //    public CompoundInterval(int pDistance, QualityMi pQuality)
-        //    {
-        //        if (pDistance < 0)
-        //            throw new ArgumentOutOfRangeException();
-        //        while (pDistance >= 7)
-        //        {
-        //            pDistance -= 7;
-        //            Octaves0 += 1;
-        //        }
-
-        //        Interval = new SimpleInterval((SimpleDistance)Conversions.ToInteger(pDistance), pQuality);
-        //    }
-
-        //    public CompoundInterval(int pDistance, QualityP pQuality)
-        //    {
-        //        if (pDistance < 0)
-        //            throw new ArgumentOutOfRangeException();
-        //        while (pDistance >= 7)
-        //        {
-        //            pDistance -= 7;
-        //            Octaves0 += 1;
-        //        }
-
-        //        Interval = new SimpleInterval((SimpleDistance)pDistance, pQuality);
-        //    }
-
-        //    public static CompoundInterval GetNew(int pDistance, int pQuality)
-        //    {
-        //        CompoundInterval GetNewRet = default;
-        //        if (pDistance < 0)
-        //            throw new ArgumentOutOfRangeException();
-        //        while (pDistance >= 7)
-        //        {
-        //            pDistance -= 7;
-        //            GetNewRet.Octaves0 += 1;
-        //        }
-
-        //        GetNewRet.Interval = new SimpleInterval(pQuality, (SimpleDistance)Conversions.ToInteger(pDistance));
-        //        return GetNewRet;
-        //    }
-
-        //    public int SemiTones
-        //    {
-        //        get
-        //        {
-        //            return Octaves0 * 12 + Interval.SemiTones;
-        //        }
-        //    }
-
-        //    public override int GetHashCode()
-        //    {
-        //        return (Distance >> 16 | Distance << 16) ^ Interval.Quality;
-        //    }
-
-        //    public static implicit operator CompoundInterval(SimpleInterval input)
-        //    {
-        //        return new CompoundInterval(input);
-        //    }
-
-        //    public static explicit operator SimpleInterval(CompoundInterval input)
-        //    {
-        //        if (input.Octaves0 != 0)
-        //            throw new ArgumentException();
-        //        return input.Interval;
-        //    }
-
-        //    public bool IsSimple
-        //    {
-        //        get
-        //        {
-        //            return Octaves0 == 0;
-        //        }
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        if (IsSimple)
-        //            return Interval.ToString();
-        //        if (Distance == 7)
-        //            return Interval.QualityName + " Octave";
-        //        return Interval.QualityName + " " + (Distance + 1).ToString() + GetOrdinalSuffix(Distance + 1);
-        //    }
-
-        //    public int Distance
-        //    {
-        //        get
-        //        {
-        //            return Octaves0 * 7 + (int)Interval.Number;
-        //        }
-        //    }
-
-        //    public static bool operator ==(CompoundInterval a, CompoundInterval b)
-        //    {
-        //        return a.Octaves0 == b.Octaves0 && a.Interval == b.Interval;
-        //    }
-
-        //    public static bool operator !=(CompoundInterval a, CompoundInterval b)
-        //    {
-        //        return !(a == b);
-        //    }
-
-        //    public static CompoundInterval operator +(CompoundInterval a, CompoundInterval b)
-        //    {
-        //        return new CompoundInterval(a.Distance + b.Distance, a.SemiTones + b.SemiTones);
-        //    }
-
-        //    /// <summary>true for up, interval returned is commutative</summary>
-        //    public static (int, CompoundInterval) operator -(CompoundInterval a, CompoundInterval b)
-        //    {
-        //        if (a.Distance > b.Distance)
-        //        {
-        //            return (-1, new CompoundInterval(a.Distance - b.Distance, a.SemiTones - b.SemiTones));
-        //        }
-        //        else if (a.Distance == b.Distance)
-        //        {
-        //            if (a.SemiTones > b.SemiTones)
-        //            {
-        //                return (-1, new CompoundInterval(0, Math.Abs(a.SemiTones - b.SemiTones)));
-        //            }
-        //            else if (a.SemiTones == b.SemiTones)
-        //            {
-        //                return (0, new CompoundInterval(0, Math.Abs(a.SemiTones - b.SemiTones)));
-        //            }
-        //            else
-        //            {
-        //                return (1, new CompoundInterval(0, Math.Abs(a.SemiTones - b.SemiTones)));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return (1, new CompoundInterval(b.Distance - a.Distance, b.SemiTones - a.SemiTones));
-        //        }
-        //    }
-
-        //    public bool Equals(CompoundInterval other)
-        //    {
-        //        return (this) == other;
-        //    }
-
-        //    public override bool Equals(object obj)
-        //    {
-        //        return obj is CompoundInterval && (CompoundInterval)obj == (this);
-        //    }
-
-        //    public int CompareTo(CompoundInterval other)
-        //    {
-        //        int CompareToRet = default;
-        //        CompareToRet = Octaves0.CompareTo(other.Octaves0);
-        //        if (CompareToRet == 0)
-        //            CompareToRet = Interval.CompareTo(other.Interval);
-        //        return CompareToRet;
-        //    }
-
-        //    public static bool operator <(CompoundInterval left, CompoundInterval right)
-        //    {
-        //        return left.CompareTo(right) < 0;
-        //    }
-
-        //    public static bool operator >(CompoundInterval left, CompoundInterval right)
-        //    {
-        //        return left.CompareTo(right) > 0;
-        //    }
-
-        //    public static bool operator <=(CompoundInterval left, CompoundInterval right)
-        //    {
-        //        return left.CompareTo(right) <= 0;
-        //    }
-
-        //    public static bool operator >=(CompoundInterval left, CompoundInterval right)
-        //    {
-        //        return left.CompareTo(right) >= 0;
-        //    }
+        //    if (n < 0)
+        //        throw new ArgumentException();
+        //    n = n % 100;
+        //    if (n == 11 || n == 12 || n == 13)
+        //        return "th";
+        //    if (n % 10 == 1)
+        //        return "st";
+        //    if (n % 10 == 2)
+        //        return "nd";
+        //    if (n % 10 == 3)
+        //        return "rd";
+        //    return "th";
         //}
 
-        //// compared by degree then quality
-        //// no error scrutiny, complete
-        //public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
+            public int Semis;
+            public int Number;
+
+            public Interval(int number, int semis)
+            {
+                Number = number;
+                Semis = semis;
+            }
+            
+            public Interval(int number, int quality, int octaves)
+            {
+                Number = number + octaves * 7;
+                Semis = 0;
+                Semis = quality - Quality;
+            }
+
+            public int NumberRem
+            {
+                get
+                {
+                    return mod(7, Number);
+                }
+            }
+            
+            public int SemisRem
+            {
+                get
+                {
+                    return Semis - 12*Octaves;
+                }
+            }
+
+            public int Octaves
+            {
+                get
+                {
+                    return (Number - NumberRem)/7;
+                }
+            }
+
+            public int Quality
+            {
+                get
+                {
+                    return SemisRem - Degree.Semis(NumberRem);
+                }
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Interval interval && Equals(interval);
+            }
+
+            public bool Equals(Interval other)
+            {
+                return Semis == other.Semis &&
+                       Number == other.Number;
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = 1960790096;
+                hashCode = hashCode * -1521134295 + Semis.GetHashCode();
+                hashCode = hashCode * -1521134295 + Number.GetHashCode();
+                return hashCode;
+            }
+
+            public int CompareTo(Interval other)
+            {
+                int result = Number.CompareTo(other.Number);
+                if (result != 0) return result;
+                return Semis.CompareTo(other.Semis);
+            }
+
+            public static bool operator ==(Interval left, Interval right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Interval left, Interval right)
+            {
+                return !(left == right);
+            }
+
+            public static Interval operator +(Interval a, Interval b)
+            {
+                return new Interval(a.Number + b.Number, a.Semis + b.Semis);
+            }
+            
+            public static Interval operator -(Interval a)
+            {
+                return new Interval(-a.Number, -a.Semis);
+            }
+            
+            public static Interval operator -(Interval a, Interval b)
+            {
+                return new Interval(a.Number - b.Number, a.Semis - b.Semis);
+            }
+
+            public static bool operator <(Interval left, Interval right)
+            {
+                return left.CompareTo(right) < 0;
+            }
+
+            public static bool operator <=(Interval left, Interval right)
+            {
+                return left.CompareTo(right) <= 0;
+            }
+
+            public static bool operator >(Interval left, Interval right)
+            {
+                return left.CompareTo(right) > 0;
+            }
+
+            public static bool operator >=(Interval left, Interval right)
+            {
+                return left.CompareTo(right) >= 0;
+            }
+
+            public Interval Residue
+            {
+                get
+                {
+                    return this - new Interval(0, 0, Octaves);
+                }
+            }
+        }
+        
+        // compared by...
+        public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
+        {
+            public Interval IntervalFromC0;
+
+            public Pitch(Interval IntervalFromC0)
+            {
+                this.IntervalFromC0 = IntervalFromC0;
+            }
+
+            public int MIDIPitch
+            {
+                get
+                {
+                    return 12 + IntervalFromC0.Semis;
+                }
+            }
+
+            public override int GetHashCode()
+            {
+                return IntervalFromC0.GetHashCode();
+            }
+
+            public int CompareTo(Pitch other)
+            {
+                return IntervalFromC0.CompareTo(other.IntervalFromC0);
+            }
+
+            public static bool operator <(Pitch left, Pitch right)
+            {
+                return left.CompareTo(right) < 0;
+            }
+
+            public static bool operator >(Pitch left, Pitch right)
+            {
+                return left.CompareTo(right) > 0;
+            }
+
+            public static bool operator <=(Pitch left, Pitch right)
+            {
+                return left.CompareTo(right) <= 0;
+            }
+
+            public static bool operator >=(Pitch left, Pitch right)
+            {
+                return left.CompareTo(right) >= 0;
+            }
+
+            public static bool operator ==(Pitch a, Pitch b)
+            {
+                return a.IntervalFromC0 == b.IntervalFromC0;
+            }
+
+            public static bool operator !=(Pitch a, Pitch b)
+            {
+                return !(a == b);
+            }
+
+            public bool Equals(Pitch other)
+            {
+                return (this) == other;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Pitch && (Pitch)obj == (this);
+            }
+
+            public static Interval operator -(Pitch a, Pitch b)
+            {
+                return a.IntervalFromC0 - b.IntervalFromC0;
+            }
+
+            public override string ToString()
+            {
+                //string acc = AccidentalSymbol(IntervalFromC0.Interval.Semiints - Mode.Instance("Ionian").get_Interval(IntervalFromC0.Interval.Number).Semiints);
+                //switch (IntervalFromC0.Residue.Number)
+                //{
+                //    case 0:
+                //        {
+                //            return "C" + acc + IntervalFromC0.Octaves;
+                //        }
+                        
+                //    case 1:
+                //        {
+                //            return "D" + acc + IntervalFromC0.Octaves;
+                //        }
+                        
+                //    case 2:
+                //        {
+                //            return "E" + acc + IntervalFromC0.Octaves0;
+                //        }
+
+                //    case 3:
+                //        {
+                //            return "F" + acc + IntervalFromC0.Octaves;
+                //        }
+                        
+                //    case 4:
+                //        {
+                //            return "G" + acc + IntervalFromC0.Octaves;
+                //        }
+
+                //    case 5:
+                //        {
+                //            return "A" + acc + IntervalFromC0.Octaves0;
+                //        }
+                        
+                //    case 6:
+                //        {
+                //            return "B" + acc + IntervalFromC0.Octaves;
+                //        }
+
+                //}
+                return base.ToString();
+            }
+        }
+
+        #endregion
+
+    }
+}
+
+        //public enum Inversion : int
         //{
-        //    public CompoundInterval IntervalFromC0;
-
-        //    public int OffsetFromC4
-        //    {
-        //        get
-        //        {
-        //            return IntervalFromC0.Distance - 28;
-        //        }
-        //    }
-
-        //    public Pitch(CompoundInterval IntervalFromC0)
-        //    {
-        //        this.IntervalFromC0 = IntervalFromC0;
-        //    }
-
-        //    public Pitch(SimpleInterval pIntervalFromC, int pOctavesFromC0)
-        //    {
-        //        IntervalFromC0.Interval = pIntervalFromC;
-        //        IntervalFromC0.Octaves0 = pOctavesFromC0;
-        //    }
-
-        //    public int MIDIPitch
-        //    {
-        //        get
-        //        {
-        //            return 12 + IntervalFromC0.SemiTones;
-        //        }
-        //    }
-
-        //    public override int GetHashCode()
-        //    {
-        //        return IntervalFromC0.GetHashCode();
-        //    }
-
-        //    public int CompareTo(Pitch other)
-        //    {
-        //        return IntervalFromC0.CompareTo(other.IntervalFromC0);
-        //    }
-
-        //    public static bool operator <(Pitch left, Pitch right)
-        //    {
-        //        return left.CompareTo(right) < 0;
-        //    }
-
-        //    public static bool operator >(Pitch left, Pitch right)
-        //    {
-        //        return left.CompareTo(right) > 0;
-        //    }
-
-        //    public static bool operator <=(Pitch left, Pitch right)
-        //    {
-        //        return left.CompareTo(right) <= 0;
-        //    }
-
-        //    public static bool operator >=(Pitch left, Pitch right)
-        //    {
-        //        return left.CompareTo(right) >= 0;
-        //    }
-
-        //    public static bool operator ==(Pitch a, Pitch b)
-        //    {
-        //        return a.IntervalFromC0 == b.IntervalFromC0;
-        //    }
-
-        //    public static bool operator !=(Pitch a, Pitch b)
-        //    {
-        //        return !(a == b);
-        //    }
-
-        //    public bool Equals(Pitch other)
-        //    {
-        //        return (this) == other;
-        //    }
-
-        //    public override bool Equals(object obj)
-        //    {
-        //        return obj is Pitch && (Pitch)obj == (this);
-        //    }
-
-        //    /// <summary>true for up, interval returned is commutative</summary>
-        //    public static (int, CompoundInterval) operator -(Pitch a, Pitch b)
-        //    {
-        //        return a.IntervalFromC0 - b.IntervalFromC0;
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        string acc = GetAccidental(IntervalFromC0.Interval.SemiTones - Mode.Instance("Ionian").get_Interval(IntervalFromC0.Interval.Number).SemiTones);
-        //        switch (IntervalFromC0.Interval.Number)
-        //        {
-        //            case SimpleDistance.Fifth_7:
-        //                {
-        //                    return "G" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance.Fourth_5:
-        //                {
-        //                    return "F" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance.Unison_0:
-        //                {
-        //                    return "C" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance._Second_1:
-        //                {
-        //                    return "D" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance._Seventh_10:
-        //                {
-        //                    return "B" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance._Sixth_8:
-        //                {
-        //                    return "A" + acc + IntervalFromC0.Octaves0;
-        //                }
-
-        //            case SimpleDistance._Third_3:
-        //                {
-        //                    return "E" + acc + IntervalFromC0.Octaves0;
-        //                }
-        //        }
-
-        //        return default;
-        //    }
+        //    Root_Position_,
+        //    First_Inversion_b,
+        //    Second_Inversion_c,
+        //    Third_Inversion_d
         //}
 
         //[ImmutableObject(true)]
         //public sealed class CharacterType : UserInstances
         //{
         //    private QualityMi iThird;
-        //    private QualityP iFifth;
+        //    private QualityPf iFifth;
         //    private QualityMi? iSeventh;
         //    private char iCharacter;
         //    private bool iUpper;
@@ -742,7 +610,7 @@ namespace mus
         //    {
         //        get
         //        {
-        //            return new SimpleInterval(SimpleDistance._Third_3, iThird);
+        //            return new SimpleInterval(SimpleDist.2, iThird);
         //        }
         //    }
 
@@ -750,7 +618,7 @@ namespace mus
         //    {
         //        get
         //        {
-        //            return new SimpleInterval(SimpleDistance.Fifth_7, iFifth);
+        //            return new SimpleInterval(SimpleDist.4, iFifth);
         //        }
         //    }
 
@@ -760,7 +628,7 @@ namespace mus
         //        {
         //            if (iSeventh.HasValue)
         //            {
-        //                return new SimpleInterval(SimpleDistance._Seventh_10, iSeventh.Value);
+        //                return new SimpleInterval(SimpleDist.6, iSeventh.Value);
         //            }
         //            else
         //            {
@@ -769,21 +637,21 @@ namespace mus
         //        }
         //    }
 
-        //    public SimpleInterval get_Tone(SimpleDistance Degree)
+        //    public SimpleInterval get_int(SimpleDist Degree)
         //    {
         //        switch (Degree)
         //        {
-        //            case SimpleDistance._Third_3:
+        //            case SimpleDist.2:
         //                {
         //                    return Third;
         //                }
 
-        //            case SimpleDistance.Fifth_7:
+        //            case SimpleDist.4:
         //                {
         //                    return Fifth;
         //                }
 
-        //            case SimpleDistance._Seventh_10:
+        //            case SimpleDist.6:
         //                {
         //                    return Seventh.Value;
         //                }
@@ -812,7 +680,7 @@ namespace mus
 
         //    /// <exception cref="ArgumentNullException">Name</exception>
         //    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
-        //    public CharacterType(string Name, QualityMi pThird, QualityP pFifth, QualityMi? pSeventh, char pCharacter, bool pUpper) : base()
+        //    public CharacterType(string Name, QualityMi pThird, QualityPf pFifth, QualityMi? pSeventh, char pCharacter, bool pUpper) : base()
         //    {
         //        if (Name is null)
         //            throw new ArgumentNullException("Name");
@@ -843,7 +711,7 @@ namespace mus
         //        }
 
         //        iThird = (QualityMi)Conversions.ToInteger(NewParts[0]);
-        //        iFifth = (QualityP)Conversions.ToInteger(NewParts[1]);
+        //        iFifth = (QualityPf)Conversions.ToInteger(NewParts[1]);
         //        iSeventh = (QualityMi)Conversions.ToInteger(NewParts[2]);
         //        if ((Parts[3] ?? "") == (string.Empty ?? ""))
         //            iSeventh = default;
@@ -907,46 +775,46 @@ namespace mus
         //{
         //    private QualityMi _2;
         //    private QualityMi _3;
-        //    private QualityP _4;
-        //    private QualityP _5;
+        //    private QualityPf _4;
+        //    private QualityPf _5;
         //    private QualityMi _6;
         //    private QualityMi _7;
 
-        //    private int get_Quality(SimpleDistance Number)
+        //    private int get_Quality(SimpleDist Number)
         //    {
         //        switch (Number)
         //        {
-        //            case SimpleDistance.Fifth_7:
+        //            case SimpleDist.4:
         //                {
         //                    return (int)_5;
         //                }
 
-        //            case SimpleDistance.Fourth_5:
+        //            case SimpleDist.3:
         //                {
         //                    return (int)_4;
         //                }
 
-        //            case SimpleDistance.Unison_0:
+        //            case SimpleDist.0:
         //                {
-        //                    return (int)QualityP._Perfect;
+        //                    return (int)QualityPf._Perfect;
         //                }
 
-        //            case SimpleDistance._Second_1:
+        //            case SimpleDist.1:
         //                {
         //                    return (int)_2;
         //                }
 
-        //            case SimpleDistance._Seventh_10:
+        //            case SimpleDist.6:
         //                {
         //                    return (int)_7;
         //                }
 
-        //            case SimpleDistance._Sixth_8:
+        //            case SimpleDist.5:
         //                {
         //                    return (int)_6;
         //                }
 
-        //            case SimpleDistance._Third_3:
+        //            case SimpleDist.2:
         //                {
         //                    return (int)_3;
         //                }
@@ -959,14 +827,14 @@ namespace mus
         //        }
         //    }
 
-        //    public SimpleInterval get_Interval(SimpleDistance Number)
+        //    public SimpleInterval get_Interval(SimpleDist Number)
         //    {
         //        return new SimpleInterval(get_Quality(Number), Number);
         //    }
 
         //    /// <exception cref="ArgumentNullException">Name</exception>
         //    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
-        //    public Mode(string Name, QualityMi p2, QualityMi p3, QualityP p4, QualityP p5, QualityMi p6, QualityMi p7) : base()
+        //    public Mode(string Name, QualityMi p2, QualityMi p3, QualityPf p4, QualityPf p5, QualityMi p6, QualityMi p7) : base()
         //    {
         //        if (Name is null)
         //            throw new ArgumentNullException("Name");
@@ -999,8 +867,8 @@ namespace mus
 
         //        _2 = (QualityMi)NewParts[0];
         //        _3 = (QualityMi)NewParts[1];
-        //        _4 = (QualityP) NewParts[2];
-        //        _5 = (QualityP) NewParts[3];
+        //        _4 = (QualityPf) NewParts[2];
+        //        _5 = (QualityPf) NewParts[3];
         //        _6 = (QualityMi)NewParts[4];
         //        _7 = (QualityMi)NewParts[5];
         //        return true;
@@ -1016,7 +884,7 @@ namespace mus
         //        string ToStringRet = default;
         //        ToStringRet = string.Empty;
         //        for (int i = 0; i <= 6; i++)
-        //            ToStringRet += ", " + get_Interval((SimpleDistance)Conversions.ToInteger(i)).ToString();
+        //            ToStringRet += ", " + get_Interval((SimpleDist)Conversions.ToInteger(i)).ToString();
         //        ToStringRet = ToStringRet.Substring(2);
         //        return ToStringRet;
         //    }
@@ -1096,7 +964,7 @@ namespace mus
         //    // End Sub
 
         //    // Public Sub New(info As SerializationInfo, context As StreamingContext)
-        //    // iRoot.Number = CType(info.GetInt32("iRoot.Number"), SimpleDistance)
+        //    // iRoot.Number = CType(info.GetInt32("iRoot.Number"), SimpleDist)
         //    // iRoot.Quality = info.GetInt32("iRoot.Quality")
         //    // iCharacter = Character.Instance(info.GetString("iCharacter"))
         //    // End Sub
@@ -1190,7 +1058,7 @@ namespace mus
         //    // End Get
         //    // End Property
 
-        //    public SimpleInterval[] GetTones
+        //    public SimpleInterval[] Getints
         //    {
         //        get
         //        {
@@ -1206,26 +1074,26 @@ namespace mus
         //        }
         //    }
 
-        //    public SimpleInterval get_GetTone(SimpleDistance Degree)
+        //    public SimpleInterval get_Getint(SimpleDist Degree)
         //    {
         //        switch (Degree)
         //        {
-        //            case SimpleDistance.Unison_0:
+        //            case SimpleDist.0:
         //                {
         //                    return iRoot;
         //                }
 
-        //            case SimpleDistance._Third_3:
+        //            case SimpleDist.2:
         //                {
         //                    return GetThird;
         //                }
 
-        //            case SimpleDistance.Fifth_7:
+        //            case SimpleDist.4:
         //                {
         //                    return GetFifth;
         //                }
 
-        //            case SimpleDistance._Seventh_10:
+        //            case SimpleDist.6:
         //                {
         //                    return GetSeventh.Value;
         //                }
@@ -1234,8 +1102,3 @@ namespace mus
         //        return default;
         //    }
         //}
-
-        #endregion
-
-    }
-}
