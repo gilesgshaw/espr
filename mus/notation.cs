@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+//major is 0
+
 namespace mus
 {
+
     public static class notation
     {
 
@@ -20,7 +23,7 @@ namespace mus
         }
 
         #region Okay
-        
+
         public static int mod(int b, int a)
         {
             int result = a % b;
@@ -51,11 +54,11 @@ namespace mus
                         }
                     case 1:
                         {
-                            return 1;
+                            return 2;
                         }
                     case 2:
                         {
-                            return 3;
+                            return 4;
                         }
                     case 3:
                         {
@@ -67,11 +70,11 @@ namespace mus
                         }
                     case 5:
                         {
-                            return 8;
+                            return 9;
                         }
                     case 6:
                         {
-                            return 10;
+                            return 11;
                         }
                     default:
                         {
@@ -244,99 +247,100 @@ namespace mus
 
         public static string QualityName()
         {
+            //remember new convention
             throw new NotImplementedException();
-            
-        //public enum QualityPf : int
-        //{
-        //    _5Diminished = -5,
-        //    _4Diminished = -4,
-        //    _3Diminished = -3,
-        //    _2Diminished = -2,
-        //    _Diminished = -1,
-        //    _Perfect = 0,
-        //    _Augmented = 1,
-        //    _2Augmented = 2,
-        //    _3Augmented = 3,
-        //    _4Augmented = 4,
-        //    _5Augmented = 5
-        //}
 
-        //public enum QualityMi : int
-        //{
-        //    _4Diminished = -4,
-        //    _3Diminished = -3,
-        //    _2Diminished = -2,
-        //    _Diminished = -1,
-        //    _Minor = 0,
-        //    _Major = 1,
-        //    _Augmented = 2,
-        //    _2Augmented = 3,
-        //    _3Augmented = 4,
-        //    _4Augmented = 5
-        //}
+            //public enum QualityPf : int
+            //{
+            //    _5Diminished = -5,
+            //    _4Diminished = -4,
+            //    _3Diminished = -3,
+            //    _2Diminished = -2,
+            //    _Diminished = -1,
+            //    _Perfect = 0,
+            //    _Augmented = 1,
+            //    _2Augmented = 2,
+            //    _3Augmented = 3,
+            //    _4Augmented = 4,
+            //    _5Augmented = 5
+            //}
+
+            //public enum QualityMi : int
+            //{
+            //    _4Diminished = -4,
+            //    _3Diminished = -3,
+            //    _2Diminished = -2,
+            //    _Diminished = -1,
+            //    _Minor = 0,
+            //    _Major = 1,
+            //    _Augmented = 2,
+            //    _2Augmented = 3,
+            //    _3Augmented = 4,
+            //    _4Augmented = 5
+            //}
 
         }
 
         public static char AccidentalSymbol()
         {
             throw new NotImplementedException();
-        //private static string GetAccidental(int alt)
-        //{
-        //    switch (alt)
-        //    {
-        //        case -2:
-        //            {
-        //                return "𝄫";
-        //            }
+            //private static string GetAccidental(int alt)
+            //{
+            //    switch (alt)
+            //    {
+            //        case -2:
+            //            {
+            //                return "𝄫";
+            //            }
 
-        //        case -1:
-        //            {
-        //                return "♭";
-        //            }
+            //        case -1:
+            //            {
+            //                return "♭";
+            //            }
 
-        //        case 0:
-        //            {
-        //                return string.Empty;
-        //            }
+            //        case 0:
+            //            {
+            //                return string.Empty;
+            //            }
 
-        //        case 1:
-        //            {
-        //                return "♯";
-        //            }
+            //        case 1:
+            //            {
+            //                return "♯";
+            //            }
 
-        //        case 2:
-        //            {
-        //                return "𝄪";
-        //            }
+            //        case 2:
+            //            {
+            //                return "𝄪";
+            //            }
 
-        //        default:
-        //            {
-        //                throw new NotImplementedException();
-        //            }
-        //    }
-        //}
+            //        default:
+            //            {
+            //                throw new NotImplementedException();
+            //            }
+            //    }
+            //}
 
         }
-        
+
         // compared by...
         public struct Interval : IEquatable<Interval>, IComparable<Interval>
         {
-            
-        //private static string GetOrdinalSuffix(int n)
-        //{
-        //    if (n < 0)
-        //        throw new ArgumentException();
-        //    n = n % 100;
-        //    if (n == 11 || n == 12 || n == 13)
-        //        return "th";
-        //    if (n % 10 == 1)
-        //        return "st";
-        //    if (n % 10 == 2)
-        //        return "nd";
-        //    if (n % 10 == 3)
-        //        return "rd";
-        //    return "th";
-        //}
+
+            //private static string GetOrdinalSuffix(int n)
+            //{
+            //    if (n < 0)
+            //        throw new ArgumentException();
+            //    n = n % 100;
+            //    if (n == 11 || n == 12 || n == 13)
+            //        return "th";
+            //    if (n % 10 == 1)
+            //        return "st";
+            //    if (n % 10 == 2)
+            //        return "nd";
+            //    if (n % 10 == 3)
+            //        return "rd";
+            //    return "th";
+            //}
 
             public int Semis;
             public int Number;
@@ -346,7 +350,7 @@ namespace mus
                 Number = number;
                 Semis = semis;
             }
-            
+
             public Interval(int number, int quality, int octaves)
             {
                 Number = number + octaves * 7;
@@ -361,12 +365,12 @@ namespace mus
                     return mod(7, Number);
                 }
             }
-            
+
             public int SemisRem
             {
                 get
                 {
-                    return Semis - 12*Octaves;
+                    return Semis - 12 * Octaves;
                 }
             }
 
@@ -374,7 +378,7 @@ namespace mus
             {
                 get
                 {
-                    return (Number - NumberRem)/7;
+                    return (Number - NumberRem) / 7;
                 }
             }
 
@@ -426,12 +430,12 @@ namespace mus
             {
                 return new Interval(a.Number + b.Number, a.Semis + b.Semis);
             }
-            
+
             public static Interval operator -(Interval a)
             {
                 return new Interval(-a.Number, -a.Semis);
             }
-            
+
             public static Interval operator -(Interval a, Interval b)
             {
                 return new Interval(a.Number - b.Number, a.Semis - b.Semis);
@@ -465,7 +469,7 @@ namespace mus
                 }
             }
         }
-        
+
         // compared by...
         public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
         {
@@ -548,12 +552,12 @@ namespace mus
                 //        {
                 //            return "C" + acc + IntervalFromC0.Octaves;
                 //        }
-                        
+
                 //    case 1:
                 //        {
                 //            return "D" + acc + IntervalFromC0.Octaves;
                 //        }
-                        
+
                 //    case 2:
                 //        {
                 //            return "E" + acc + IntervalFromC0.Octaves0;
@@ -563,7 +567,7 @@ namespace mus
                 //        {
                 //            return "F" + acc + IntervalFromC0.Octaves;
                 //        }
-                        
+
                 //    case 4:
                 //        {
                 //            return "G" + acc + IntervalFromC0.Octaves;
@@ -573,7 +577,7 @@ namespace mus
                 //        {
                 //            return "A" + acc + IntervalFromC0.Octaves0;
                 //        }
-                        
+
                 //    case 6:
                 //        {
                 //            return "B" + acc + IntervalFromC0.Octaves;
@@ -584,521 +588,575 @@ namespace mus
             }
         }
 
+        public class Mode
+        {
+
+            public int Q1 { get; }
+            public int Q2 { get; }
+            public int Q3 { get; }
+            public int Q4 { get; }
+            public int Q5 { get; }
+            public int Q6 { get; }
+            public int Q7 { get; }
+
+            public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7)
+            {
+                Q1 = q1;
+                Q2 = q2;
+                Q3 = q3;
+                Q4 = q4;
+                Q5 = q5;
+                Q6 = q6;
+                Q7 = q7;
+            }
+
+            public static readonly Mode Zero = new Mode();
+
+            private Mode()
+            {
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Mode mode &&
+                       Q1 == mode.Q1 &&
+                       Q2 == mode.Q2 &&
+                       Q3 == mode.Q3 &&
+                       Q4 == mode.Q4 &&
+                       Q5 == mode.Q5 &&
+                       Q6 == mode.Q6 &&
+                       Q7 == mode.Q7;
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = -2001665520;
+                hashCode = hashCode * -1521134295 + Q1.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q2.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q3.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q4.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q5.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q6.GetHashCode();
+                hashCode = hashCode * -1521134295 + Q7.GetHashCode();
+                return hashCode;
+            }
+        }
+
         #endregion
 
     }
 }
 
-        //public enum Inversion : int
-        //{
-        //    Root_Position_,
-        //    First_Inversion_b,
-        //    Second_Inversion_c,
-        //    Third_Inversion_d
-        //}
+//public enum Inversion : int
+//{
+//    Root_Position_,
+//    First_Inversion_b,
+//    Second_Inversion_c,
+//    Third_Inversion_d
+//}
 
-        //[ImmutableObject(true)]
-        //public sealed class CharacterType : UserInstances
-        //{
-        //    private QualityMi iThird;
-        //    private QualityPf iFifth;
-        //    private QualityMi? iSeventh;
-        //    private char iCharacter;
-        //    private bool iUpper;
+//[ImmutableObject(true)]
+//public sealed class CharacterType : UserInstances
+//{
+//    private QualityMi iThird;
+//    private QualityPf iFifth;
+//    private QualityMi? iSeventh;
+//    private char iCharacter;
+//    private bool iUpper;
 
-        //    public SimpleInterval Third
-        //    {
-        //        get
-        //        {
-        //            return new SimpleInterval(SimpleDist.2, iThird);
-        //        }
-        //    }
+//    public SimpleInterval Third
+//    {
+//        get
+//        {
+//            return new SimpleInterval(SimpleDist.2, iThird);
+//        }
+//    }
 
-        //    public SimpleInterval Fifth
-        //    {
-        //        get
-        //        {
-        //            return new SimpleInterval(SimpleDist.4, iFifth);
-        //        }
-        //    }
+//    public SimpleInterval Fifth
+//    {
+//        get
+//        {
+//            return new SimpleInterval(SimpleDist.4, iFifth);
+//        }
+//    }
 
-        //    public SimpleInterval? Seventh
-        //    {
-        //        get
-        //        {
-        //            if (iSeventh.HasValue)
-        //            {
-        //                return new SimpleInterval(SimpleDist.6, iSeventh.Value);
-        //            }
-        //            else
-        //            {
-        //                return default;
-        //            }
-        //        }
-        //    }
+//    public SimpleInterval? Seventh
+//    {
+//        get
+//        {
+//            if (iSeventh.HasValue)
+//            {
+//                return new SimpleInterval(SimpleDist.6, iSeventh.Value);
+//            }
+//            else
+//            {
+//                return default;
+//            }
+//        }
+//    }
 
-        //    public SimpleInterval get_int(SimpleDist Degree)
-        //    {
-        //        switch (Degree)
-        //        {
-        //            case SimpleDist.2:
-        //                {
-        //                    return Third;
-        //                }
+//    public SimpleInterval get_int(SimpleDist Degree)
+//    {
+//        switch (Degree)
+//        {
+//            case SimpleDist.2:
+//                {
+//                    return Third;
+//                }
 
-        //            case SimpleDist.4:
-        //                {
-        //                    return Fifth;
-        //                }
+//            case SimpleDist.4:
+//                {
+//                    return Fifth;
+//                }
 
-        //            case SimpleDist.6:
-        //                {
-        //                    return Seventh.Value;
-        //                }
-        //        }
+//            case SimpleDist.6:
+//                {
+//                    return Seventh.Value;
+//                }
+//        }
 
-        //        return default;
-        //    }
+//        return default;
+//    }
 
-        //    /// <summary>Safe</summary>
-        //    public char Character
-        //    {
-        //        get
-        //        {
-        //            return iCharacter;
-        //        }
-        //    }
+//    /// <summary>Safe</summary>
+//    public char Character
+//    {
+//        get
+//        {
+//            return iCharacter;
+//        }
+//    }
 
-        //    /// <summary>Safe</summary>
-        //    public bool Upper
-        //    {
-        //        get
-        //        {
-        //            return iUpper;
-        //        }
-        //    }
+//    /// <summary>Safe</summary>
+//    public bool Upper
+//    {
+//        get
+//        {
+//            return iUpper;
+//        }
+//    }
 
-        //    /// <exception cref="ArgumentNullException">Name</exception>
-        //    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
-        //    public CharacterType(string Name, QualityMi pThird, QualityPf pFifth, QualityMi? pSeventh, char pCharacter, bool pUpper) : base()
-        //    {
-        //        if (Name is null)
-        //            throw new ArgumentNullException("Name");
-        //        if ((Name ?? "") == (string.Empty ?? ""))
-        //            throw new ArgumentException("Empty", "Name");
-        //        if (Names().Contains(Name))
-        //            throw new ArgumentException("Duplicate", "Name");
-        //        if (Name.Contains(Conversions.ToString(':')))
-        //            throw new ArgumentException("Contains colon", "Name");
-        //        iThird = pThird;
-        //        iFifth = pFifth;
-        //        iSeventh = pSeventh;
-        //        iCharacter = pCharacter;
-        //        iUpper = pUpper;
-        //        Add(typeof(CharacterType), Name);
-        //    }
+//    /// <exception cref="ArgumentNullException">Name</exception>
+//    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
+//    public CharacterType(string Name, QualityMi pThird, QualityPf pFifth, QualityMi? pSeventh, char pCharacter, bool pUpper) : base()
+//    {
+//        if (Name is null)
+//            throw new ArgumentNullException("Name");
+//        if ((Name ?? "") == (string.Empty ?? ""))
+//            throw new ArgumentException("Empty", "Name");
+//        if (Names().Contains(Name))
+//            throw new ArgumentException("Duplicate", "Name");
+//        if (Name.Contains(Conversions.ToString(':')))
+//            throw new ArgumentException("Contains colon", "Name");
+//        iThird = pThird;
+//        iFifth = pFifth;
+//        iSeventh = pSeventh;
+//        iCharacter = pCharacter;
+//        iUpper = pUpper;
+//        Add(typeof(CharacterType), Name);
+//    }
 
-        //    protected override bool Deserialize(string Contents)
-        //    {
-        //        var Parts = Contents.Split(';');
-        //        if (Parts.Length != 6)
-        //            return false;
-        //        var NewParts = new int[3];
-        //        for (int i = 0; i <= 2; i++)
-        //        {
-        //            if (!int.TryParse(Parts[i], out NewParts[i]))
-        //                return false;
-        //        }
+//    protected override bool Deserialize(string Contents)
+//    {
+//        var Parts = Contents.Split(';');
+//        if (Parts.Length != 6)
+//            return false;
+//        var NewParts = new int[3];
+//        for (int i = 0; i <= 2; i++)
+//        {
+//            if (!int.TryParse(Parts[i], out NewParts[i]))
+//                return false;
+//        }
 
-        //        iThird = (QualityMi)Conversions.ToInteger(NewParts[0]);
-        //        iFifth = (QualityPf)Conversions.ToInteger(NewParts[1]);
-        //        iSeventh = (QualityMi)Conversions.ToInteger(NewParts[2]);
-        //        if ((Parts[3] ?? "") == (string.Empty ?? ""))
-        //            iSeventh = default;
-        //        iUpper = (Parts[4] ?? "") != (string.Empty ?? "");
-        //        int CharacterInt;
-        //        if (!int.TryParse(Parts[5], out CharacterInt) || CharacterInt < -32768 || CharacterInt > 65535)
-        //            return false;
-        //        iCharacter = (char)CharacterInt;
-        //        return true;
-        //    }
+//        iThird = (QualityMi)Conversions.ToInteger(NewParts[0]);
+//        iFifth = (QualityPf)Conversions.ToInteger(NewParts[1]);
+//        iSeventh = (QualityMi)Conversions.ToInteger(NewParts[2]);
+//        if ((Parts[3] ?? "") == (string.Empty ?? ""))
+//            iSeventh = default;
+//        iUpper = (Parts[4] ?? "") != (string.Empty ?? "");
+//        int CharacterInt;
+//        if (!int.TryParse(Parts[5], out CharacterInt) || CharacterInt < -32768 || CharacterInt > 65535)
+//            return false;
+//        iCharacter = (char)CharacterInt;
+//        return true;
+//    }
 
-        //    protected override string Serialize()
-        //    {
-        //        if (iSeventh.HasValue)
-        //        {
-        //            return ((int)iThird).ToString() + ';' + (int)iFifth + ';' + Conversions.ToInteger(iSeventh) + (Upper ? ";T;T;" : ";T;;") + Strings.AscW(iCharacter);
-        //        }
-        //        else
-        //        {
-        //            return ((int)iThird).ToString() + ';' + (int)iFifth + (Upper ? ";0;;T;" : ";0;;;") + Strings.AscW(iCharacter);
-        //        }
-        //    }
+//    protected override string Serialize()
+//    {
+//        if (iSeventh.HasValue)
+//        {
+//            return ((int)iThird).ToString() + ';' + (int)iFifth + ';' + Conversions.ToInteger(iSeventh) + (Upper ? ";T;T;" : ";T;;") + Strings.AscW(iCharacter);
+//        }
+//        else
+//        {
+//            return ((int)iThird).ToString() + ';' + (int)iFifth + (Upper ? ";0;;T;" : ";0;;;") + Strings.AscW(iCharacter);
+//        }
+//    }
 
-        //    private CharacterType() : base()
-        //    {
-        //    }
+//    private CharacterType() : base()
+//    {
+//    }
 
-        //    /// <summary>Safe, *:*</summary>
-        //    public static IEnumerable<string> Names()
-        //    {
-        //        return (IEnumerable<string>)Names().ElementAtOrDefault(typeof(CharacterType));
-        //    }
+//    /// <summary>Safe, *:*</summary>
+//    public static IEnumerable<string> Names()
+//    {
+//        return (IEnumerable<string>)Names().ElementAtOrDefault(typeof(CharacterType));
+//    }
 
-        //    /// <summary>*</summary>
-        //    /// <exception cref="ArgumentNullException">Name</exception>
-        //    /// <exception cref="ArgumentException">Not listed or invalid</exception>
-        //    public static CharacterType Instance(string Name)
-        //    {
-        //        if (Name is null)
-        //            throw new ArgumentNullException("Name");
-        //        return Instance(typeof(CharacterType), Name, new CharacterType());
-        //    }
+//    /// <summary>*</summary>
+//    /// <exception cref="ArgumentNullException">Name</exception>
+//    /// <exception cref="ArgumentException">Not listed or invalid</exception>
+//    public static CharacterType Instance(string Name)
+//    {
+//        if (Name is null)
+//            throw new ArgumentNullException("Name");
+//        return Instance(typeof(CharacterType), Name, new CharacterType());
+//    }
 
-        //    public override string ToString()
-        //    {
-        //        string ToStringRet = default;
-        //        ToStringRet = Third.ToString();
-        //        ToStringRet += ", " + Fifth.ToString();
-        //        if (iSeventh.HasValue)
-        //            ToStringRet += ", " + Seventh.ToString();
-        //        if (iCharacter != default(char))
-        //            ToStringRet += ", " + iCharacter;
-        //        if (iUpper)
-        //            return ToStringRet.ToUpper();
-        //        return ToStringRet;
-        //    }
-        //}
+//    public override string ToString()
+//    {
+//        string ToStringRet = default;
+//        ToStringRet = Third.ToString();
+//        ToStringRet += ", " + Fifth.ToString();
+//        if (iSeventh.HasValue)
+//            ToStringRet += ", " + Seventh.ToString();
+//        if (iCharacter != default(char))
+//            ToStringRet += ", " + iCharacter;
+//        if (iUpper)
+//            return ToStringRet.ToUpper();
+//        return ToStringRet;
+//    }
+//}
 
-        //[ImmutableObject(true)]
-        //public sealed class Mode : UserInstances
-        //{
-        //    private QualityMi _2;
-        //    private QualityMi _3;
-        //    private QualityPf _4;
-        //    private QualityPf _5;
-        //    private QualityMi _6;
-        //    private QualityMi _7;
+//[ImmutableObject(true)]
+//public sealed class Mode : UserInstances
+//{
+//    private QualityMi _2;
+//    private QualityMi _3;
+//    private QualityPf _4;
+//    private QualityPf _5;
+//    private QualityMi _6;
+//    private QualityMi _7;
 
-        //    private int get_Quality(SimpleDist Number)
-        //    {
-        //        switch (Number)
-        //        {
-        //            case SimpleDist.4:
-        //                {
-        //                    return (int)_5;
-        //                }
+//    private int get_Quality(SimpleDist Number)
+//    {
+//        switch (Number)
+//        {
+//            case SimpleDist.4:
+//                {
+//                    return (int)_5;
+//                }
 
-        //            case SimpleDist.3:
-        //                {
-        //                    return (int)_4;
-        //                }
+//            case SimpleDist.3:
+//                {
+//                    return (int)_4;
+//                }
 
-        //            case SimpleDist.0:
-        //                {
-        //                    return (int)QualityPf._Perfect;
-        //                }
+//            case SimpleDist.0:
+//                {
+//                    return (int)QualityPf._Perfect;
+//                }
 
-        //            case SimpleDist.1:
-        //                {
-        //                    return (int)_2;
-        //                }
+//            case SimpleDist.1:
+//                {
+//                    return (int)_2;
+//                }
 
-        //            case SimpleDist.6:
-        //                {
-        //                    return (int)_7;
-        //                }
+//            case SimpleDist.6:
+//                {
+//                    return (int)_7;
+//                }
 
-        //            case SimpleDist.5:
-        //                {
-        //                    return (int)_6;
-        //                }
+//            case SimpleDist.5:
+//                {
+//                    return (int)_6;
+//                }
 
-        //            case SimpleDist.2:
-        //                {
-        //                    return (int)_3;
-        //                }
+//            case SimpleDist.2:
+//                {
+//                    return (int)_3;
+//                }
 
-        //            default:
-        //                {
-        //                    throw new ArgumentException();
-        //                    break;
-        //                }
-        //        }
-        //    }
+//            default:
+//                {
+//                    throw new ArgumentException();
+//                    break;
+//                }
+//        }
+//    }
 
-        //    public SimpleInterval get_Interval(SimpleDist Number)
-        //    {
-        //        return new SimpleInterval(get_Quality(Number), Number);
-        //    }
+//    public SimpleInterval get_Interval(SimpleDist Number)
+//    {
+//        return new SimpleInterval(get_Quality(Number), Number);
+//    }
 
-        //    /// <exception cref="ArgumentNullException">Name</exception>
-        //    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
-        //    public Mode(string Name, QualityMi p2, QualityMi p3, QualityPf p4, QualityPf p5, QualityMi p6, QualityMi p7) : base()
-        //    {
-        //        if (Name is null)
-        //            throw new ArgumentNullException("Name");
-        //        if ((Name ?? "") == (string.Empty ?? ""))
-        //            throw new ArgumentException("Empty", "Name");
-        //        if (Names().Contains(Name))
-        //            throw new ArgumentException("Duplicate", "Name");
-        //        if (Name.Contains(Conversions.ToString(':')))
-        //            throw new ArgumentException("Contains colon", "Name");
-        //        _2 = p2;
-        //        _3 = p3;
-        //        _4 = p4;
-        //        _5 = p5;
-        //        _6 = p6;
-        //        _7 = p7;
-        //        Add(typeof(Mode), Name);
-        //    }
+//    /// <exception cref="ArgumentNullException">Name</exception>
+//    /// <exception cref="ArgumentException">Name Empty, contains colon or duplicate</exception>
+//    public Mode(string Name, QualityMi p2, QualityMi p3, QualityPf p4, QualityPf p5, QualityMi p6, QualityMi p7) : base()
+//    {
+//        if (Name is null)
+//            throw new ArgumentNullException("Name");
+//        if ((Name ?? "") == (string.Empty ?? ""))
+//            throw new ArgumentException("Empty", "Name");
+//        if (Names().Contains(Name))
+//            throw new ArgumentException("Duplicate", "Name");
+//        if (Name.Contains(Conversions.ToString(':')))
+//            throw new ArgumentException("Contains colon", "Name");
+//        _2 = p2;
+//        _3 = p3;
+//        _4 = p4;
+//        _5 = p5;
+//        _6 = p6;
+//        _7 = p7;
+//        Add(typeof(Mode), Name);
+//    }
 
-        //    protected override bool Deserialize(string Contents)
-        //    {
-        //        var Parts = Contents.Split(';');
-        //        var NewParts = new int[6];
-        //        if (Parts.Length != 6)
-        //            return false;
-        //        for (int i = 0; i <= 5; i++)
-        //        {
-        //            if (!int.TryParse(Parts[i], out NewParts[i]))
-        //                return false;
-        //        }
+//    protected override bool Deserialize(string Contents)
+//    {
+//        var Parts = Contents.Split(';');
+//        var NewParts = new int[6];
+//        if (Parts.Length != 6)
+//            return false;
+//        for (int i = 0; i <= 5; i++)
+//        {
+//            if (!int.TryParse(Parts[i], out NewParts[i]))
+//                return false;
+//        }
 
-        //        _2 = (QualityMi)NewParts[0];
-        //        _3 = (QualityMi)NewParts[1];
-        //        _4 = (QualityPf) NewParts[2];
-        //        _5 = (QualityPf) NewParts[3];
-        //        _6 = (QualityMi)NewParts[4];
-        //        _7 = (QualityMi)NewParts[5];
-        //        return true;
-        //    }
+//        _2 = (QualityMi)NewParts[0];
+//        _3 = (QualityMi)NewParts[1];
+//        _4 = (QualityPf) NewParts[2];
+//        _5 = (QualityPf) NewParts[3];
+//        _6 = (QualityMi)NewParts[4];
+//        _7 = (QualityMi)NewParts[5];
+//        return true;
+//    }
 
-        //    protected override string Serialize()
-        //    {
-        //        return ((int)_2).ToString() + ';' + (int)_3 + ';' + (int)_4 + ';' + (int)_5 + ';' + (int)_6 + ';' + (int)_7;
-        //    }
+//    protected override string Serialize()
+//    {
+//        return ((int)_2).ToString() + ';' + (int)_3 + ';' + (int)_4 + ';' + (int)_5 + ';' + (int)_6 + ';' + (int)_7;
+//    }
 
-        //    public override string ToString()
-        //    {
-        //        string ToStringRet = default;
-        //        ToStringRet = string.Empty;
-        //        for (int i = 0; i <= 6; i++)
-        //            ToStringRet += ", " + get_Interval((SimpleDist)Conversions.ToInteger(i)).ToString();
-        //        ToStringRet = ToStringRet.Substring(2);
-        //        return ToStringRet;
-        //    }
+//    public override string ToString()
+//    {
+//        string ToStringRet = default;
+//        ToStringRet = string.Empty;
+//        for (int i = 0; i <= 6; i++)
+//            ToStringRet += ", " + get_Interval((SimpleDist)Conversions.ToInteger(i)).ToString();
+//        ToStringRet = ToStringRet.Substring(2);
+//        return ToStringRet;
+//    }
 
-        //    private Mode() : base()
-        //    {
-        //    }
+//    private Mode() : base()
+//    {
+//    }
 
-        //    /// <summary>Safe, *:*</summary>
-        //    public static IEnumerable<string> Names()
-        //    {
-        //        return (IEnumerable<string>)Names().ElementAtOrDefault(typeof(Mode));
-        //    }
+//    /// <summary>Safe, *:*</summary>
+//    public static IEnumerable<string> Names()
+//    {
+//        return (IEnumerable<string>)Names().ElementAtOrDefault(typeof(Mode));
+//    }
 
-        //    /// <summary>*</summary>
-        //    /// <exception cref="ArgumentNullException">Name</exception>
-        //    /// <exception cref="ArgumentException">Not listed or invalid</exception>
-        //    public static Mode Instance(string Name)
-        //    {
-        //        if (Name is null)
-        //            throw new ArgumentNullException("Name");
-        //        return Instance(typeof(Mode), Name, new Mode());
-        //    }
-        //}
+//    /// <summary>*</summary>
+//    /// <exception cref="ArgumentNullException">Name</exception>
+//    /// <exception cref="ArgumentException">Not listed or invalid</exception>
+//    public static Mode Instance(string Name)
+//    {
+//        if (Name is null)
+//            throw new ArgumentNullException("Name");
+//        return Instance(typeof(Mode), Name, new Mode());
+//    }
+//}
 
-        //// not quite finished. serializxation...
-        //public struct Key
-        //{
-        //    public Key(SimpleInterval pTonic, Mode pScale)
-        //    {
-        //        Tonic = pTonic;
-        //        Scale = pScale;
-        //    }
+//// not quite finished. serializxation...
+//public struct Key
+//{
+//    public Key(SimpleInterval pTonic, Mode pScale)
+//    {
+//        Tonic = pTonic;
+//        Scale = pScale;
+//    }
 
-        //    public SimpleInterval Tonic;
-        //    public Mode Scale;
-        //}
+//    public SimpleInterval Tonic;
+//    public Mode Scale;
+//}
 
-        //// no error scrutiny, complete
-        //// no validation d with 7
-        //[Serial]
-        //public sealed class Chord : IEquatable<Chord>
-        //{
-        //    public static bool operator ==(Chord left, Chord right)
-        //    {
-        //        if (ReferenceEquals(left, right))
-        //            return true;
-        //        if (left is null || right is null)
-        //            return false;
-        //        return left.iRoot == right.iRoot && left.iCharacter == right.iCharacter;
-        //    }
+//// no error scrutiny, complete
+//// no validation d with 7
+//[Serial]
+//public sealed class Chord : IEquatable<Chord>
+//{
+//    public static bool operator ==(Chord left, Chord right)
+//    {
+//        if (ReferenceEquals(left, right))
+//            return true;
+//        if (left is null || right is null)
+//            return false;
+//        return left.iRoot == right.iRoot && left.iCharacter == right.iCharacter;
+//    }
 
-        //    public static bool operator !=(Chord left, Chord right)
-        //    {
-        //        return !(left == right);
-        //    }
+//    public static bool operator !=(Chord left, Chord right)
+//    {
+//        return !(left == right);
+//    }
 
-        //    public override bool Equals(object obj)
-        //    {
-        //        return (this) == obj as Chord;
-        //    }
+//    public override bool Equals(object obj)
+//    {
+//        return (this) == obj as Chord;
+//    }
 
-        //    public override int GetHashCode()
-        //    {
-        //        return iCharacter.GetHashCode << 20 ^ iRoot.GetHashCode();
-        //    }
+//    public override int GetHashCode()
+//    {
+//        return iCharacter.GetHashCode << 20 ^ iRoot.GetHashCode();
+//    }
 
-        //    public bool Equals(Chord other)
-        //    {
-        //        return (this) == other;
-        //    }
+//    public bool Equals(Chord other)
+//    {
+//        return (this) == other;
+//    }
 
-        //    // Private Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
-        //    // info.AddValue("iRoot.Number", iRoot.Number)
-        //    // info.AddValue("iRoot.Quality", iRoot.Quality)
-        //    // info.AddValue("iCharacter", Character.Names.Where(Function(x) Character.Instance(x) = iCharacter)(0))
-        //    // End Sub
+//    // Private Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+//    // info.AddValue("iRoot.Number", iRoot.Number)
+//    // info.AddValue("iRoot.Quality", iRoot.Quality)
+//    // info.AddValue("iCharacter", Character.Names.Where(Function(x) Character.Instance(x) = iCharacter)(0))
+//    // End Sub
 
-        //    // Public Sub New(info As SerializationInfo, context As StreamingContext)
-        //    // iRoot.Number = CType(info.GetInt32("iRoot.Number"), SimpleDist)
-        //    // iRoot.Quality = info.GetInt32("iRoot.Quality")
-        //    // iCharacter = Character.Instance(info.GetString("iCharacter"))
-        //    // End Sub
+//    // Public Sub New(info As SerializationInfo, context As StreamingContext)
+//    // iRoot.Number = CType(info.GetInt32("iRoot.Number"), SimpleDist)
+//    // iRoot.Quality = info.GetInt32("iRoot.Quality")
+//    // iCharacter = Character.Instance(info.GetString("iCharacter"))
+//    // End Sub
 
-        //    private SimpleInterval iRoot;
-        //    private CharacterType iCharacter;
+//    private SimpleInterval iRoot;
+//    private CharacterType iCharacter;
 
-        //    public Chord(SimpleInterval Root, CharacterType Character)
-        //    {
-        //        iRoot = Root;
-        //        iCharacter = Character;
-        //    }
+//    public Chord(SimpleInterval Root, CharacterType Character)
+//    {
+//        iRoot = Root;
+//        iCharacter = Character;
+//    }
 
-        //    /// <summary>Safe</summary>
-        //    public CharacterType Character
-        //    {
-        //        get
-        //        {
-        //            return iCharacter;
-        //        }
-        //    }
+//    /// <summary>Safe</summary>
+//    public CharacterType Character
+//    {
+//        get
+//        {
+//            return iCharacter;
+//        }
+//    }
 
-        //    /// <summary>Safe</summary>
-        //    public SimpleInterval Root
-        //    {
-        //        get
-        //        {
-        //            return iRoot;
-        //        }
-        //    }
+//    /// <summary>Safe</summary>
+//    public SimpleInterval Root
+//    {
+//        get
+//        {
+//            return iRoot;
+//        }
+//    }
 
-        //    public SimpleInterval GetThird
-        //    {
-        //        get
-        //        {
-        //            return iRoot + iCharacter.Third;
-        //        }
-        //    }
+//    public SimpleInterval GetThird
+//    {
+//        get
+//        {
+//            return iRoot + iCharacter.Third;
+//        }
+//    }
 
-        //    public SimpleInterval GetFifth
-        //    {
-        //        get
-        //        {
-        //            return iRoot + iCharacter.Fifth;
-        //        }
-        //    }
+//    public SimpleInterval GetFifth
+//    {
+//        get
+//        {
+//            return iRoot + iCharacter.Fifth;
+//        }
+//    }
 
-        //    public SimpleInterval? GetSeventh
-        //    {
-        //        get
-        //        {
-        //            var obj = iCharacter.Seventh;
-        //            if (obj.HasValue)
-        //            {
-        //                return iRoot + obj.Value;
-        //            }
-        //            else
-        //            {
-        //                return default;
-        //            }
-        //        }
-        //    }
+//    public SimpleInterval? GetSeventh
+//    {
+//        get
+//        {
+//            var obj = iCharacter.Seventh;
+//            if (obj.HasValue)
+//            {
+//                return iRoot + obj.Value;
+//            }
+//            else
+//            {
+//                return default;
+//            }
+//        }
+//    }
 
-        //    // Public ReadOnly Property GetBass() As SimpleInterval
-        //    // Get
-        //    // Select Case iInversion
-        //    // Case Inversion.Root_Position_
-        //    // Return iRoot
-        //    // Case Inversion.First_Inversion_b
-        //    // Return GetThird()
-        //    // Case Inversion.Second_Inversion_c
-        //    // Return GetFifth()
-        //    // Case Inversion.Third_Inversion_d
-        //    // Return GetSeventh().Value
-        //    // End Select
-        //    // End Get
-        //    // End Property
+//    // Public ReadOnly Property GetBass() As SimpleInterval
+//    // Get
+//    // Select Case iInversion
+//    // Case Inversion.Root_Position_
+//    // Return iRoot
+//    // Case Inversion.First_Inversion_b
+//    // Return GetThird()
+//    // Case Inversion.Second_Inversion_c
+//    // Return GetFifth()
+//    // Case Inversion.Third_Inversion_d
+//    // Return GetSeventh().Value
+//    // End Select
+//    // End Get
+//    // End Property
 
-        //    // Public ReadOnly Property GetBassFromRoot() As SimpleInterval
-        //    // Get
-        //    // Select Case iInversion
-        //    // Case Inversion.Root_Position_
-        //    // Return Nothing
-        //    // Case Inversion.First_Inversion_b
-        //    // Return iCharacter.Third
-        //    // Case Inversion.Second_Inversion_c
-        //    // Return iCharacter.Fifth
-        //    // Case Inversion.Third_Inversion_d
-        //    // Return iCharacter.Seventh.Value
-        //    // End Select
-        //    // End Get
-        //    // End Property
+//    // Public ReadOnly Property GetBassFromRoot() As SimpleInterval
+//    // Get
+//    // Select Case iInversion
+//    // Case Inversion.Root_Position_
+//    // Return Nothing
+//    // Case Inversion.First_Inversion_b
+//    // Return iCharacter.Third
+//    // Case Inversion.Second_Inversion_c
+//    // Return iCharacter.Fifth
+//    // Case Inversion.Third_Inversion_d
+//    // Return iCharacter.Seventh.Value
+//    // End Select
+//    // End Get
+//    // End Property
 
-        //    public SimpleInterval[] Getints
-        //    {
-        //        get
-        //        {
-        //            var obj = GetSeventh;
-        //            if (obj.HasValue)
-        //            {
-        //                return new[] { iRoot, GetThird, GetFifth, obj.Value };
-        //            }
-        //            else
-        //            {
-        //                return new[] { iRoot, GetThird, GetFifth };
-        //            }
-        //        }
-        //    }
+//    public SimpleInterval[] Getints
+//    {
+//        get
+//        {
+//            var obj = GetSeventh;
+//            if (obj.HasValue)
+//            {
+//                return new[] { iRoot, GetThird, GetFifth, obj.Value };
+//            }
+//            else
+//            {
+//                return new[] { iRoot, GetThird, GetFifth };
+//            }
+//        }
+//    }
 
-        //    public SimpleInterval get_Getint(SimpleDist Degree)
-        //    {
-        //        switch (Degree)
-        //        {
-        //            case SimpleDist.0:
-        //                {
-        //                    return iRoot;
-        //                }
+//    public SimpleInterval get_Getint(SimpleDist Degree)
+//    {
+//        switch (Degree)
+//        {
+//            case SimpleDist.0:
+//                {
+//                    return iRoot;
+//                }
 
-        //            case SimpleDist.2:
-        //                {
-        //                    return GetThird;
-        //                }
+//            case SimpleDist.2:
+//                {
+//                    return GetThird;
+//                }
 
-        //            case SimpleDist.4:
-        //                {
-        //                    return GetFifth;
-        //                }
+//            case SimpleDist.4:
+//                {
+//                    return GetFifth;
+//                }
 
-        //            case SimpleDist.6:
-        //                {
-        //                    return GetSeventh.Value;
-        //                }
-        //        }
+//            case SimpleDist.6:
+//                {
+//                    return GetSeventh.Value;
+//                }
+//        }
 
-        //        return default;
-        //    }
-        //}
+//        return default;
+//    }
+//}
