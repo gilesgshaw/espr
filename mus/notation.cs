@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 //convention - major is 0
+//Number is traditionally stored as offset starting from 0...
 
 namespace mus
 {
@@ -41,6 +42,7 @@ namespace mus
             }
         }
 
+        //offset is from 0 to 6
         public static class Degree
         {
 
@@ -245,6 +247,7 @@ namespace mus
             }
         }
 
+        //placeholder
         public static string QualityName()
         {
             //remember new convention
@@ -281,48 +284,45 @@ namespace mus
 
         }
 
-        public static char AccidentalSymbol()
+        //should this throw the exception?
+        public static string AccidentalSymbol(int alt)
         {
-            throw new NotImplementedException();
-            //private static string GetAccidental(int alt)
-            //{
-            //    switch (alt)
-            //    {
-            //        case -2:
-            //            {
-            //                return "𝄫";
-            //            }
+            switch (alt)
+            {
+                case -2:
+                    {
+                        return "𝄫";
+                    }
 
-            //        case -1:
-            //            {
-            //                return "♭";
-            //            }
+                case -1:
+                    {
+                        return "♭";
+                    }
 
-            //        case 0:
-            //            {
-            //                return string.Empty;
-            //            }
+                case 0:
+                    {
+                        return string.Empty;
+                    }
 
-            //        case 1:
-            //            {
-            //                return "♯";
-            //            }
+                case 1:
+                    {
+                        return "♯";
+                    }
 
-            //        case 2:
-            //            {
-            //                return "𝄪";
-            //            }
+                case 2:
+                    {
+                        return "𝄪";
+                    }
 
-            //        default:
-            //            {
-            //                throw new NotImplementedException();
-            //            }
-            //    }
-            //}
-
+                default:
+                    {
+                        throw new NotImplementedException();
+                    }
+            }
         }
 
         // compared by...
+        // consistent naming - rem vs res
         public struct Interval : IEquatable<Interval>, IComparable<Interval>
         {
 
@@ -543,51 +543,53 @@ namespace mus
                 return a.IntervalFromC0 - b.IntervalFromC0;
             }
 
+            //should this throw the exception?
             public override string ToString()
             {
-                //string acc = AccidentalSymbol(IntervalFromC0.Interval.Semiints - Mode.Instance("Ionian").get_Interval(IntervalFromC0.Interval.Number).Semiints);
-                //switch (IntervalFromC0.Residue.Number)
-                //{
-                //    case 0:
-                //        {
-                //            return "C" + acc + IntervalFromC0.Octaves;
-                //        }
+                string acc = AccidentalSymbol(IntervalFromC0.Quality - Mode.Zero.QualByOffset(IntervalFromC0.NumberRem));
+                switch (IntervalFromC0.NumberRem)
+                {
+                    case 0:
+                        {
+                            return "C" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 1:
-                //        {
-                //            return "D" + acc + IntervalFromC0.Octaves;
-                //        }
+                    case 1:
+                        {
+                            return "D" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 2:
-                //        {
-                //            return "E" + acc + IntervalFromC0.Octaves0;
-                //        }
+                    case 2:
+                        {
+                            return "E" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 3:
-                //        {
-                //            return "F" + acc + IntervalFromC0.Octaves;
-                //        }
+                    case 3:
+                        {
+                            return "F" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 4:
-                //        {
-                //            return "G" + acc + IntervalFromC0.Octaves;
-                //        }
+                    case 4:
+                        {
+                            return "G" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 5:
-                //        {
-                //            return "A" + acc + IntervalFromC0.Octaves0;
-                //        }
+                    case 5:
+                        {
+                            return "A" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //    case 6:
-                //        {
-                //            return "B" + acc + IntervalFromC0.Octaves;
-                //        }
+                    case 6:
+                        {
+                            return "B" + acc + IntervalFromC0.Octaves;
+                        }
 
-                //}
-                return base.ToString();
+                }
+                throw new ArgumentException();
             }
         }
 
+        //this uses the wrong convention really
         public class Mode
         {
 
@@ -608,6 +610,52 @@ namespace mus
                 Q5 = q5;
                 Q6 = q6;
                 Q7 = q7;
+            }
+
+            public int QualByOffset(int offest)
+            {
+                 switch (offest)
+                {
+                    case 0:
+                        {
+                            return Q1;
+                        }
+
+                    case 1:
+                        {
+                            return Q2;
+                        }
+
+                    case 2:
+                        {
+                            return Q3;
+                        }
+
+                    case 3:
+                        {
+                            return Q4;
+                        }
+
+                    case 4:
+                        {
+                            return Q5;
+                        }
+
+                    case 5:
+                        {
+                            return Q6;
+                        }
+
+                    case 6:
+                        {
+                            return Q7;
+                        }
+
+                    default:
+                        {
+                            throw new ArgumentException();
+                        }
+                }
             }
 
             public static readonly Mode Zero = new Mode();
