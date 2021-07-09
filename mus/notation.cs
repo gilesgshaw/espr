@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-//major is 0
+//convention - major is 0
 
 namespace mus
 {
