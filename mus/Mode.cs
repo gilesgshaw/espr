@@ -6,7 +6,7 @@ namespace mus
     public static partial class notation
     {
         //this uses the wrong convention really
-        public class Mode
+        public class Mode : ICharactrer
         {
 
             public int Q1 { get; }
@@ -16,6 +16,14 @@ namespace mus
             public int Q5 { get; }
             public int Q6 { get; }
             public int Q7 { get; }
+
+            int? ICharactrer.Q1 => Q1;
+            int? ICharactrer.Q2 => Q2;
+            int? ICharactrer.Q3 => Q3;
+            int? ICharactrer.Q4 => Q4;
+            int? ICharactrer.Q5 => Q5;
+            int? ICharactrer.Q6 => Q6;
+            int? ICharactrer.Q7 => Q7;
 
             public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7)
             {
