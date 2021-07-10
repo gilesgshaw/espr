@@ -8,7 +8,7 @@ namespace mus
         
         // compared by...
         // consistent naming - rem vs res
-        public struct Interval : IEquatable<Interval>, IComparable<Interval>
+        public struct IntervalC : IEquatable<IntervalC>, IComparable<IntervalC>
         {
 
             //private static string GetOrdinalSuffix(int n)
@@ -30,13 +30,13 @@ namespace mus
             public int Semis;
             public int Number;
 
-            public Interval(int number, int semis)
+            public IntervalC(int number, int semis)
             {
                 Number = number;
                 Semis = semis;
             }
 
-            public Interval(int number, int quality, int octaves)
+            public IntervalC(int number, int quality, int octaves)
             {
                 Number = number + octaves * 7;
                 Semis = 0;
@@ -77,10 +77,10 @@ namespace mus
 
             public override bool Equals(object obj)
             {
-                return obj is Interval interval && Equals(interval);
+                return obj is IntervalC interval && Equals(interval);
             }
 
-            public bool Equals(Interval other)
+            public bool Equals(IntervalC other)
             {
                 return Semis == other.Semis &&
                        Number == other.Number;
@@ -94,63 +94,63 @@ namespace mus
                 return hashCode;
             }
 
-            public int CompareTo(Interval other)
+            public int CompareTo(IntervalC other)
             {
                 int result = Number.CompareTo(other.Number);
                 if (result != 0) return result;
                 return Semis.CompareTo(other.Semis);
             }
 
-            public static bool operator ==(Interval left, Interval right)
+            public static bool operator ==(IntervalC left, IntervalC right)
             {
                 return left.Equals(right);
             }
 
-            public static bool operator !=(Interval left, Interval right)
+            public static bool operator !=(IntervalC left, IntervalC right)
             {
                 return !(left == right);
             }
 
-            public static Interval operator +(Interval a, Interval b)
+            public static IntervalC operator +(IntervalC a, IntervalC b)
             {
-                return new Interval(a.Number + b.Number, a.Semis + b.Semis);
+                return new IntervalC(a.Number + b.Number, a.Semis + b.Semis);
             }
 
-            public static Interval operator -(Interval a)
+            public static IntervalC operator -(IntervalC a)
             {
-                return new Interval(-a.Number, -a.Semis);
+                return new IntervalC(-a.Number, -a.Semis);
             }
 
-            public static Interval operator -(Interval a, Interval b)
+            public static IntervalC operator -(IntervalC a, IntervalC b)
             {
-                return new Interval(a.Number - b.Number, a.Semis - b.Semis);
+                return new IntervalC(a.Number - b.Number, a.Semis - b.Semis);
             }
 
-            public static bool operator <(Interval left, Interval right)
+            public static bool operator <(IntervalC left, IntervalC right)
             {
                 return left.CompareTo(right) < 0;
             }
 
-            public static bool operator <=(Interval left, Interval right)
+            public static bool operator <=(IntervalC left, IntervalC right)
             {
                 return left.CompareTo(right) <= 0;
             }
 
-            public static bool operator >(Interval left, Interval right)
+            public static bool operator >(IntervalC left, IntervalC right)
             {
                 return left.CompareTo(right) > 0;
             }
 
-            public static bool operator >=(Interval left, Interval right)
+            public static bool operator >=(IntervalC left, IntervalC right)
             {
                 return left.CompareTo(right) >= 0;
             }
 
-            public Interval Residue
+            public IntervalC Residue
             {
                 get
                 {
-                    return this - new Interval(0, 0, Octaves);
+                    return this - new IntervalC(0, 0, Octaves);
                 }
             }
         }

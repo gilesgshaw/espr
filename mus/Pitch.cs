@@ -8,9 +8,9 @@ namespace mus
         // compared by...
         public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
         {
-            public Interval IntervalFromC0;
+            public IntervalC IntervalFromC0;
 
-            public Pitch(Interval IntervalFromC0)
+            public Pitch(IntervalC IntervalFromC0)
             {
                 this.IntervalFromC0 = IntervalFromC0;
             }
@@ -73,7 +73,7 @@ namespace mus
                 return obj is Pitch && (Pitch)obj == (this);
             }
 
-            public static Interval operator -(Pitch a, Pitch b)
+            public static IntervalC operator -(Pitch a, Pitch b)
             {
                 return a.IntervalFromC0 - b.IntervalFromC0;
             }
