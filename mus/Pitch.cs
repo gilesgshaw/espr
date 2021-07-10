@@ -81,8 +81,8 @@ namespace mus
             //should this throw the exception?
             public override string ToString()
             {
-                string acc = AccidentalSymbol(IntervalFromC0.Quality - Mode.Zero.QualByOffset(IntervalFromC0.NumberRem));
-                switch (IntervalFromC0.NumberRem)
+                string acc = AccidentalSymbol(IntervalFromC0.Quality - Mode.Zero.QualByOffset(IntervalFromC0.ResidueNumber));
+                switch (IntervalFromC0.ResidueNumber)
                 {
                     case 0:
                         {
