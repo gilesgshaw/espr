@@ -4,7 +4,7 @@ namespace mus
 {
     public static partial class notation
     {
-        
+
         //this uses the wrong convention really
         public abstract class Character
         {
@@ -16,9 +16,15 @@ namespace mus
             public abstract int? PQ6 { get; }
             public abstract int? PQ7 { get; }
 
-            public int? PQualByOffset(int offest)
+            public IntervalS? Interval(int number)
             {
-                switch (offest)
+                if (PQualByOffset(number).HasValue) return IntervalS.GetNew(number, PQualByOffset(number).Value);
+                return null;
+            }
+
+            public int? PQualByOffset(int number)
+            {
+                switch (number)
                 {
                     case 0:
                         {
