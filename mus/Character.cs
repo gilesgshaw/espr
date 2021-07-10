@@ -6,15 +6,15 @@ namespace mus
     {
 
         //this uses the wrong convention really
-        public abstract class Character
+        public class Character
         {
-            public abstract int? PQ1 { get; }
-            public abstract int? PQ2 { get; }
-            public abstract int? PQ3 { get; }
-            public abstract int? PQ4 { get; }
-            public abstract int? PQ5 { get; }
-            public abstract int? PQ6 { get; }
-            public abstract int? PQ7 { get; }
+            public virtual int? PQ1 { get; }
+            public virtual int? PQ2 { get; }
+            public virtual int? PQ3 { get; }
+            public virtual int? PQ4 { get; }
+            public virtual int? PQ5 { get; }
+            public virtual int? PQ6 { get; }
+            public virtual int? PQ7 { get; }
 
             public IntervalS? Interval(int number)
             {
