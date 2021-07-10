@@ -16,6 +16,17 @@ namespace mus
             public virtual int? PQ6 { get; }
             public virtual int? PQ7 { get; }
 
+            public Character(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7)
+            {
+                PQ1 = pQ1;
+                PQ2 = pQ2;
+                PQ3 = pQ3;
+                PQ4 = pQ4;
+                PQ5 = pQ5;
+                PQ6 = pQ6;
+                PQ7 = pQ7;
+            }
+
             public IntervalS? Interval(int number)
             {
                 if (PQualByOffset(number).HasValue) return IntervalS.GetNew(number, PQualByOffset(number).Value);
