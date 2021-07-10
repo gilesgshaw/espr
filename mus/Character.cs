@@ -6,7 +6,7 @@ namespace mus
     {
         
         //this uses the wrong convention really
-        public abstract class Charactrer
+        public abstract class Character
         {
             public abstract int? PQ1 { get; }
             public abstract int? PQ2 { get; }
