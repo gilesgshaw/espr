@@ -2,11 +2,10 @@
 
 namespace mus
 {
-
     public static partial class notation
     {
-        //this uses the wrong convention really
-        public class Mode : ICharactrer
+
+        public class Mode : Charactrer
         {
 
             public int Q1 { get; }
@@ -17,13 +16,13 @@ namespace mus
             public int Q6 { get; }
             public int Q7 { get; }
 
-            int? ICharactrer.Q1 => Q1;
-            int? ICharactrer.Q2 => Q2;
-            int? ICharactrer.Q3 => Q3;
-            int? ICharactrer.Q4 => Q4;
-            int? ICharactrer.Q5 => Q5;
-            int? ICharactrer.Q6 => Q6;
-            int? ICharactrer.Q7 => Q7;
+            public override int? PQ1 => this.Q1;
+            public override int? PQ2 => this.Q2;
+            public override int? PQ3 => this.Q3;
+            public override int? PQ4 => this.Q4;
+            public override int? PQ5 => this.Q5;
+            public override int? PQ6 => this.Q6;
+            public override int? PQ7 => this.Q7;
 
             public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7)
             {
@@ -34,52 +33,6 @@ namespace mus
                 Q5 = q5;
                 Q6 = q6;
                 Q7 = q7;
-            }
-
-            public int QualByOffset(int offest)
-            {
-                switch (offest)
-                {
-                    case 0:
-                        {
-                            return Q1;
-                        }
-
-                    case 1:
-                        {
-                            return Q2;
-                        }
-
-                    case 2:
-                        {
-                            return Q3;
-                        }
-
-                    case 3:
-                        {
-                            return Q4;
-                        }
-
-                    case 4:
-                        {
-                            return Q5;
-                        }
-
-                    case 5:
-                        {
-                            return Q6;
-                        }
-
-                    case 6:
-                        {
-                            return Q7;
-                        }
-
-                    default:
-                        {
-                            throw new ArgumentException();
-                        }
-                }
             }
 
             public static readonly Mode Zero = new Mode();
@@ -98,6 +51,11 @@ namespace mus
                        Q5 == mode.Q5 &&
                        Q6 == mode.Q6 &&
                        Q7 == mode.Q7;
+            }
+
+            public int QualByOffset(int offset)
+            {
+                return (int)PQualByOffset(offset);
             }
 
             public override int GetHashCode()
