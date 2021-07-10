@@ -24,7 +24,7 @@ namespace mus
             public override int? PQ6 => this.Q6;
             public override int? PQ7 => this.Q7;
 
-            public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7)
+            public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7) : base()
             {
                 Q1 = q1;
                 Q2 = q2;
@@ -37,7 +37,7 @@ namespace mus
 
             public static readonly Mode Zero = new Mode();
 
-            private Mode()
+            private Mode() : base()
             {
             }
 

@@ -16,6 +16,8 @@ namespace mus
             public virtual int? PQ6 { get; }
             public virtual int? PQ7 { get; }
 
+            public Character() { }
+
             public Character(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7)
             {
                 PQ1 = pQ1;
