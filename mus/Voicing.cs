@@ -12,6 +12,16 @@ namespace mus
             public IntervalS T { get; set; }
             public IntervalS B { get; set; }
 
+            public static VoicingS operator +(VoicingS a, IntervalS b)
+            {
+                return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
+            }
+            
+            public static VoicingS operator +(IntervalS b, VoicingS a)
+            {
+                return a + b;
+            }
+
             public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b)
             {
                 S = s;
