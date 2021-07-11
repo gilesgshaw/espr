@@ -106,6 +106,11 @@ namespace mus
                 Semis = 0;
                 Semis = quality - Quality;
             }
+            
+            public override string ToString()
+            {
+                return Octaves + ": " + QualityName(Quality, Degree.IsConsonant(ResidueNumber)) + " " + Degree.Interval(ResidueNumber);
+            }
 
             public int Quality => ResidueSemis - Degree.Semis(ResidueNumber);
 

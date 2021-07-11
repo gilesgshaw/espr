@@ -83,5 +83,36 @@ namespace mus
             } // IEnumerable<VoicingS> FromCharacter(Character c)
         }
 
+        public struct VoicingC
+        {
+            public IntervalC S { get; set; }
+            public IntervalC A { get; set; }
+            public IntervalC T { get; set; }
+            public IntervalC B { get; set; }
+
+            public static VoicingC operator +(VoicingC a, IntervalC b)
+            {
+                return new VoicingC(a.S + b, a.A + b, a.T + b, a.B + b);
+            }
+            
+            public static VoicingC operator +(IntervalC b, VoicingC a)
+            {
+                return a + b;
+            }
+
+            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b)
+            {
+                S = s;
+                A = a;
+                T = t;
+                B = b;
+            }
+
+            public override string ToString()
+            {
+                return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
+            }
+        }
+
     }
 }
