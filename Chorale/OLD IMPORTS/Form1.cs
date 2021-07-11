@@ -87,58 +87,6 @@ namespace Chorale
             c.Click += () => PlayMIDI(obj);
         }
 
-        public class MIDIData
-        {
-            public mdNotation.Pitch[][] Notes;
-            public mdNotation.Key Key;
-
-            public Bitmap GetBitmap()
-            {
-                var bars1 = new List<mdNotation.Display.Event[][]>();
-                var bars2 = new List<mdNotation.Display.Event[][]>();
-                for (int Index = 0, loopTo = Notes.Length - 1; Index <= loopTo; Index += 4)
-                {
-                    var voice1 = new List<mdNotation.Display.Event>();
-                    var voice2 = new List<mdNotation.Display.Event>();
-                    for (int SubIndex = Index, loopTo1 = Math.Min(Notes.Length - 1, Index + 3); SubIndex <= loopTo1; SubIndex++)
-                    {
-                        if (Notes[SubIndex].Length > 0)
-                            voice1.Add(new mdNotation.Display.Event() { Pitch = Notes[SubIndex][0], WholeDivisionPower = 2 });
-                        if (Notes[SubIndex].Length > 1)
-                            voice2.Add(new mdNotation.Display.Event() { Pitch = Notes[SubIndex][1], WholeDivisionPower = 2 });
-                    }
-
-                    bars1.Add(new[] { voice1.ToArray(), voice2.ToArray() });
-                    voice1 = new List<mdNotation.Display.Event>();
-                    voice2 = new List<mdNotation.Display.Event>();
-                    for (int SubIndex = Index, loopTo2 = Math.Min(Notes.Length - 1, Index + 3); SubIndex <= loopTo2; SubIndex++)
-                    {
-                        if (Notes[SubIndex].Length > 2)
-                            voice1.Add(new mdNotation.Display.Event() { Pitch = Notes[SubIndex][2], WholeDivisionPower = 2 });
-                        if (Notes[SubIndex].Length > 3)
-                            voice2.Add(new mdNotation.Display.Event() { Pitch = Notes[SubIndex][3], WholeDivisionPower = 2 });
-                    }
-
-                    bars2.Add(new[] { voice1.ToArray(), voice2.ToArray() });
-                }
-
-                var part1 = new mdNotation.Display.Part() { Bars = bars1.ToArray(), Clef = mdNotation.Display.Clef.Instance("Treble") };
-                var part2 = new mdNotation.Display.Part() { Bars = bars2.ToArray(), Clef = mdNotation.Display.Clef.Instance("Bass") };
-                var obj = new mdNotation.Display() { Parts = new[] { part1, part2 }, TS = mdNotation.Display.TimeSignature.Common, Key = Key };
-                return obj.Draw();
-            }
-        }
-
-        public void PlayMIDI(MIDIData data)
-        {
-            var thr = new System.Threading.Thread((System.Threading.ParameterizedThreadStart)(Tuple<MIDIData, MIDI.MIDIIO.MIDIOutput> x) => { using (new mdNotation.GeneralDisposable<MIDI.MIDIIO.MIDIOutput>(x.Item2, () => x.Item2.Dispose())) foreach (var Chord in x.Item1.Notes) { foreach (var Note in Chord) Invoke(new Action(() => x.Item2.SendMessage(new MIDI.MIDIEvents.MIDIEvent(new MIDI.MIDIEvents.MIDIEventData() { Pitch = (byte)Note.MIDIPitch, Velocity = 100 }, 1, MIDI.MIDIEvents.MIDIEventType.NoteOn)))); System.Threading.Thread.Sleep(1000); foreach (var Note in Chord) Invoke(new Action(() => x.Item2.SendMessage(new MIDI.MIDIEvents.MIDIEvent(new MIDI.MIDIEvents.MIDIEventData() { Pitch = (byte)Note.MIDIPitch, Velocity = 100 }, 1, MIDI.MIDIEvents.MIDIEventType.NoteOff)))); } });
-            var obj = default(MIDI.MIDIIO.MIDIOutput);
-            string args = null;
-            if (MIDI.MIDIIO.AskForMIDIOutDevice(ref obj, ref args))
-            {
-                thr.Start(Tuple.Create(data, obj));
-            }
-        }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
