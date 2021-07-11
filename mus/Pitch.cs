@@ -2,9 +2,46 @@
 
 namespace mus
 {
-
     public static partial class notation
     {
+        
+        //should this throw the exception?
+        private static string AccidentalSymbol(int alt)
+        {
+            switch (alt)
+            {
+                case -2:
+                    {
+                        return "𝄫";
+                    }
+
+                case -1:
+                    {
+                        return "♭";
+                    }
+
+                case 0:
+                    {
+                        return string.Empty;
+                    }
+
+                case 1:
+                    {
+                        return "♯";
+                    }
+
+                case 2:
+                    {
+                        return "𝄪";
+                    }
+
+                default:
+                    {
+                        throw new NotImplementedException();
+                    }
+            }
+        }
+
         // compared by...
         public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
         {
