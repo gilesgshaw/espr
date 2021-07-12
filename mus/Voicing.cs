@@ -114,23 +114,18 @@ namespace mus
                 return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
             }
 
-            //refers to MIDI pitches, as if relative to C0. Non-decreasing. Min and max.
+            //Bounds are min and max on semis. Non-decreasing.
             public static IEnumerable<VoicingC> FromSimple(VoicingS v, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
             {
-                var bGround = new Pitch(new IntervalC(v.B.ResidueNumber, v.B.Quality, 0));
-                var tGround = new Pitch(new IntervalC(v.T.ResidueNumber, v.T.Quality, 0));
-                var aGround = new Pitch(new IntervalC(v.A.ResidueNumber, v.A.Quality, 0));
-                var sGround = new Pitch(new IntervalC(v.S.ResidueNumber, v.S.Quality, 0));
+                var bMin = (int)Ceiling(((double)(bRange.Item1 - v.B.ResidueSemis)) / 12);
+                var tMin = (int)Ceiling(((double)(tRange.Item1 - v.T.ResidueSemis)) / 12);
+                var aMin = (int)Ceiling(((double)(aRange.Item1 - v.A.ResidueSemis)) / 12);
+                var sMin = (int)Ceiling(((double)(sRange.Item1 - v.S.ResidueSemis)) / 12);
 
-                var bMin = (int)Ceiling(((double)(bRange.Item1 - bGround.MIDIPitch)) / 12);
-                var tMin = (int)Ceiling(((double)(tRange.Item1 - tGround.MIDIPitch)) / 12);
-                var aMin = (int)Ceiling(((double)(aRange.Item1 - aGround.MIDIPitch)) / 12);
-                var sMin = (int)Ceiling(((double)(sRange.Item1 - sGround.MIDIPitch)) / 12);
-
-                var bMax = (int)Ceiling(((double)(bRange.Item2 + 1 - bGround.MIDIPitch)) / 12);
-                var tMax = (int)Ceiling(((double)(tRange.Item2 + 1 - tGround.MIDIPitch)) / 12);
-                var aMax = (int)Ceiling(((double)(aRange.Item2 + 1 - aGround.MIDIPitch)) / 12);
-                var sMax = (int)Ceiling(((double)(sRange.Item2 + 1 - sGround.MIDIPitch)) / 12);
+                var bMax = (int)Ceiling(((double)(bRange.Item2 + 1 - v.B.ResidueSemis)) / 12);
+                var tMax = (int)Ceiling(((double)(tRange.Item2 + 1 - v.T.ResidueSemis)) / 12);
+                var aMax = (int)Ceiling(((double)(aRange.Item2 + 1 - v.A.ResidueSemis)) / 12);
+                var sMax = (int)Ceiling(((double)(sRange.Item2 + 1 - v.S.ResidueSemis)) / 12);
 
                 for (int b = bMin; b < bMax; b++)
                 {
