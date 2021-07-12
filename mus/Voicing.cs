@@ -6,12 +6,12 @@ namespace mus
     public static partial class notation
     {
 
-        public struct VoicingS
+        public class VoicingS
         {
-            public IntervalS S { get; set; }
-            public IntervalS A { get; set; }
-            public IntervalS T { get; set; }
-            public IntervalS B { get; set; }
+            public IntervalS S { get; }
+            public IntervalS A { get; }
+            public IntervalS T { get; }
+            public IntervalS B { get; }
 
             public static VoicingS operator +(VoicingS a, IntervalS b)
             {
@@ -84,12 +84,12 @@ namespace mus
             } // IEnumerable<VoicingS> FromVariety(Variety c)
         }
 
-        public struct VoicingC
+        public class VoicingC
         {
-            public IntervalC S { get; set; }
-            public IntervalC A { get; set; }
-            public IntervalC T { get; set; }
-            public IntervalC B { get; set; }
+            public IntervalC S { get; }
+            public IntervalC A { get; }
+            public IntervalC T { get; }
+            public IntervalC B { get; }
 
             public static VoicingC operator +(VoicingC a, IntervalC b)
             {
