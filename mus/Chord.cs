@@ -16,8 +16,8 @@ namespace mus
                 Variety = variety;
             }
 
-            //returns (Root, Voicing, Absolute)
-            public IEnumerable<(IntervalS, VoicingC, VoicingC)> Instances((int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
+            //returns relative voicings
+            public IEnumerable<VoicingC> Instances((int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
             {
                 foreach (var v in VoicingS.FromVariety(Variety))
                 {
@@ -27,7 +27,7 @@ namespace mus
                         (aRange.Item1 - Root.ResidueSemis, aRange.Item2 - Root.ResidueSemis),
                         (sRange.Item1 - Root.ResidueSemis, sRange.Item2 - Root.ResidueSemis)))
                     {
-                        yield return (Root, V, Root + V);
+                        yield return V;
                     }
                 }
             }
