@@ -5,7 +5,7 @@ namespace mus
     public static partial class notation
     {
 
-        public class Mode : Character
+        public class Mode : Variety
         {
 
             public int Q1 { get; }

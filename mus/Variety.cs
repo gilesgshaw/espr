@@ -6,7 +6,7 @@ namespace mus
     {
 
         //this uses the wrong convention really
-        public class Character
+        public class Variety
         {
             public virtual int? PQ1 { get; }
             public virtual int? PQ2 { get; }
@@ -16,9 +16,9 @@ namespace mus
             public virtual int? PQ6 { get; }
             public virtual int? PQ7 { get; }
 
-            public Character() { }
+            public Variety() { }
 
-            public Character(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7)
+            public Variety(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7)
             {
                 PQ1 = pQ1;
                 PQ2 = pQ2;

@@ -36,7 +36,7 @@ namespace mus
                 return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
             }
 
-            public static IEnumerable<VoicingS> FromCharacter(Character c)
+            public static IEnumerable<VoicingS> FromVariety(Variety c)
             {
 
                 int[] profile = new int[7];
@@ -81,7 +81,7 @@ namespace mus
                     profile[b]--;
                 }
 
-            } // IEnumerable<VoicingS> FromCharacter(Character c)
+            } // IEnumerable<VoicingS> FromVariety(Variety c)
         }
 
         public struct VoicingC
