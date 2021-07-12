@@ -42,6 +42,7 @@ namespace mus
             }
         }
 
+        //SHOULD PROBABLY AVOID USING UNTIL EVERYTHING ELSE IS DEVELOPED.
         // compared by...
         public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
         {
