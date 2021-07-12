@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static System.Math;
 
 namespace mus
 {
@@ -16,7 +17,7 @@ namespace mus
             {
                 return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
             }
-            
+
             public static VoicingS operator +(IntervalS b, VoicingS a)
             {
                 return a + b;
@@ -94,7 +95,7 @@ namespace mus
             {
                 return new VoicingC(a.S + b, a.A + b, a.T + b, a.B + b);
             }
-            
+
             public static VoicingC operator +(IntervalC b, VoicingC a)
             {
                 return a + b;
@@ -111,6 +112,50 @@ namespace mus
             public override string ToString()
             {
                 return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
+            }
+
+            //refers to MIDI pitches, as if relative to C0. Non-decreasing. Min and max.
+            public static IEnumerable<VoicingC> FromSimple(VoicingS v, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
+            {
+                var bGround = new Pitch(new IntervalC(v.B.ResidueNumber, v.B.Quality, 0));
+                var tGround = new Pitch(new IntervalC(v.T.ResidueNumber, v.T.Quality, 0));
+                var aGround = new Pitch(new IntervalC(v.A.ResidueNumber, v.A.Quality, 0));
+                var sGround = new Pitch(new IntervalC(v.S.ResidueNumber, v.S.Quality, 0));
+
+                var bMin = (int)Ceiling(((double)(bRange.Item1 - bGround.MIDIPitch)) / 12);
+                var tMin = (int)Ceiling(((double)(tRange.Item1 - tGround.MIDIPitch)) / 12);
+                var aMin = (int)Ceiling(((double)(aRange.Item1 - aGround.MIDIPitch)) / 12);
+                var sMin = (int)Ceiling(((double)(sRange.Item1 - sGround.MIDIPitch)) / 12);
+
+                var bMax = (int)Ceiling(((double)(bRange.Item2 + 1 - bGround.MIDIPitch)) / 12);
+                var tMax = (int)Ceiling(((double)(tRange.Item2 + 1 - tGround.MIDIPitch)) / 12);
+                var aMax = (int)Ceiling(((double)(aRange.Item2 + 1 - aGround.MIDIPitch)) / 12);
+                var sMax = (int)Ceiling(((double)(sRange.Item2 + 1 - sGround.MIDIPitch)) / 12);
+
+                for (int b = bMin; b < bMax; b++)
+                {
+                    var B = new IntervalC(v.B.ResidueNumber, v.B.Quality, b);
+
+                    for (int t = tMin; t < tMax; t++)
+                    {
+                        var T = new IntervalC(v.T.ResidueNumber, v.T.Quality, t);
+                        if (T < B) continue;
+
+                        for (int a = aMin; a < aMax; a++)
+                        {
+                            var A = new IntervalC(v.A.ResidueNumber, v.A.Quality, a);
+                            if (A < T) continue;
+
+                            for (int s = sMin; s < sMax; s++)
+                            {
+                                var S = new IntervalC(v.S.ResidueNumber, v.S.Quality, s);
+                                if (S < A) continue;
+
+                                yield return new VoicingC(S, A, T, B);
+                            }
+                        }
+                    }
+                }
             }
         }
 
