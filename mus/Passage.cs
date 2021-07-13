@@ -33,10 +33,8 @@ namespace mus
                         tr += Abs(RootChange+AChange);
                         tr += Abs(RootChange+TChange);
                         tr += Abs(RootChange+BChange);
-                        if (ReferenceEquals(Chords[i], Chords[i - 1]) && Verts[i].Voicing.B.Residue == Verts[i - 1].Voicing.B.Residue)
-                        {
-                            tr += 60;
-                        }
+                        if (ReferenceEquals(Chords[i], Chords[i - 1]) && Verts[i].Voicing.B.Residue == Verts[i - 1].Voicing.B.Residue) tr += 50;
+                        if (ReferenceEquals(Chords[i], Chords[i - 1])) tr += 35;
                     }
                     return tr;
                 }
