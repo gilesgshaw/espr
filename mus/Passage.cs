@@ -8,11 +8,11 @@ namespace mus
         //could do with some optimisation...
         public class Passage : Valued
         {
-            IntervalS Tonic { get; }
-            IntervalS[] Roots { get; }
-            IntervalC[][] Pitches { get; } //satb
-            Vert[] Verts { get; }
-            Chord[] Chords { get; }
+            public IntervalS Tonic { get; }
+            public IntervalS[] Roots { get; }
+            public IntervalC[][] Pitches { get; } //satb
+            public Vert[] Verts { get; }
+            public Chord[] Chords { get; }
 
             private static Vert[] GetVerts(IntervalS tonic, Chord[] chords, IntervalC[][] pitches)
             {
