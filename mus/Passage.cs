@@ -6,29 +6,15 @@ namespace mus
     {
 
         //could do with some optimisation...
+        //for later should maybe store the pitches directly...
+        //and in fact they are probably the 'independant' data.
         public class Passage : Valued
         {
             public IntervalS Tonic { get; }
-            public IntervalS[] Roots { get; }
-            public IntervalC[][] Pitches { get; } //satb
             public Vert[] Verts { get; }
             public Chord[] Chords { get; }
 
-            private static Vert[] GetVerts(IntervalS tonic, Chord[] chords, IntervalC[][] pitches)
-            {
-                var Roots = Array.ConvertAll(chords, (x) => x.Root);
-                var Verts = new Vert[chords.Length];
-                for (int i = 0; i < chords.Length; i++)
-                {
-                    Verts[i] = new Vert(chords[i], new VoicingC(
-                        pitches[i][0] - tonic - Roots[i],
-                        pitches[i][1] - tonic - Roots[i],
-                        pitches[i][2] - tonic - Roots[i],
-                        pitches[i][3] - tonic - Roots[i],
-                        chords[i].Variety));
-                }
-                return Verts;
-            }
+            //public IntervalC[][] Pitches { get; } //satb
 
             public override double Penalty
             {
@@ -39,13 +25,11 @@ namespace mus
                 }
             }
 
-            public Passage(IntervalS tonic, Chord[] chords, IntervalC[][] pitches) : base()
+            public Passage(IntervalS tonic, Vert[] verts) : base()
             {
                 Tonic = tonic;
-                Chords = chords;
-                Roots = Array.ConvertAll(chords, (x) => x.Root);
-                Pitches = pitches;
-                Verts = GetVerts(tonic, chords, pitches);
+                Chords = Array.ConvertAll(verts, (x) => x.Chord);
+                Verts = verts;
             }
         }
 
