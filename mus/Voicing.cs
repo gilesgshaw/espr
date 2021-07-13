@@ -6,6 +6,7 @@ namespace mus
     public static partial class notation
     {
 
+        //constructor trusts the information given.
         public class VoicingS : Valued
         {
             public IntervalS S { get; }
@@ -13,20 +14,22 @@ namespace mus
             public IntervalS T { get; }
             public IntervalS B { get; }
 
-            public static VoicingS operator +(VoicingS a, IntervalS b)
-            {
-                return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
-            }
+            public Variety Variety { get; }
 
-            public static VoicingS operator -(VoicingS a, IntervalS b)
-            {
-                return new VoicingS(a.S - b, a.A - b, a.T - b, a.B - b);
-            }
+            //public static VoicingS operator +(VoicingS a, IntervalS b)
+            //{
+            //    return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
+            //}
 
-            public static VoicingS operator +(IntervalS b, VoicingS a)
-            {
-                return a + b;
-            }
+            //public static VoicingS operator -(VoicingS a, IntervalS b)
+            //{
+            //    return new VoicingS(a.S - b, a.A - b, a.T - b, a.B - b);
+            //}
+
+            //public static VoicingS operator +(IntervalS b, VoicingS a)
+            //{
+            //    return a + b;
+            //}
 
             public override double Penalty
             {
@@ -50,12 +53,13 @@ namespace mus
                 }
             }
 
-            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b) : base()
+            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b, Variety variety) : base()
             {
                 S = s;
                 A = a;
                 T = t;
                 B = b;
+                Variety = variety;
             }
 
             public override string ToString()
@@ -96,7 +100,7 @@ namespace mus
 
                                 if (complete)
                                 {
-                                    yield return new VoicingS((IntervalS)c.Interval(s), (IntervalS)c.Interval(a), (IntervalS)c.Interval(t), (IntervalS)c.Interval(b));
+                                    yield return new VoicingS((IntervalS)c.Interval(s), (IntervalS)c.Interval(a), (IntervalS)c.Interval(t), (IntervalS)c.Interval(b), c);
                                 }
 
                                 profile[s]--;
@@ -111,6 +115,7 @@ namespace mus
             } // IEnumerable<VoicingS> FromVariety(Variety c)
         }
 
+        //constructor trusts the information given.
         public class VoicingC : Valued
         {
             public IntervalC S { get; }
@@ -118,15 +123,15 @@ namespace mus
             public IntervalC T { get; }
             public IntervalC B { get; }
 
-            public static VoicingC operator +(VoicingC a, IntervalC b)
-            {
-                return new VoicingC(a.S + b, a.A + b, a.T + b, a.B + b);
-            }
+            //public static VoicingC operator +(VoicingC a, IntervalC b)
+            //{
+            //    return new VoicingC(a.S + b, a.A + b, a.T + b, a.B + b);
+            //}
 
-            public static VoicingC operator +(IntervalC b, VoicingC a)
-            {
-                return a + b;
-            }
+            //public static VoicingC operator +(IntervalC b, VoicingC a)
+            //{
+            //    return a + b;
+            //}
 
             public override double Penalty
             {
@@ -157,7 +162,7 @@ namespace mus
                 }
             }
 
-            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b) : base(new Valued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue) })
+            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(new Valued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
             {
                 S = s;
                 A = a;
@@ -202,7 +207,7 @@ namespace mus
                                 var S = new IntervalC(v.S.ResidueNumber, v.S.Quality, s);
                                 if (S < A) continue;
 
-                                yield return new VoicingC(S, A, T, B);
+                                yield return new VoicingC(S, A, T, B, v.Variety);
                             }
                         }
                     }

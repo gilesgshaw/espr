@@ -7,13 +7,13 @@
         {
             public Chord Chord { get; }
             public VoicingC Voicing { get; }
-            public VoicingC Absolute { get; }
+            //public VoicingC Absolute { get; }
 
             public Vert(Chord chord, VoicingC voicing) : base(new Valued[] { voicing, chord })
             {
                 Chord = chord;
                 Voicing = voicing;
-                Absolute = Chord.Root + voicing;
+                //Absolute = Chord.Root + voicing;
             }
         }
 

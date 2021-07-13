@@ -24,8 +24,8 @@ namespace mus
                         pitches[i][0] - tonic - Roots[i],
                         pitches[i][1] - tonic - Roots[i],
                         pitches[i][2] - tonic - Roots[i],
-                        pitches[i][3] - tonic - Roots[i]
-                        ));
+                        pitches[i][3] - tonic - Roots[i],
+                        chords[i].Variety));
                 }
                 return Verts;
             }
