@@ -6,7 +6,7 @@ namespace mus
     public static partial class notation
     {
 
-        public class VoicingS
+        public class VoicingS : Valued
         {
             public IntervalS S { get; }
             public IntervalS A { get; }
@@ -23,7 +23,16 @@ namespace mus
                 return a + b;
             }
 
-            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b)
+            public override double Penalty
+            {
+                get
+                {
+                    var tr = base.Penalty;
+                    return tr;
+                }
+            }
+
+            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b) : base(new Valued[] { })
             {
                 S = s;
                 A = a;
@@ -119,7 +128,7 @@ namespace mus
                 }
             }
 
-            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b) : base(new Valued[] { })
+            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b) : base(new Valued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue) })
             {
                 S = s;
                 A = a;

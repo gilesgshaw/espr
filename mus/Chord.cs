@@ -5,15 +5,24 @@ namespace mus
     public static partial class notation
     {
 
-        public class Chord
+        public class Chord : Valued
         {
-            public IntervalS Root{ get; }
-            public Variety Variety{ get; }
+            public IntervalS Root { get; }
+            public Variety Variety { get; }
 
-            public Chord(IntervalS root, Variety variety)
+            public Chord(IntervalS root, Variety variety) : base(new Valued[] { })
             {
                 Root = root;
                 Variety = variety;
+            }
+
+            public override double Penalty
+            {
+                get
+                {
+                    var tr = base.Penalty;
+                    return tr;
+                }
             }
 
             //returns relative voicings
