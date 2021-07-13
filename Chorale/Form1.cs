@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Midi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +18,6 @@ namespace Chorale
         {
             InitializeComponent();
         }
-
 
 
         public struct Key
@@ -284,11 +284,36 @@ namespace Chorale
             }
         }
 
-
         public class MIDIData
         {
+
             public Pitch[][] Notes;
             public Key Key;
+
+            private static MidiOut midiOut = new MidiOut(0);
+
+            public void Play()
+            {
+                int channel = 1;
+
+                for (int i = 0; i < Notes.Length; i++)
+                {
+
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][0].MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][1].MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][2].MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][3].MIDIPitch, 100, 50).GetAsShortMessage());
+
+                    System.Threading.Thread.Sleep(i == Notes.Length - 1 ? 1400 : 800);
+
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][0].MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][1].MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][2].MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][3].MIDIPitch, 0, 50).GetAsShortMessage());
+
+                    System.Threading.Thread.Sleep(i == Notes.Length - 1 ? 0 : 100);
+                }
+            }
 
             public Bitmap GetBitmap()
             {
@@ -325,12 +350,14 @@ namespace Chorale
                 var obj = new Display() { Parts = new[] { part1, part2 }, TS = Display.TimeSignature.Common, Key = Key };
                 return obj.Draw();
             }
+
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private PictureBox CreatePB(IEnumerable<Vert> Data)
         {
-            var result = test().ToArray();
+            var result = Data.ToArray();
             var Notes = new Pitch[result.Length][];
 
             for (int i = 0; i < result.Length; i++)
@@ -343,12 +370,27 @@ namespace Chorale
                 };
             }
 
-            var Data = new MIDIData()
+            var nData = new MIDIData()
             {
                 Notes = Notes,
                 Key = new Key(default, Mode.Zero)
             };
-            pictureBox1.Image = Data.GetBitmap();
+
+            var pb = new PictureBox();
+            pb.Image = nData.GetBitmap();
+            pb.Size = pb.Image.Size;
+
+            pb.Click += (s, e) => nData.Play();
+
+            return pb;
+        }
+
+        private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in test())
+            {
+                flowLayoutPanel1.Controls.Add(CreatePB(item));
+            }
         }
     }
 }
