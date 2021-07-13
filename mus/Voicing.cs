@@ -18,6 +18,11 @@ namespace mus
                 return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
             }
 
+            public static VoicingS operator -(VoicingS a, IntervalS b)
+            {
+                return new VoicingS(a.S - b, a.A - b, a.T - b, a.B - b);
+            }
+
             public static VoicingS operator +(IntervalS b, VoicingS a)
             {
                 return a + b;
@@ -138,7 +143,8 @@ namespace mus
                         var spacing = Spacing[i];
                         var optimal = Optimal[i];
                         var zeroVal = ZeroVal[i];
-                        if (spacing == 0) {
+                        if (spacing == 0)
+                        {
                             tr += Abs(optimal - zeroVal);
                         }
                         else
