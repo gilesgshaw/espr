@@ -84,7 +84,7 @@ namespace mus
             } // IEnumerable<VoicingS> FromVariety(Variety c)
         }
 
-        public class VoicingC
+        public class VoicingC : Valued
         {
             public IntervalC S { get; }
             public IntervalC A { get; }
@@ -101,7 +101,25 @@ namespace mus
                 return a + b;
             }
 
-            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b)
+            public override double Penalty
+            {
+                get
+                {
+                    var tr = base.Penalty;
+                    if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
+                    int[] profile = new int[7];
+                    profile[B.ResidueNumber]++;
+                    profile[T.ResidueNumber]++;
+                    profile[A.ResidueNumber]++;
+                    profile[S.ResidueNumber]++;
+                    if (profile[2] >= 2) tr += 50;
+                    if (profile[4] >= 2) tr += 20;
+                    if (0 < T.Semis - B.Semis && T.Semis - B.Semis < 10) tr += 10 - (T.Semis - B.Semis);
+                    return tr;
+                }
+            }
+
+            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b) : base(new Valued[] { })
             {
                 S = s;
                 A = a;
