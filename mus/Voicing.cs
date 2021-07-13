@@ -32,7 +32,7 @@ namespace mus
                 }
             }
 
-            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b) : base(new Valued[] { })
+            public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b) : base()
             {
                 S = s;
                 A = a;

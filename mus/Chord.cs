@@ -10,7 +10,7 @@ namespace mus
             public IntervalS Root { get; }
             public Variety Variety { get; }
 
-            public Chord(IntervalS root, Variety variety) : base(new Valued[] { })
+            public Chord(IntervalS root, Variety variety) : base()
             {
                 Root = root;
                 Variety = variety;

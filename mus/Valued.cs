@@ -23,9 +23,24 @@ namespace mus
 
             public virtual double Penalty { get; }
 
+            protected Valued()
+            {
+                Penalty = 0;
+            }
+
             protected Valued(Valued[] children)
             {
                 Penalty = children.Aggregate(0D, (x, y) => x + y.Penalty);
+            }
+
+            protected Valued(double penalty)
+            {
+                Penalty = penalty;
+            }
+
+            protected Valued(Valued[] children, double penalty)
+            {
+                Penalty = children.Aggregate(penalty, (x, y) => x + y.Penalty);
             }
         }
 
