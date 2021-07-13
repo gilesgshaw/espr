@@ -336,10 +336,10 @@ namespace Chorale
             for (int i = 0; i < result.Length; i++)
             {
                 Notes[i] = new Pitch[] {
-                    new Pitch(result[i].Absolute.S),
-                    new Pitch(result[i].Absolute.A),
-                    new Pitch(result[i].Absolute.T),
-                    new Pitch(result[i].Absolute.B)
+                    new Pitch(result[i].Chord.Root + result[i].Voicing.S),
+                    new Pitch(result[i].Chord.Root + result[i].Voicing.A),
+                    new Pitch(result[i].Chord.Root + result[i].Voicing.T),
+                    new Pitch(result[i].Chord.Root + result[i].Voicing.B)
                 };
             }
 
