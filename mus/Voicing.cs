@@ -28,6 +28,19 @@ namespace mus
                 get
                 {
                     var tr = base.Penalty;
+
+                    //inversion
+                    if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
+
+                    //doubling
+                    int[] profile = new int[7];
+                    profile[B.ResidueNumber]++;
+                    profile[T.ResidueNumber]++;
+                    profile[A.ResidueNumber]++;
+                    profile[S.ResidueNumber]++;
+                    if (profile[2] >= 2) tr += 50;
+                    if (profile[4] >= 2) tr += 20;
+
                     return tr;
                 }
             }
@@ -115,15 +128,25 @@ namespace mus
                 get
                 {
                     var tr = base.Penalty;
-                    if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
-                    int[] profile = new int[7];
-                    profile[B.ResidueNumber]++;
-                    profile[T.ResidueNumber]++;
-                    profile[A.ResidueNumber]++;
-                    profile[S.ResidueNumber]++;
-                    if (profile[2] >= 2) tr += 50;
-                    if (profile[4] >= 2) tr += 20;
-                    if (0 < T.Semis - B.Semis && T.Semis - B.Semis < 10) tr += 10 - (T.Semis - B.Semis);
+
+                    //spacing
+                    var Spacing = new int[] { T.Semis - B.Semis, A.Semis - T.Semis, S.Semis - A.Semis };
+                    var Optimal = new int[] { 11, 6, 4 };
+                    var ZeroVal = new int[] { 05, 3, 2 };
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var spacing = Spacing[i];
+                        var optimal = Optimal[i];
+                        var zeroVal = ZeroVal[i];
+                        if (spacing == 0) {
+                            tr += Abs(optimal - zeroVal);
+                        }
+                        else
+                        {
+                            tr += Abs(optimal - spacing);
+                        }
+                    }
+
                     return tr;
                 }
             }
