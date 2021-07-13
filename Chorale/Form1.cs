@@ -236,7 +236,7 @@ namespace Chorale
                     int PositionY;
                     if (voice[index].Pitch.HasValue)
                     {
-                        int ranknumber = clef.MCRankFromTopLine - voice[index].Pitch.Value.IntervalFromC0.Number - 4 * 7;
+                        int ranknumber = clef.MCRankFromTopLine - voice[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
                         int X1 = startX + (int)Math.Round(timeW / barWidthW * barWidth) - rankHeightY;
                         int X2 = startX + (int)Math.Round(timeW / barWidthW * barWidth) + rankHeightY;
                         for (int ledgerRank = -2, loopTo1 = ranknumber; ledgerRank >= loopTo1; ledgerRank -= 2)
