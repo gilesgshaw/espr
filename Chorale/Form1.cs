@@ -330,7 +330,25 @@ namespace Chorale
 
         private void button1_Click(object sender, EventArgs e)
         {
-             MessageBox.Show(mus.notation.test());
+            var result = test().ToArray();
+            var Notes = new Pitch[result.Length][];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                Notes[i] = new Pitch[] {
+                    new Pitch(result[i].Absolute.S),
+                    new Pitch(result[i].Absolute.A),
+                    new Pitch(result[i].Absolute.T),
+                    new Pitch(result[i].Absolute.B)
+                };
+            }
+
+            var Data = new MIDIData()
+            {
+                Notes = Notes,
+                Key = new Key(default, Mode.Zero)
+            };
+            pictureBox1.Image = Data.GetBitmap();
         }
     }
 }
