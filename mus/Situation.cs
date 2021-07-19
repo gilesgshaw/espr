@@ -11,7 +11,8 @@ namespace mus
 
             #region Static
 
-            public static IEnumerable<Passage> GetPairs(Situation situation)
+            //not yet implemented tolerence
+            public static IEnumerable<Passage> GetPairs(Situation situation, double[] tolerence)
             {
                 if (situation.Terminal)
                 {
@@ -44,17 +45,17 @@ namespace mus
             public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
 
             //at least 2
-            public static IEnumerable<Passage> GetExterenal(Situation situation)
+            public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence)
             {
                 if (situation.Sop.Length == 2)
                 {
                     //exactly 2
-                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetPairs(situation)));
+                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetPairs(situation, tolerence)));
                 }
                 else
                 {
                     //at least 3
-                    AddExterenal(situation);
+                    AddExterenal(situation, tolerence);
                 }
                 foreach (var item in Cache[situation])
                 {
@@ -63,17 +64,19 @@ namespace mus
             }
 
             //at least 3
-            public static void AddExterenal(Situation situation)
+            //tolerence dosen't matter if already present.
+            public static void AddExterenal(Situation situation, double[] tolerence)
             {
                 if (Cache.ContainsKey(situation)) return;
 
                 var list = new List<Passage>();
                 Cache.Add(situation, list);
-                foreach (var l in GetExterenal(situation.Left))
+                foreach (var l in GetExterenal(situation.Left, tolerence))
                 {
-                    foreach (var r in GetExterenal(situation.Right).Where((x) => x.Left == l.Right))
+                    foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => x.Left == l.Right))
                     {
-                        list.Add(new Passage(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r));
+                        var obj = new Passage(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
+                        if (obj.Penalty <= tolerence[obj.Verts.Length]) list.Add(obj);
                     }
                 }
             }
