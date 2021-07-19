@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.getCadencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,8 +49,8 @@
             // getCadencesToolStripMenuItem
             // 
             this.getCadencesToolStripMenuItem.Name = "getCadencesToolStripMenuItem";
-            this.getCadencesToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
-            this.getCadencesToolStripMenuItem.Text = "Get Cadences";
+            this.getCadencesToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
+            this.getCadencesToolStripMenuItem.Text = "&Go";
             this.getCadencesToolStripMenuItem.Click += new System.EventHandler(this.getCadencesToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
@@ -80,6 +82,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem getCadencesToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
