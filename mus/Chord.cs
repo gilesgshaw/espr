@@ -5,6 +5,7 @@ namespace mus
     public static partial class notation
     {
 
+        //Root is relative to tonic
         public class Chord : Valued
         {
             public IntervalS Root { get; }
@@ -25,6 +26,7 @@ namespace mus
                 }
             }
 
+            //I think ranges count from tonic.
             //returns relative voicings
             public IEnumerable<VoicingC> Instances((int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
             {

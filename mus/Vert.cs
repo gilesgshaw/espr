@@ -3,10 +3,12 @@
     public static partial class notation
     {
 
+        //'based off of' tonic
         public class Vert : Valued
         {
             public Chord Chord { get; }
             public VoicingC Voicing { get; }
+
             //public VoicingC Absolute { get; }
 
             public Vert(Chord chord, VoicingC voicing) : base(new Valued[] { voicing, chord })

@@ -6,6 +6,7 @@ namespace mus
     public static partial class notation
     {
 
+        //counts from root
         //constructor trusts the information given.
         public class VoicingS : Valued
         {
@@ -115,6 +116,7 @@ namespace mus
             } // IEnumerable<VoicingS> FromVariety(Variety c)
         }
 
+        //counts from root
         //constructor trusts the information given.
         public class VoicingC : Valued
         {
