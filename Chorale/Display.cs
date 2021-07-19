@@ -5,9 +5,22 @@ using static mus.notation;
 
 namespace Chorale
 {
-
     public partial class Display
     {
+
+        private class L
+        {
+            public const int stemlength = 17;
+            public const int MainMarginX = 30;
+            public const int MainMarginY = 30;
+            public const int StaveMargin = 13;
+            public const int SignatureWidth = 80;
+            public const int PostSignatureMargin = 13;
+            public const int BarLineMargin = 8;
+            public const int StaffSpacing = 57;
+            public const int RankSpacing = 5;
+            public const int BarWidth = 85;
+        }
 
         // what supported, no key signatures, no ledger lines, all as dots with no accidentals, or squares
         // update for degree
@@ -35,28 +48,17 @@ namespace Chorale
             return Draw(Parts, TS, key.Tonic, key.Scale);
         }
 
-        private const int MainMarginX = 30;
-        private const int MainMarginY = 30;
-        private const int StaveMargin = 13;
-        private const int SignatureWidth = 80;
-        private const int PostSignatureMargin = 13;
-        private const int BarLineMargin = 8;
-        private const int StaffSpacing = 57;
-        private const int RankSpacing = 5;
-        private const int BarWidth = 85;
-        public const int stemlength = 17;
-
         private static Bitmap Draw(Part[] parts, TimeSignature ts, IntervalS key, Mode Scale)
         {
             Bitmap DrawRet = default;
             DrawRet = new Bitmap(
-                2 * MainMarginX + StaveMargin + SignatureWidth + PostSignatureMargin + parts.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * BarWidth - BarLineMargin / 2,
-                MainMarginY * 2 + parts.Length * (8 * RankSpacing + StaffSpacing) - StaffSpacing);
+                2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + parts.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2,
+                L.MainMarginY * 2 + parts.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing);
             using (var g = Graphics.FromImage(DrawRet))
             {
                 for (int index = 0, loopTo = parts.Length - 1; index <= loopTo; index++)
                 {
-                    DrawStave(g, parts[index].Clef, parts[index].Bars, MainMarginY + index * (8 * RankSpacing + StaffSpacing), RankSpacing, MainMarginX, BarWidth, ts, key, Scale);
+                    DrawStave(g, parts[index].Clef, parts[index].Bars, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.RankSpacing, L.MainMarginX, L.BarWidth, ts, key, Scale);
                 }
             }
 
@@ -114,16 +116,16 @@ namespace Chorale
         private static void DrawStave(Graphics g, Clef clef, Event[][][] bars, int topLineY, int rankHeightY, int startX, int barWidth, TimeSignature TimeSignature, IntervalS Key, Mode Scale)
         {
             g.DrawLine(Pens.Black, startX, topLineY, startX, topLineY + rankHeightY * 8);
-            TimeSignature.Draw(g, topLineY, rankHeightY, startX + StaveMargin, SignatureWidth);
-            clef.Draw(g, topLineY, rankHeightY, startX + StaveMargin, SignatureWidth);
-            DrawKeySignature(g, topLineY, rankHeightY, startX + StaveMargin, SignatureWidth, Key, Scale, clef);
-            int StartPosition = startX + StaveMargin + SignatureWidth + PostSignatureMargin;
+            TimeSignature.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
+            clef.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
+            DrawKeySignature(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth, Key, Scale, clef);
+            int StartPosition = startX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
             for (int line = 0; line <= 4; line++)
-                g.DrawLine(Pens.Black, startX, topLineY + line * rankHeightY * 2, StartPosition + bars.Count() * barWidth - BarLineMargin / 2, topLineY + line * rankHeightY * 2);
+                g.DrawLine(Pens.Black, startX, topLineY + line * rankHeightY * 2, StartPosition + bars.Count() * barWidth - L.BarLineMargin / 2, topLineY + line * rankHeightY * 2);
             for (int index = 0, loopTo = bars.Count() - 1; index <= loopTo; index++)
             {
-                g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - BarLineMargin / 2, topLineY, StartPosition + (index + 1) * barWidth - BarLineMargin / 2, topLineY + rankHeightY * 8);
-                DrawBar(g, clef, bars[index], topLineY, rankHeightY, StartPosition + index * barWidth + BarLineMargin, barWidth - BarLineMargin, TimeSignature.BarLengthW);
+                g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY + rankHeightY * 8);
+                DrawBar(g, clef, bars[index], topLineY, rankHeightY, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
             }
         }
 
@@ -172,11 +174,11 @@ namespace Chorale
                     g.FillEllipse(Brushes.Black, new Rectangle(X1, PositionY - rankHeightY, rankHeightY * 2, rankHeightY * 2));
                     if (stems == -1 || stems == 0 && ranknumber <= 4)
                     {
-                        g.DrawLine(Pens.Black, X2, PositionY, X2, PositionY - stemlength);
+                        g.DrawLine(Pens.Black, X2, PositionY, X2, PositionY - L.stemlength);
                     }
                     else
                     {
-                        g.DrawLine(Pens.Black, X1, PositionY, X1, PositionY + stemlength);
+                        g.DrawLine(Pens.Black, X1, PositionY, X1, PositionY + L.stemlength);
                     }
                 }
                 else
