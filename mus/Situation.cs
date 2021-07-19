@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace mus
@@ -6,7 +7,7 @@ namespace mus
     public static partial class notation
     {
 
-        public class Situation
+        public class Situation : IEquatable<Situation>
         {
 
             #region Static
@@ -108,6 +109,43 @@ namespace mus
                 {
                     return new Situation(Context, Sop.Skip(1).ToArray(), Terminal);
                 }
+            }
+            
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as Situation);
+            }
+
+            public bool Equals(Situation other)
+            {
+                if (other == null ||
+                    !ReferenceEquals(Context, other.Context) ||
+                    Terminal != other.Terminal ||
+                    Sop.Length != other.Sop.Length) return false;
+                for (int i = 0; i < Sop.Length; i++)
+                {
+                    if (Sop[i] != other.Sop[i]) return false;
+                }
+                return true;
+            }
+
+            //This is VERY RUDAMENTORY
+            public override int GetHashCode()
+            {
+                int hashCode = 280880954;
+                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(Context);
+                hashCode = hashCode * -1521134295 + Terminal.GetHashCode();
+                return hashCode;
+            }
+
+            public static bool operator ==(Situation left, Situation right)
+            {
+                return EqualityComparer<Situation>.Default.Equals(left, right);
+            }
+
+            public static bool operator !=(Situation left, Situation right)
+            {
+                return !(left == right);
             }
         }
 
