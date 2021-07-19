@@ -29,21 +29,23 @@ namespace Chorale
         public class Stave
         {
             public Clef Clef;
+            public TimeSignature TimeSignature;
+            public Key Key;
             public Event[][][] Bars;
 
-            public void Draw(Graphics g, int topLineY, int rankHeightY, int startX, int barWidth, TimeSignature TimeSignature, IntervalS Key, Mode Scale)
+            public void Draw(Graphics g, int top, int left, int barWidth)
             {
-                g.DrawLine(Pens.Black, startX, topLineY, startX, topLineY + rankHeightY * 8);
-                TimeSignature.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
-                Clef.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
-                DrawKeySignature(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth, Key, Scale, Clef);
-                int StartPosition = startX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
+                g.DrawLine(Pens.Black, left, top, left, top + L.RankSpacing * 8);
+                TimeSignature.Draw(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth);
+                Clef.Draw(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth);
+                Key.DrawSig(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth, Clef);
+                int StartPosition = left + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
                 for (int line = 0; line <= 4; line++)
-                    g.DrawLine(Pens.Black, startX, topLineY + line * rankHeightY * 2, StartPosition + Bars.Count() * barWidth - L.BarLineMargin / 2, topLineY + line * rankHeightY * 2);
+                    g.DrawLine(Pens.Black, left, top + line * L.RankSpacing * 2, StartPosition + Bars.Count() * barWidth - L.BarLineMargin / 2, top + line * L.RankSpacing * 2);
                 for (int index = 0, loopTo = Bars.Length - 1; index <= loopTo; index++)
                 {
-                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY + rankHeightY * 8);
-                    DrawBar(g, Clef, Bars[index], topLineY, rankHeightY, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
+                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, top, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, top + L.RankSpacing * 8);
+                    DrawBar(g, Clef, Bars[index], top, L.RankSpacing, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
                 }
             }
 
@@ -57,78 +59,23 @@ namespace Chorale
             public int Dot;
         }
 
-        public TimeSignature TS;
-        public Key key;
         public Stave[] Staves;
 
         public Bitmap Draw()
         {
-            return Draw(Staves, TS, key.Tonic, key.Scale);
-        }
-
-        private static Bitmap Draw(Stave[] staves, TimeSignature ts, IntervalS key, Mode Scale)
-        {
             Bitmap DrawRet = default;
             DrawRet = new Bitmap(
-                2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2,
-                L.MainMarginY * 2 + staves.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing);
+                2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + Staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2,
+                L.MainMarginY * 2 + Staves.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing);
             using (var g = Graphics.FromImage(DrawRet))
             {
-                for (int index = 0, loopTo = staves.Length - 1; index <= loopTo; index++)
+                for (int index = 0; index < Staves.Length; index++)
                 {
-                    staves[index].Draw(g, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.RankSpacing, L.MainMarginX, L.BarWidth, ts, key, Scale);
+                    Staves[index].Draw(g, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.MainMarginX, L.BarWidth);
                 }
             }
 
             return DrawRet;
-        }
-
-        private static void DrawKeySignature(Graphics g, int topLineY, int rankHeightY, int startX, int widthX, IntervalS Key, Mode Scale, Clef clef)
-        {
-            int position = 0;
-            for (int ScaleDegree = 0; ScaleDegree <= 6; ScaleDegree++)
-            {
-                var AbsoluteNote = Key + Scale.Interval(ScaleDegree).Value;
-                int offset = AbsoluteNote.ResidueSemis - Mode.Zero.Interval(AbsoluteNote.ResidueNumber).Value.ResidueSemis;
-                switch (offset)
-                {
-                    case 0:
-                        {
-                            break;
-                        }
-
-                    case 1:
-                        {
-                            int currentrank = clef.MCRankFromTopLine - (int)AbsoluteNote.ResidueNumber;
-                            while (currentrank < 0)
-                                currentrank += 7;
-                            while (currentrank >= 7)
-                                currentrank -= 7;
-                            g.DrawString("#", new Font("calibri", 12f), Brushes.Black, new Point(startX + 27 + position * 8, topLineY + currentrank * rankHeightY - 10));
-                            position += 1;
-                            break;
-                        }
-
-                    case -1:
-                        {
-                            int currentrank = clef.MCRankFromTopLine - (int)AbsoluteNote.ResidueNumber;
-                            while (currentrank < 0)
-                                currentrank += 7;
-                            while (currentrank >= 7)
-                                currentrank -= 7;
-                            g.DrawString("b", new Font("calibri", 12f), Brushes.Black, new Point(startX + 27 + position * 8, topLineY + currentrank * rankHeightY - 10));
-                            position += 1;
-                            break;
-                        }
-
-                    default:
-                        {
-                            break;
-                        }
-                        // CRITICAL
-                        // Throw New NotImplementedException()
-                }
-            }
         }
 
         // must have at least one voice
