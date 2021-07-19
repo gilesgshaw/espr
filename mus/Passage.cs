@@ -43,8 +43,15 @@ namespace mus
                         tr += Abs(RootChange + TChange);
                         tr += Abs(RootChange + BChange);
 
-                        if (ReferenceEquals(Chords[i], Chords[i - 1]) && Verts[i].Voicing.B.Residue == Verts[i - 1].Voicing.B.Residue) tr += 50;
-                        if (ReferenceEquals(Chords[i], Chords[i - 1])) tr += 35;
+                        if (Chords[i].Root == Chords[i - 1].Root && Verts[i].Voicing.B.Residue == Verts[i - 1].Voicing.B.Residue)
+                        {
+                            tr += 50;
+                        }
+
+                        if (Chords[i].Root == Chords[i - 1].Root)
+                        {
+                            tr += 35;
+                        }
 
                         var Notes = new (IntervalS, IntervalS)[] {
                             (Verts[i - 1].Voicing.S.Residue + Verts[i - 1].Chord.Root, Verts[i].Voicing.S.Residue + Verts[i].Chord.Root),
