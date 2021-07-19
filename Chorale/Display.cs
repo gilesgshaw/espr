@@ -26,10 +26,28 @@ namespace Chorale
         // update for degree
         // accidentals and key signature agreement
 
-        public class Part
+        public class Stave
         {
             public Clef Clef;
             public Event[][][] Bars;
+
+            public void Draw(Graphics g, int topLineY, int rankHeightY, int startX, int barWidth, TimeSignature TimeSignature, IntervalS Key, Mode Scale)
+            {
+                g.DrawLine(Pens.Black, startX, topLineY, startX, topLineY + rankHeightY * 8);
+                TimeSignature.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
+                Clef.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
+                DrawKeySignature(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth, Key, Scale, Clef);
+                int StartPosition = startX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
+                for (int line = 0; line <= 4; line++)
+                    g.DrawLine(Pens.Black, startX, topLineY + line * rankHeightY * 2, StartPosition + Bars.Count() * barWidth - L.BarLineMargin / 2, topLineY + line * rankHeightY * 2);
+                for (int index = 0, loopTo = Bars.Length - 1; index <= loopTo; index++)
+                {
+                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY + rankHeightY * 8);
+                    DrawBar(g, Clef, Bars[index], topLineY, rankHeightY, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
+                }
+            }
+
+
         }
 
         public struct Event
@@ -41,24 +59,24 @@ namespace Chorale
 
         public TimeSignature TS;
         public Key key;
-        public Part[] Parts;
+        public Stave[] Staves;
 
         public Bitmap Draw()
         {
-            return Draw(Parts, TS, key.Tonic, key.Scale);
+            return Draw(Staves, TS, key.Tonic, key.Scale);
         }
 
-        private static Bitmap Draw(Part[] parts, TimeSignature ts, IntervalS key, Mode Scale)
+        private static Bitmap Draw(Stave[] staves, TimeSignature ts, IntervalS key, Mode Scale)
         {
             Bitmap DrawRet = default;
             DrawRet = new Bitmap(
-                2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + parts.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2,
-                L.MainMarginY * 2 + parts.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing);
+                2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2,
+                L.MainMarginY * 2 + staves.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing);
             using (var g = Graphics.FromImage(DrawRet))
             {
-                for (int index = 0, loopTo = parts.Length - 1; index <= loopTo; index++)
+                for (int index = 0, loopTo = staves.Length - 1; index <= loopTo; index++)
                 {
-                    DrawStave(g, parts[index].Clef, parts[index].Bars, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.RankSpacing, L.MainMarginX, L.BarWidth, ts, key, Scale);
+                    staves[index].Draw(g, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.RankSpacing, L.MainMarginX, L.BarWidth, ts, key, Scale);
                 }
             }
 
@@ -110,22 +128,6 @@ namespace Chorale
                         // CRITICAL
                         // Throw New NotImplementedException()
                 }
-            }
-        }
-
-        private static void DrawStave(Graphics g, Clef clef, Event[][][] bars, int topLineY, int rankHeightY, int startX, int barWidth, TimeSignature TimeSignature, IntervalS Key, Mode Scale)
-        {
-            g.DrawLine(Pens.Black, startX, topLineY, startX, topLineY + rankHeightY * 8);
-            TimeSignature.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
-            clef.Draw(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth);
-            DrawKeySignature(g, topLineY, rankHeightY, startX + L.StaveMargin, L.SignatureWidth, Key, Scale, clef);
-            int StartPosition = startX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
-            for (int line = 0; line <= 4; line++)
-                g.DrawLine(Pens.Black, startX, topLineY + line * rankHeightY * 2, StartPosition + bars.Count() * barWidth - L.BarLineMargin / 2, topLineY + line * rankHeightY * 2);
-            for (int index = 0, loopTo = bars.Count() - 1; index <= loopTo; index++)
-            {
-                g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, topLineY + rankHeightY * 8);
-                DrawBar(g, clef, bars[index], topLineY, rankHeightY, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
             }
         }
 

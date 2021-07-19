@@ -80,9 +80,9 @@ namespace Chorale
                     bars2.Add(new[] { voice1.ToArray(), voice2.ToArray() });
                 }
 
-                var part1 = new Display.Part() { Bars = bars1.ToArray(), Clef = new Display.Clef(10, "Treble") };
-                var part2 = new Display.Part() { Bars = bars2.ToArray(), Clef = new Display.Clef(-2, "Bass") };
-                var obj = new Display() { Parts = new[] { part1, part2 }, TS = Display.TimeSignature.Common, key = Key };
+                var part1 = new Display.Stave() { Bars = bars1.ToArray(), Clef = new Display.Clef(10, "Treble") };
+                var part2 = new Display.Stave() { Bars = bars2.ToArray(), Clef = new Display.Clef(-2, "Bass") };
+                var obj = new Display() { Staves = new[] { part1, part2 }, TS = Display.TimeSignature.Common, key = Key };
                 return obj.Draw();
             }
 
