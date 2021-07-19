@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static System.Math;
 
 namespace mus
@@ -9,11 +10,18 @@ namespace mus
         //could do with some optimisation...
         //for later should maybe store the pitches directly...
         //and in fact they are probably the 'independant' data.
-        public class Passage : Valued
+        
+        //Currently: tonic is placeholder, just stores and compares verts
+        public class Passage : Valued, IEquatable<Passage>
         {
-            public IntervalS Tonic { get; }
+            //public IntervalS Tonic { get; }
             public Vert[] Verts { get; }
             public Chord[] Chords { get; }
+
+            //accepts these as trusted redundant information.
+
+            public Passage Left { get; }
+            public Passage Right { get; }
 
             //public IntervalC[][] Pitches { get; } //satb
 
@@ -40,11 +48,44 @@ namespace mus
                 }
             }
 
-            public Passage(IntervalS tonic, Vert[] verts) : base(verts)
+            //public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts)
+            public Passage(Vert[] verts, Passage left, Passage right) : base(verts)
             {
-                Tonic = tonic;
+                //Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
                 Verts = verts;
+                Left = left;
+                Right = right;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as Passage);
+            }
+
+            public bool Equals(Passage other)
+            {
+                if (other == null || Verts.Length != other.Verts.Length) return false;
+                for (int i = 0; i < Verts.Length; i++)
+                {
+                    if (!ReferenceEquals(Verts[i], other.Verts[i])) return false;
+                }
+                return true;
+            }
+
+            public override int GetHashCode()
+            {
+                return -1971104453 + EqualityComparer<Vert[]>.Default.GetHashCode(Verts);
+            }
+
+            public static bool operator ==(Passage left, Passage right)
+            {
+                return EqualityComparer<Passage>.Default.Equals(left, right);
+            }
+
+            public static bool operator !=(Passage left, Passage right)
+            {
+                return !(left == right);
             }
         }
 

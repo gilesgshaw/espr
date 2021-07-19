@@ -1,0 +1,112 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace mus
+{
+    public static partial class notation
+    {
+
+        public class Situation
+        {
+
+            #region Static
+
+            public static IEnumerable<Passage> GetPairs(Situation situation)
+            {
+                if (situation.Terminal)
+                {
+                    foreach (var final in situation.Context.Bank[situation.Sop[1]].Where((x) => x.Chord.Root.ResidueNumber == 0 && x.Voicing.B.ResidueNumber == 0))
+                    {
+                        foreach (var pp in situation.Context.Bank[situation.Sop[0]].Where((x) => x.Voicing.B.ResidueNumber == 0))
+                        {
+                            switch (pp.Chord.Root.ResidueNumber)
+                            {
+                                case 4:
+                                    yield return new Passage(new Vert[] { pp, final }, new Passage(new Vert[] { pp }, null, null), new Passage(new Vert[] { final }, null, null));
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var final in situation.Context.Bank[situation.Sop[1]])
+                    {
+                        foreach (var pp in situation.Context.Bank[situation.Sop[0]])
+                        {
+                            yield return new Passage(new Vert[] { pp, final }, new Passage(new Vert[] { pp }, null, null), new Passage(new Vert[] { final }, null, null));
+                        }
+                    }
+                }
+            }
+
+            //at least 2
+            public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
+
+            //at least 2
+            public static IEnumerable<Passage> GetExterenal(Situation situation)
+            {
+                if (situation.Sop.Length == 2)
+                {
+                    //exactly 2
+                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetPairs(situation)));
+                }
+                else
+                {
+                    //at least 3
+                    AddExterenal(situation);
+                }
+                foreach (var item in Cache[situation])
+                {
+                    yield return item;
+                }
+            }
+
+            //at least 3
+            public static void AddExterenal(Situation situation)
+            {
+                if (Cache.ContainsKey(situation)) return;
+
+                var list = new List<Passage>();
+                Cache.Add(situation, list);
+                foreach (var l in GetExterenal(situation.Left))
+                {
+                    foreach (var r in GetExterenal(situation.Right).Where((x) => x.Left == l.Right))
+                    {
+                        list.Add(new Passage(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r));
+                    }
+                }
+            }
+
+            #endregion
+
+            public Context Context;
+            public int[] Sop;
+            public bool Terminal;
+
+            public Situation(Context context, int[] sop, bool terminal)
+            {
+                Context = context;
+                Sop = sop;
+                Terminal = terminal;
+            }
+
+            public Situation Left
+            {
+                get
+                {
+                    return new Situation(Context, Sop.Take(Sop.Length - 1).ToArray(), false);
+                }
+            }
+
+            public Situation Right
+            {
+                get
+                {
+                    return new Situation(Context, Sop.Skip(1).ToArray(), Terminal);
+                }
+            }
+        }
+
+    }
+}
