@@ -18,7 +18,7 @@ namespace Chorale
                 Scale = scale;
             }
 
-            public void DrawSig(Graphics g, int top, int rankHeight, int left, int width, Clef clef)
+            public void DrawSig(Graphics g, float top, float rankHeight, float left, float width, Clef clef)
             {
                 int position = 0;
                 for (int ScaleDegree = 0; ScaleDegree <= 6; ScaleDegree++)
@@ -39,7 +39,7 @@ namespace Chorale
                                     currentrank += 7;
                                 while (currentrank >= 7)
                                     currentrank -= 7;
-                                g.DrawString("#", new Font("calibri", 12f), Brushes.Black, new Point(left + 27 + position * 8, top + currentrank * rankHeight - 10));
+                                g.DrawString("#", new Font("calibri", 12f), Brushes.Black, new PointF(left + 27 + position * 8, top + currentrank * rankHeight - 10));
                                 position += 1;
                                 break;
                             }
@@ -51,7 +51,7 @@ namespace Chorale
                                     currentrank += 7;
                                 while (currentrank >= 7)
                                     currentrank -= 7;
-                                g.DrawString("b", new Font("calibri", 12f), Brushes.Black, new Point(left + 27 + position * 8, top + currentrank * rankHeight - 10));
+                                g.DrawString("b", new Font("calibri", 12f), Brushes.Black, new PointF(left + 27 + position * 8, top + currentrank * rankHeight - 10));
                                 position += 1;
                                 break;
                             }
