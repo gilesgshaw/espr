@@ -10,7 +10,6 @@ namespace Chorale
 
         private class L
         {
-            public readonly static float StaveHeight = RankSpacing * 8;
             public readonly static float StaveDisplacement = StaveHeight + StaffSpacing;
 
             public const float stemlength = 17;
@@ -21,7 +20,7 @@ namespace Chorale
             public const float PostSignatureMargin = 13;
             public const float BarLineMargin = 8;
             public const float StaffSpacing = 57;
-            public const float RankSpacing = 5;
+            public const float StaveHeight = 40;
             public const float BarWidth = 85;
         }
 
@@ -40,11 +39,11 @@ namespace Chorale
             {
                 g.DrawLine(Pens.Black, left, top, left, top + L.StaveHeight);
                 TimeSignature.Draw(g, top, L.StaveHeight, left + L.StaveMargin, L.SignatureWidth);
-                Clef.Draw(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth);
-                Key.DrawSig(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth, Clef);
+                Clef.Draw(g, top, L.StaveHeight, left + L.StaveMargin, L.SignatureWidth);
+                Key.DrawSig(g, new RectangleF(left + L.StaveMargin, top, L.SignatureWidth, L.StaveHeight), Clef);
                 float StartPosition = left + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
-                for (int line = 0; line <= 4; line++)
-                    g.DrawLine(Pens.Black, left, top + line * L.RankSpacing * 2, StartPosition + Bars.Count() * L.BarWidth - L.BarLineMargin / 2, top + line * L.RankSpacing * 2);
+                for (int line = 0; line <= Clef.NumSpaces; line++)
+                    g.DrawLine(Pens.Black, left, top + line * L.StaveHeight / Clef.NumSpaces, StartPosition + Bars.Count() * L.BarWidth - L.BarLineMargin / 2, top + line * L.StaveHeight / Clef.NumSpaces);
                 for (int index = 0; index < Bars.Length; index++)
                 {
                     g.DrawLine(Pens.Black, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top + L.StaveHeight);
@@ -109,7 +108,7 @@ namespace Chorale
         // use stem direction
         private static void DrawVoice(Graphics g, Clef clef, Event[] events, int stems, int restRankFromTopLine, float top, float staveHeight, float left, float barWidth, double barWidthW)
         {
-            var RankSp = staveHeight / 8;
+            var RankSp = staveHeight / clef.NumSpaces / 2;
             double timeW = 0d;
             for (int index = 0; index < events.Length; index++)
             {
@@ -117,8 +116,8 @@ namespace Chorale
                 if (events[index].Pitch.HasValue)
                 {
                     int ranknumber = clef.MCRankFromTopLine - events[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
-                    float X1 = left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp;
-                    float X2 = left + (float)Math.Round(timeW / barWidthW * barWidth) + RankSp;
+                    float X1 = (float)(left + (timeW / barWidthW * barWidth) - RankSp);
+                    float X2 = (float)(left + (timeW / barWidthW * barWidth) + RankSp);
                     for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
                         g.DrawLine(Pens.Black, X1 - 2, top + RankSp * ledgerRank, X2 + 2, top + RankSp * ledgerRank);
                     for (int ledgerRank = 10; ledgerRank <= ranknumber; ledgerRank += 2)
