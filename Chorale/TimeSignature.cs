@@ -21,10 +21,10 @@ namespace Chorale
             {
             }
 
-            public void Draw(Graphics g, float topLineY, float rankHeightY, float startX, float widthX)
+            public void Draw(Graphics g, float topLineY, float staveHeight, float startX, float widthX)
             {
                 g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(widthX + startX - 10, topLineY));
-                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(widthX + startX - 10, topLineY + rankHeightY * 4));
+                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(widthX + startX - 10, topLineY + staveHeight / 2));
             }
         }
 

@@ -10,6 +10,9 @@ namespace Chorale
 
         private class L
         {
+            public readonly static float StaveHeight = RankSpacing * 8;
+            public readonly static float StaveDisplacement = StaveHeight + StaffSpacing;
+
             public const float stemlength = 17;
             public const float MainMarginX = 30;
             public const float MainMarginY = 30;
@@ -33,19 +36,19 @@ namespace Chorale
             public Key Key;
             public Event[][][] Bars;
 
-            public void Draw(Graphics g, float top, float left, float barWidth)
+            public void Draw(Graphics g, float top, float left)
             {
-                g.DrawLine(Pens.Black, left, top, left, top + L.RankSpacing * 8);
-                TimeSignature.Draw(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth);
+                g.DrawLine(Pens.Black, left, top, left, top + L.StaveHeight);
+                TimeSignature.Draw(g, top, L.StaveHeight, left + L.StaveMargin, L.SignatureWidth);
                 Clef.Draw(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth);
                 Key.DrawSig(g, top, L.RankSpacing, left + L.StaveMargin, L.SignatureWidth, Clef);
                 float StartPosition = left + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
                 for (int line = 0; line <= 4; line++)
-                    g.DrawLine(Pens.Black, left, top + line * L.RankSpacing * 2, StartPosition + Bars.Count() * barWidth - L.BarLineMargin / 2, top + line * L.RankSpacing * 2);
-                for (int index = 0, loopTo = Bars.Length - 1; index <= loopTo; index++)
+                    g.DrawLine(Pens.Black, left, top + line * L.RankSpacing * 2, StartPosition + Bars.Count() * L.BarWidth - L.BarLineMargin / 2, top + line * L.RankSpacing * 2);
+                for (int index = 0; index < Bars.Length; index++)
                 {
-                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, top, StartPosition + (index + 1) * barWidth - L.BarLineMargin / 2, top + L.RankSpacing * 8);
-                    DrawBar(g, Clef, Bars[index], top, L.RankSpacing, StartPosition + index * barWidth + L.BarLineMargin, barWidth - L.BarLineMargin, TimeSignature.BarLengthW);
+                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top + L.StaveHeight);
+                    DrawBar(g, Clef, Bars[index], new RectangleF(StartPosition + index * L.BarWidth + L.BarLineMargin, top, L.BarWidth - L.BarLineMargin, L.StaveHeight), TimeSignature.BarLengthW);
                 }
             }
 
@@ -63,15 +66,14 @@ namespace Chorale
 
         public Bitmap Draw()
         {
-            Bitmap DrawRet = default;
-            DrawRet = new Bitmap(
+            Bitmap DrawRet = new Bitmap(
                 (int)(2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + Staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2),
-                (int)(L.MainMarginY * 2 + Staves.Length * (8 * L.RankSpacing + L.StaffSpacing) - L.StaffSpacing));
+                (int)(L.MainMarginY * 2 + Staves.Length * (L.StaveHeight + L.StaffSpacing) - L.StaffSpacing));
             using (var g = Graphics.FromImage(DrawRet))
             {
                 for (int index = 0; index < Staves.Length; index++)
                 {
-                    Staves[index].Draw(g, L.MainMarginY + index * (8 * L.RankSpacing + L.StaffSpacing), L.MainMarginX, L.BarWidth);
+                    Staves[index].Draw(g, L.MainMarginY + index * L.StaveDisplacement, L.MainMarginX);
                 }
             }
 
@@ -79,20 +81,20 @@ namespace Chorale
         }
 
         // must have at least one voice
-        private static void DrawBar(Graphics g, Clef clef, Event[][] voices, float topLineY, float rankHeightY, float startX, float barWidth, double barWidthW)
+        private static void DrawBar(Graphics g, Clef clef, Event[][] voices, RectangleF rect, double barWidthW)
         {
             switch (voices.Length)
             {
                 case 1:
                     {
-                        DrawVoice(g, clef, voices[0], 0, 4, topLineY, rankHeightY, startX, barWidth, barWidthW);
+                        DrawVoice(g, clef, voices[0], 0, 4, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
                         break;
                     }
 
                 case 2:
                     {
-                        DrawVoice(g, clef, voices[0], -1, 1, topLineY, rankHeightY, startX, barWidth, barWidthW);
-                        DrawVoice(g, clef, voices[1], 1, 7, topLineY, rankHeightY, startX, barWidth, barWidthW);
+                        DrawVoice(g, clef, voices[0], -1, 1, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
+                        DrawVoice(g, clef, voices[1], 1, 7, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
                         break;
                     }
 
@@ -104,23 +106,24 @@ namespace Chorale
         }
 
         // use stem direction
-        private static void DrawVoice(Graphics g, Clef clef, Event[] voice, int stems, int restRankFromTopLine, float topLineY, float rankHeightY, float startX, float barWidth, double barWidthW)
+        private static void DrawVoice(Graphics g, Clef clef, Event[] voice, int stems, int restRankFromTopLine, float top, float staveHeight, float left, float barWidth, double barWidthW)
         {
+            var RankSp = staveHeight / 8;
             double timeW = 0d;
-            for (int index = 0, loopTo = voice.Length - 1; index <= loopTo; index++)
+            for (int index = 0; index < voice.Length; index++)
             {
                 float PositionY;
                 if (voice[index].Pitch.HasValue)
                 {
                     int ranknumber = clef.MCRankFromTopLine - voice[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
-                    float X1 = startX + (float)Math.Round(timeW / barWidthW * barWidth) - rankHeightY;
-                    float X2 = startX + (float)Math.Round(timeW / barWidthW * barWidth) + rankHeightY;
-                    for (int ledgerRank = -2, loopTo1 = ranknumber; ledgerRank >= loopTo1; ledgerRank -= 2)
-                        g.DrawLine(Pens.Black, X1 - 2, topLineY + rankHeightY * ledgerRank, X2 + 2, topLineY + rankHeightY * ledgerRank);
-                    for (int ledgerRank = 10, loopTo2 = ranknumber; ledgerRank <= loopTo2; ledgerRank += 2)
-                        g.DrawLine(Pens.Black, X1 - 2, topLineY + rankHeightY * ledgerRank, X2 + 2, topLineY + rankHeightY * ledgerRank);
-                    PositionY = topLineY + rankHeightY * ranknumber;
-                    g.FillEllipse(Brushes.Black, new RectangleF(X1, PositionY - rankHeightY, rankHeightY * 2, rankHeightY * 2));
+                    float X1 = left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp;
+                    float X2 = left + (float)Math.Round(timeW / barWidthW * barWidth) + RankSp;
+                    for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
+                        g.DrawLine(Pens.Black, X1 - 2, top + RankSp * ledgerRank, X2 + 2, top + RankSp * ledgerRank);
+                    for (int ledgerRank = 10; ledgerRank <= ranknumber; ledgerRank += 2)
+                        g.DrawLine(Pens.Black, X1 - 2, top + RankSp * ledgerRank, X2 + 2, top + RankSp * ledgerRank);
+                    PositionY = top + RankSp * ranknumber;
+                    g.FillEllipse(Brushes.Black, new RectangleF(X1, PositionY - RankSp, RankSp * 2, RankSp * 2));
                     if (stems == -1 || stems == 0 && ranknumber <= 4)
                     {
                         g.DrawLine(Pens.Black, X2, PositionY, X2, PositionY - L.stemlength);
@@ -132,8 +135,8 @@ namespace Chorale
                 }
                 else
                 {
-                    PositionY = topLineY + rankHeightY * restRankFromTopLine;
-                    g.FillEllipse(Brushes.Blue, new RectangleF(startX + (float)Math.Round(timeW / barWidthW * barWidth) - rankHeightY, PositionY - rankHeightY, rankHeightY * 2, rankHeightY * 2));
+                    PositionY = top + RankSp * restRankFromTopLine;
+                    g.FillEllipse(Brushes.Blue, new RectangleF(left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp, PositionY - RankSp, RankSp * 2, RankSp * 2));
                 }
 
                 switch (voice[index].Dot)
