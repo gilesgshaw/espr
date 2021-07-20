@@ -1,2 +1,4 @@
 ﻿//convention - major is 0
 //Number is traditionally stored as offset starting from 0...
+
+//Rest position and stem directions are still based on 5 lines stave.
