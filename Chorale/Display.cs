@@ -107,16 +107,16 @@ namespace Chorale
         }
 
         // use stem direction
-        private static void DrawVoice(Graphics g, Clef clef, Event[] voice, int stems, int restRankFromTopLine, float top, float staveHeight, float left, float barWidth, double barWidthW)
+        private static void DrawVoice(Graphics g, Clef clef, Event[] events, int stems, int restRankFromTopLine, float top, float staveHeight, float left, float barWidth, double barWidthW)
         {
             var RankSp = staveHeight / 8;
             double timeW = 0d;
-            for (int index = 0; index < voice.Length; index++)
+            for (int index = 0; index < events.Length; index++)
             {
                 float PositionY;
-                if (voice[index].Pitch.HasValue)
+                if (events[index].Pitch.HasValue)
                 {
-                    int ranknumber = clef.MCRankFromTopLine - voice[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
+                    int ranknumber = clef.MCRankFromTopLine - events[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
                     float X1 = left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp;
                     float X2 = left + (float)Math.Round(timeW / barWidthW * barWidth) + RankSp;
                     for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
@@ -140,17 +140,17 @@ namespace Chorale
                     g.FillEllipse(Brushes.Blue, new RectangleF(left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp, PositionY - RankSp, RankSp * 2, RankSp * 2));
                 }
 
-                switch (voice[index].Dot)
+                switch (events[index].Dot)
                 {
                     case 0:
                         {
-                            timeW += Math.Pow(2d, -voice[index].WholeDivisionPower);
+                            timeW += Math.Pow(2d, -events[index].WholeDivisionPower);
                             break;
                         }
 
                     case 1:
                         {
-                            timeW += Math.Pow(2d, -voice[index].WholeDivisionPower) * 1.5d;
+                            timeW += Math.Pow(2d, -events[index].WholeDivisionPower) * 1.5d;
                             break;
                         }
 
