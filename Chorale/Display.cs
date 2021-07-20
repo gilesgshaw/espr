@@ -71,6 +71,7 @@ namespace Chorale
                 (int)(L.MainMarginY * 2 + Staves.Length * (L.StaveHeight + L.StaffSpacing) - L.StaffSpacing));
             using (var g = Graphics.FromImage(DrawRet))
             {
+                g.DrawLine(Pens.Black, L.MainMarginX, L.MainMarginY, L.MainMarginX, L.MainMarginY + (Staves.Length - 1) * L.StaveDisplacement + L.StaveHeight);
                 for (int index = 0; index < Staves.Length; index++)
                 {
                     Staves[index].Draw(g, L.MainMarginY + index * L.StaveDisplacement, L.MainMarginX);
