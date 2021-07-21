@@ -9,11 +9,11 @@ namespace Chorale
         {
             public static TimeSignature Common { get; } = new TimeSignature();
 
-            public double BarLengthW
+            public float BarLengthW
             {
                 get
                 {
-                    return 1d;
+                    return 1;
                 }
             }
 
@@ -21,10 +21,10 @@ namespace Chorale
             {
             }
 
-            public void Draw(Graphics g, float topLineY, float staveHeight, float startX, float widthX)
+            public void Draw(Graphics g, RectangleF SignatureRect)
             {
-                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(widthX + startX - 10, topLineY));
-                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(widthX + startX - 10, topLineY + staveHeight / 2));
+                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(SignatureRect.Right - 10, SignatureRect.Top));
+                g.DrawString("4", new Font("calibri", 14f), Brushes.Black, new PointF(SignatureRect.Right - 10, SignatureRect.Top + SignatureRect.Height / 2));
             }
         }
 

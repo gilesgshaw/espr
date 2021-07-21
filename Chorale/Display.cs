@@ -5,52 +5,124 @@ using static mus.notation;
 
 namespace Chorale
 {
+
+    // what supported, no key signatures, no ledger lines, all as dots with no accidentals, or squares
+    // update for degree
+    // accidentals and key signature agreement
+
     public partial class Display
     {
+        public Stave[] Staves;
 
-        private class L
+        public Bitmap Draw()
         {
-            public readonly static float StaveDisplacement = StaveHeight + StaffSpacing;
-
-            public const float stemlength = 17;
-            public const float MainMarginX = 30;
-            public const float MainMarginY = 30;
-            public const float StaveMargin = 13;
-            public const float SignatureWidth = 80;
-            public const float PostSignatureMargin = 13;
-            public const float BarLineMargin = 8;
-            public const float StaffSpacing = 57;
-            public const float StaveHeight = 40;
-            public const float BarWidth = 85;
+            var BodyX = L.BarsLeft + Staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth;
+            var BodyY = L.StaveHeight + (Staves.Length - 1) * L.StaveDisplacement;
+            Bitmap DrawRet = new Bitmap(
+                (int)(L.MainMarginX + BodyX + L.MainMarginX),
+                (int)(L.MainMarginY + BodyY + L.MainMarginY));
+            using (var g = Graphics.FromImage(DrawRet))
+            {
+                g.DrawLine(Pens.Black, L.MainMarginX, L.MainMarginY, L.MainMarginX, L.MainMarginY + BodyY);
+                for (int index = 0; index < Staves.Length; index++)
+                {
+                    Staves[index].Draw(g, new PointF(L.MainMarginX, L.MainMarginY + index * L.StaveDisplacement));
+                }
+            }
+            return DrawRet;
         }
-
-        // what supported, no key signatures, no ledger lines, all as dots with no accidentals, or squares
-        // update for degree
-        // accidentals and key signature agreement
 
         public class Stave
         {
+
             public Clef Clef;
             public TimeSignature TimeSignature;
             public Key Key;
             public Event[][][] Bars;
 
-            public void Draw(Graphics g, float top, float left)
+            public void Draw(Graphics g, PointF offset)
             {
-                g.DrawLine(Pens.Black, left, top, left, top + L.StaveHeight);
-                TimeSignature.Draw(g, top, L.StaveHeight, left + L.StaveMargin, L.SignatureWidth);
-                Clef.Draw(g, top, L.StaveHeight, left + L.StaveMargin, L.SignatureWidth);
-                Key.DrawSig(g, new RectangleF(left + L.StaveMargin, top, L.SignatureWidth, L.StaveHeight), Clef);
-                float StartPosition = left + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin;
-                for (int line = 0; line <= Clef.NumSpaces; line++)
-                    g.DrawLine(Pens.Black, left, top + line * L.StaveHeight / Clef.NumSpaces, StartPosition + Bars.Count() * L.BarWidth - L.BarLineMargin / 2, top + line * L.StaveHeight / Clef.NumSpaces);
+                var Sig__Rect = L.SignatureFromStave;
+
+                var Bars_Rect = new RectangleF(
+                    L.BarsLeft,
+                    0,
+                    Bars.Length * L.BarWidth,
+                    L.StaveHeight);
+
+                var Me___Rect = new RectangleF(
+                    0,
+                    0,
+                    Bars_Rect.Right,
+                    Bars_Rect.Bottom);
+
+                Bars_Rect = Bars_Rect.Translate(offset);
+                Me___Rect = Me___Rect.Translate(offset);
+                Sig__Rect = Sig__Rect.Translate(offset);
+
+
+                var BarsRects = Bars_Rect.PartitionH(Bars.Length);
+                g.DrawLine(Pens.Black, Me___Rect.X, Me___Rect.Y, Me___Rect.X, Me___Rect.Bottom);
                 for (int index = 0; index < Bars.Length; index++)
                 {
-                    g.DrawLine(Pens.Black, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top, StartPosition + (index + 1) * L.BarWidth - L.BarLineMargin / 2, top + L.StaveHeight);
-                    DrawBar(g, Clef, Bars[index], new RectangleF(StartPosition + index * L.BarWidth + L.BarLineMargin, top, L.BarWidth - L.BarLineMargin, L.StaveHeight), TimeSignature.BarLengthW);
+                    g.DrawLine(Pens.Black, BarsRects[index].Right, BarsRects[index].Top, BarsRects[index].Right, BarsRects[index].Bottom);
+                }
+
+                TimeSignature.Draw(g, Sig__Rect);
+                Clef.Draw(g, Sig__Rect);
+                Key.DrawSig(g, Sig__Rect, Clef);
+
+                for (int index = 0; index < Bars.Length; index++)
+                {
+                    DrawBar(g, Clef, Bars[index], BarsRects[index], TimeSignature.BarLengthW, L.MarginL, L.MarginR);
+                }
+
+                for (int line = 0; line <= Clef.NumSpaces; line++)
+                {
+                    var prop = (float)line / Clef.NumSpaces;
+                    var y = Me___Rect.Top + prop * Me___Rect.Height;
+                    g.DrawLine(Pens.Black, Me___Rect.Left, y, Me___Rect.Right, y);
                 }
             }
 
+        }
+
+        // must have at least one voice
+        private static void DrawBar(Graphics g, Clef clef, Event[][] voices, RectangleF rect, float barWidthW, float MarginL, float MarginR)
+        {
+            rect.Width -= MarginL + MarginR;
+            rect.X += MarginL;
+            switch (voices.Length)
+            {
+                case 1:
+                    DrawVoice(g, clef, voices[0], 0, 4, rect, barWidthW);
+                    break;
+                case 2:
+                    DrawVoice(g, clef, voices[0], -1, 1, rect, barWidthW);
+                    DrawVoice(g, clef, voices[1], 1, 7, rect, barWidthW);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        // use stem direction
+        private static void DrawVoice(Graphics g, Clef clef, Event[] events, int stems, int restRankFromTopLine, RectangleF rect, float barWidthW)
+        {
+
+            float timeWh = 0;
+            for (int i = 0; i < events.Length; i++)
+            {
+                events[i].timeW = timeWh;
+                timeWh += (float)Math.Pow(2, -events[i].WholeDivisionPower) * (2 - (float)Math.Pow(2, -events[i].Dot));
+            }
+
+            foreach (Event Event in events)
+            {
+                //HERE - need to consider key.
+                var Info = new Bar(default, clef, rect.Top, rect.Height, rect.Left + (Event.timeW / barWidthW * rect.Width));
+                Event.Draw(g, Info, stems, restRankFromTopLine);
+            }
 
         }
 
@@ -59,108 +131,96 @@ namespace Chorale
             public Pitch? Pitch;
             public int WholeDivisionPower;
             public int Dot;
-        }
+            public float timeW; //temporary
 
-        public Stave[] Staves;
-
-        public Bitmap Draw()
-        {
-            Bitmap DrawRet = new Bitmap(
-                (int)(2 * L.MainMarginX + L.StaveMargin + L.SignatureWidth + L.PostSignatureMargin + Staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth - L.BarLineMargin / 2),
-                (int)(L.MainMarginY * 2 + Staves.Length * (L.StaveHeight + L.StaffSpacing) - L.StaffSpacing));
-            using (var g = Graphics.FromImage(DrawRet))
+            public void Draw(Graphics g, Bar Info, int stems, int restRankFromTopLine)
             {
-                g.DrawLine(Pens.Black, L.MainMarginX, L.MainMarginY, L.MainMarginX, L.MainMarginY + (Staves.Length - 1) * L.StaveDisplacement + L.StaveHeight);
-                for (int index = 0; index < Staves.Length; index++)
-                {
-                    Staves[index].Draw(g, L.MainMarginY + index * L.StaveDisplacement, L.MainMarginX);
-                }
-            }
 
-            return DrawRet;
-        }
+                var RankSp = Info.Height / Info.Clef.NumSpaces / 2;
 
-        // must have at least one voice
-        private static void DrawBar(Graphics g, Clef clef, Event[][] voices, RectangleF rect, double barWidthW)
-        {
-            switch (voices.Length)
-            {
-                case 1:
-                    {
-                        DrawVoice(g, clef, voices[0], 0, 4, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
-                        break;
-                    }
-
-                case 2:
-                    {
-                        DrawVoice(g, clef, voices[0], -1, 1, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
-                        DrawVoice(g, clef, voices[1], 1, 7, rect.Top, rect.Height, rect.Left, rect.Width, barWidthW);
-                        break;
-                    }
-
-                default:
-                    {
-                        throw new NotImplementedException();
-                    }
-            }
-        }
-
-        // use stem direction
-        private static void DrawVoice(Graphics g, Clef clef, Event[] events, int stems, int restRankFromTopLine, float top, float staveHeight, float left, float barWidth, double barWidthW)
-        {
-            var RankSp = staveHeight / clef.NumSpaces / 2;
-            double timeW = 0d;
-            for (int index = 0; index < events.Length; index++)
-            {
+                Pen pen;
+                Brush brush;
                 float PositionY;
-                if (events[index].Pitch.HasValue)
+
+                if (Pitch.HasValue)
                 {
-                    int ranknumber = clef.MCRankFromTopLine - events[index].Pitch.Value.IntervalFromC0.Number + 4 * 7;
-                    float X1 = (float)(left + (timeW / barWidthW * barWidth) - RankSp);
-                    float X2 = (float)(left + (timeW / barWidthW * barWidth) + RankSp);
+                    int ranknumber = (Info.Clef.MCRankFromTopLine - Pitch.Value.IntervalFromC0.Number + 4 * 7);
+
+                    PositionY = Info.Top + RankSp * ranknumber;
+                    pen = Pens.Black;
+                    brush = Brushes.Black;
+
+                    if (stems == -1 || stems == 0 && ranknumber <= 4) //up
+                    {
+                        g.DrawLine(Pens.Black, Info.X + RankSp, PositionY, Info.X + RankSp, PositionY - L.stemlength);
+                    }
+                    else                                              //down
+                    {
+                        g.DrawLine(Pens.Black, Info.X - RankSp, PositionY, Info.X - RankSp, PositionY + L.stemlength);
+                    }
+
                     for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
-                        g.DrawLine(Pens.Black, X1 - 2, top + RankSp * ledgerRank, X2 + 2, top + RankSp * ledgerRank);
+                        g.DrawLine(Pens.Black, Info.X - RankSp - 2, Info.Top + RankSp * ledgerRank, Info.X + RankSp + 2, Info.Top + RankSp * ledgerRank);
                     for (int ledgerRank = 10; ledgerRank <= ranknumber; ledgerRank += 2)
-                        g.DrawLine(Pens.Black, X1 - 2, top + RankSp * ledgerRank, X2 + 2, top + RankSp * ledgerRank);
-                    PositionY = top + RankSp * ranknumber;
-                    g.FillEllipse(Brushes.Black, new RectangleF(X1, PositionY - RankSp, RankSp * 2, RankSp * 2));
-                    if (stems == -1 || stems == 0 && ranknumber <= 4)
-                    {
-                        g.DrawLine(Pens.Black, X2, PositionY, X2, PositionY - L.stemlength);
-                    }
-                    else
-                    {
-                        g.DrawLine(Pens.Black, X1, PositionY, X1, PositionY + L.stemlength);
-                    }
+                        g.DrawLine(Pens.Black, Info.X - RankSp - 2, Info.Top + RankSp * ledgerRank, Info.X + RankSp + 2, Info.Top + RankSp * ledgerRank);
                 }
                 else
                 {
-                    PositionY = top + RankSp * restRankFromTopLine;
-                    g.FillEllipse(Brushes.Blue, new RectangleF(left + (float)Math.Round(timeW / barWidthW * barWidth) - RankSp, PositionY - RankSp, RankSp * 2, RankSp * 2));
+
+                    PositionY = Info.Top + RankSp * restRankFromTopLine;
+                    pen = Pens.Blue;
+                    brush = Brushes.Blue;
+
                 }
 
-                switch (events[index].Dot)
-                {
-                    case 0:
-                        {
-                            timeW += Math.Pow(2d, -events[index].WholeDivisionPower);
-                            break;
-                        }
-
-                    case 1:
-                        {
-                            timeW += Math.Pow(2d, -events[index].WholeDivisionPower) * 1.5d;
-                            break;
-                        }
-
-                    default:
-                        {
-                            throw new NotImplementedException();
-                        }
-                }
+                bool solid;
+                switch (WholeDivisionPower) { case 2: solid = true; break; case 1: solid = false; break; default: throw new NotImplementedException(); }
+                g.DrawCenteredEllipse(pen, brush, solid, new PointF(Info.X, PositionY), new SizeF(RankSp * 2, RankSp * 2));
             }
         }
 
+        private class L
+        {
+            public readonly static float StaveDisplacement = StaveHeight + StaffSpacing;
+
+            public readonly static RectangleF SignatureFromStave = new RectangleF(StaveMargin, 0, SignatureWidth, StaveHeight);
+
+            public readonly static float BarsLeft = SignatureFromStave.Right + PostSignatureMargin;
+
+            public readonly static float MarginL = BarLineMargin * 1.5f;
+            public readonly static float MarginR = BarLineMargin * -0.5f;
+
+            public const float stemlength = 17;
+            public const float MainMarginX = 30;
+            public const float MainMarginY = 30;
+            public const float StaveMargin = 13;
+            public const float SignatureWidth = 80;
+            public const float PostSignatureMargin = 9;
+            public const float BarLineMargin = 8;
+            public const float StaffSpacing = 57;
+            public const float StaveHeight = 40;
+            public const float BarWidth = 85;
+        }
+
+        //private??
+        public struct Bar
+        {
+            public Key Sig { get; }
+            public Clef Clef { get; }
+            public float Top { get; }
+            public float Bottom { get => Top + Height; }
+            public float Height { get; }
+            public float X { get; }
+
+            public Bar(Key sig, Clef clef, float top, float height, float x)
+            {
+                Sig = sig;
+                Clef = clef;
+                Top = top;
+                Height = height;
+                X = x;
+            }
+        }
     }
 
 }

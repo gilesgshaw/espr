@@ -14,15 +14,15 @@ namespace Chorale
 
             public int NumSpaces { get => NumLines - 1; }
 
-            public void Draw(Graphics g, float topLineY, float staveHeight, float startX, float widthX)
+            public void Draw(Graphics g, RectangleF SignatureRect)
             {
                 switch (MCRankFromTopLine)
                 {
                     case 10:
-                        g.DrawString("g", new Font("calibri", 14f), Brushes.Black, new PointF(startX, topLineY + (staveHeight / 2 / NumSpaces) * 6 - 15));
+                        g.DrawString("g", new Font("calibri", 14f), Brushes.Black, new PointF(SignatureRect.Left, SignatureRect.Top + (SignatureRect.Height / 2 / NumSpaces) * 6 - 15));
                         break;
                     case -2:
-                        g.DrawString("f", new Font("calibri", 14f), Brushes.Black, new PointF(startX, topLineY + (staveHeight / 2 / NumSpaces) * 2 - 10));
+                        g.DrawString("f", new Font("calibri", 14f), Brushes.Black, new PointF(SignatureRect.Left, SignatureRect.Top + (SignatureRect.Height / 2 / NumSpaces) * 2 - 10));
                         break;
                     default:
                         throw new NotImplementedException();
