@@ -145,6 +145,10 @@
       <Project>{1de0418f-04e3-4bbb-9c8a-62f239d52ebd}</Project>
       <Name>mus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Notation\Notation.csproj">
+      <Project>{eb7d1c3b-7bd6-4f4e-8e8b-6adf5dd99473}</Project>
+      <Name>Notation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
