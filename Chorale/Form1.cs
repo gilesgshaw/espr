@@ -100,10 +100,10 @@ namespace Chorale
             for (int i = 0; i < result.Length; i++)
             {
                 Notes[i] = new Pitch[] {
-                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.S),
-                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.A),
-                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.T),
-                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.B)
+                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.S)),
+                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.A)),
+                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.T)),
+                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.B))
                 };
             }
 
