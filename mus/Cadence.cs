@@ -3,6 +3,7 @@
     public static partial class notation
     {
 
+        //as currently using, fields may be null.
         public class Cadence : Valued
         {
             public Vert Antepenultimate { get; }
