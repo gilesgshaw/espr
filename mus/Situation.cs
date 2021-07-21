@@ -24,7 +24,12 @@ namespace mus
                             switch (pp.Chord.Root.ResidueNumber)
                             {
                                 case 4:
-                                    yield return new Passage(new Vert[] { pp, final }, new Passage(new Vert[] { pp }, null, null), new Passage(new Vert[] { final }, null, null));
+                                    yield return new Passage(
+                                        situation.Context.Tonic,
+                                        new Vert[] { pp, final },
+                                        new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
+                                        new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
+                                        );
                                     break;
                             }
                         }
@@ -36,7 +41,12 @@ namespace mus
                     {
                         foreach (var pp in situation.Context.Bank[situation.Sop[0]])
                         {
-                            yield return new Passage(new Vert[] { pp, final }, new Passage(new Vert[] { pp }, null, null), new Passage(new Vert[] { final }, null, null));
+                            yield return new Passage(
+                                situation.Context.Tonic,
+                                new Vert[] { pp, final },
+                                new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
+                                new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
+                                );
                         }
                     }
                 }
@@ -76,7 +86,7 @@ namespace mus
                 {
                     foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => x.Left == l.Right))
                     {
-                        var obj = new Passage(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
+                        var obj = new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
                         if (obj.Penalty <= tolerence[obj.Verts.Length]) list.Add(obj);
                     }
                 }
@@ -110,7 +120,7 @@ namespace mus
                     return new Situation(Context, Sop.Skip(1).ToArray(), Terminal);
                 }
             }
-            
+
             public override bool Equals(object obj)
             {
                 return Equals(obj as Situation);

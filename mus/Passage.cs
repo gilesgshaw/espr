@@ -11,10 +11,9 @@ namespace mus
         //for later should maybe store the pitches directly...
         //and in fact they are probably the 'independant' data.
 
-        //Currently: tonic is placeholder, just stores and compares verts
         public class Passage : Valued, IEquatable<Passage>
         {
-            //public IntervalS Tonic { get; }
+            public IntervalS Tonic { get; }
             public Vert[] Verts { get; }
             public Chord[] Chords { get; }
 
@@ -78,11 +77,10 @@ namespace mus
                     return tr;
                 }
             }
-
-            //public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts)
-            public Passage(Vert[] verts, Passage left, Passage right) : base(verts)
+            
+            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts)
             {
-                //Tonic = tonic;
+                Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
                 Verts = verts;
                 Left = left;
@@ -96,7 +94,7 @@ namespace mus
 
             public bool Equals(Passage other)
             {
-                if (other == null || Verts.Length != other.Verts.Length) return false;
+                if (other == null || other.Tonic != Tonic || Verts.Length != other.Verts.Length) return false;
                 for (int i = 0; i < Verts.Length; i++)
                 {
                     if (!ReferenceEquals(Verts[i], other.Verts[i])) return false;

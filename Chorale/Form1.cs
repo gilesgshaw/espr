@@ -90,7 +90,7 @@ namespace Chorale
 
 
 
-        private PictureBox CreatePB(Passage data)
+        private PictureBox CreatePB(Passage data, Mode SigMode)
         {
             var Data = data.Verts;
 
@@ -100,17 +100,17 @@ namespace Chorale
             for (int i = 0; i < result.Length; i++)
             {
                 Notes[i] = new Pitch[] {
-                    new Pitch(result[i].Chord.Root + result[i].Voicing.S),
-                    new Pitch(result[i].Chord.Root + result[i].Voicing.A),
-                    new Pitch(result[i].Chord.Root + result[i].Voicing.T),
-                    new Pitch(result[i].Chord.Root + result[i].Voicing.B)
+                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.S),
+                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.A),
+                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.T),
+                    new Pitch(data.Tonic + result[i].Chord.Root + result[i].Voicing.B)
                 };
             }
 
             var nData = new MIDIData()
             {
                 Notes = Notes,
-                Key = new Display.Key(default, Mode.Zero)
+                Key = new Display.Key(data.Tonic, SigMode)
             };
 
             var pb = new PictureBox();
@@ -127,9 +127,10 @@ namespace Chorale
 
         private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var item in test())
+            var result = test();
+            foreach (var item in result.Item1)
             {
-                CreatePB(item);
+                CreatePB(item, result.Item2);
             }
         }
     }
