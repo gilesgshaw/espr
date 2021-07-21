@@ -19,10 +19,10 @@ namespace mus
             //key is MIDI pitches
             public Vert[][] Bank { get; }
 
-            public Context()
+            public Context(IntervalS tonic)
             {
 
-                Tonic = default;
+                Tonic = tonic;
 
                 bRange = (31 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
                 tRange = (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis);
