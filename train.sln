@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aud", "aud\aud.csproj", "{E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chorale", "Chorale\Chorale.csproj", "{902B56DC-FFC2-49FD-8245-8CC0F2F2663A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mus", "mus\mus.csproj", "{1DE0418F-04E3-4BBB-9C8A-62F239D52EBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mus", "mus\mus.csproj", "{1DE0418F-04E3-4BBB-9C8A-62F239D52EBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Non-active", "Non-active", "{D77BB44F-47C9-4090-BAD3-553D8723063A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8A997743-2490-4DD4-BF9A-9A230D0109CE} = {D77BB44F-47C9-4090-BAD3-553D8723063A}
+		{E09C58B8-34C2-4EA1-B6D6-58D2D6642847} = {D77BB44F-47C9-4090-BAD3-553D8723063A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F733556-95CB-4311-9F55-062A66DDCE18}
