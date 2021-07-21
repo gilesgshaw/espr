@@ -18,7 +18,7 @@
                 }
             }
 
-            public Cadence(Vert antepenultimate, Vert penultimate, Vert ultimate) : base(new Valued[] { antepenultimate, penultimate, ultimate })
+            public Cadence(Vert antepenultimate, Vert penultimate, Vert ultimate) : base()
             {
                 Antepenultimate = antepenultimate;
                 Penultimate = penultimate;

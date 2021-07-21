@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static System.Math;
 
 namespace mus
@@ -16,6 +17,8 @@ namespace mus
             public IntervalS Tonic { get; }
             public Vert[] Verts { get; }
             public Chord[] Chords { get; }
+
+            public Cadence Cadence { get; }
 
             //accepts these as trusted redundant information.
 
@@ -77,14 +80,25 @@ namespace mus
                     return tr;
                 }
             }
-            
-            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts)
+
+            private static Cadence GetCadence(Vert[] verts)
+            {
+                Cadence Cadence = default;
+                if (verts.Length >= 3) Cadence = new Cadence(verts[verts.Length - 3], verts[verts.Length - 2], verts[verts.Length - 1]);
+                if (verts.Length == 2) Cadence = new Cadence(default, verts[verts.Length - 2], verts[verts.Length - 1]);
+                if (verts.Length == 1) Cadence = new Cadence(default, default, verts[verts.Length - 1]);
+                if (verts.Length == 0) Cadence = new Cadence(default, default, default);
+                return Cadence;
+            }
+
+            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts.Concat(new Valued[] { GetCadence(verts) }).ToArray())
             {
                 Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
                 Verts = verts;
                 Left = left;
                 Right = right;
+                Cadence = GetCadence(verts);
             }
 
             public override bool Equals(object obj)
