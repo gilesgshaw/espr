@@ -6,7 +6,7 @@ namespace mus
     public static partial class notation
     {
 
-        class Valuer<T> : IComparer<T> where T : Valued
+        class Valuer<T> : IComparer<T> where T : Valuable
         {
             public int Compare(T x, T y)
             {
@@ -18,7 +18,12 @@ namespace mus
             public readonly static Valuer<T> instance = new Valuer<T>();
         }
 
-        public abstract class Valued
+        public interface Valuable
+        {
+            double Penalty { get; }
+        }
+
+        public abstract class Valued : Valuable
         {
 
             public virtual double Penalty { get; }
@@ -45,7 +50,7 @@ namespace mus
         }
 
         //must be a tree...
-        public abstract class TreeValued
+        public abstract class TreeValued : Valuable
         {
             public IEnumerable<TreeValued> Children { get; }
 
