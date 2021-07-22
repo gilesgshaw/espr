@@ -49,7 +49,7 @@ namespace mus
             }
         }
 
-        //must be a tree...
+        //Is actually a directed acyclic graph
         public abstract class TreeValued : Valuable
         {
             public IEnumerable<TreeValued> Children { get; }
