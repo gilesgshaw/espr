@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace mus
@@ -49,9 +50,11 @@ namespace mus
             }
         }
 
+
         //Is actually a directed acyclic graph
-        public abstract class TreeValued : Valuable
+        public abstract class TreeValued : Valuable, IEquatable<TreeValued>
         {
+
             public IEnumerable<TreeValued> Children { get; }
 
             public IEnumerable<TreeValued> Decendants { get; }
@@ -64,8 +67,16 @@ namespace mus
 
             public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
 
+
+
+            private static int NextSerial = 0;
+            private int Serial { get; }
+
+
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty, double temporaryPenalty)
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = temporaryPenalty;
                 Children = children;
@@ -74,6 +85,8 @@ namespace mus
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = 0;
                 Children = children;
@@ -82,6 +95,8 @@ namespace mus
 
             protected TreeValued()
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = 0;
                 TemporaryPenalty = 0;
                 Children = Enumerable.Empty<TreeValued>();
@@ -90,6 +105,8 @@ namespace mus
 
             protected TreeValued(double intrinticPenalty, double temporaryPenalty)
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = temporaryPenalty;
                 Children = Enumerable.Empty<TreeValued>();
@@ -98,6 +115,8 @@ namespace mus
 
             protected TreeValued(double intrinticPenalty)
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = 0;
                 Children = Enumerable.Empty<TreeValued>();
@@ -106,10 +125,30 @@ namespace mus
 
             protected TreeValued(IEnumerable<TreeValued> children)
             {
+                Serial = NextSerial;
+                NextSerial++;
                 IntrinsicPenalty = 0;
                 TemporaryPenalty = 0;
                 Children = children;
                 Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
+            }
+
+
+
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as TreeValued);
+            }
+
+            public bool Equals(TreeValued other)
+            {
+                return other != null &&
+                       Serial == other.Serial;
+            }
+
+            public override int GetHashCode()
+            {
+                return Serial;
             }
         }
 
