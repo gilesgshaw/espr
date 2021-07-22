@@ -6,22 +6,22 @@ namespace mus
     {
 
         //Root is relative to tonic
-        public class Chord : Valued
+        public class Chord : TreeValued
         {
             public IntervalS Root { get; }
             public Variety Variety { get; }
 
-            public Chord(IntervalS root, Variety variety, double penalty) : base(penalty)
+            public Chord(IntervalS root, Variety variety, double intrinsicPenalty) : base(intrinsicPenalty)
             {
                 Root = root;
                 Variety = variety;
             }
 
-            public override double Penalty
+            public override double IntrinticPenalty
             {
                 get
                 {
-                    var tr = base.Penalty;
+                    var tr = base.IntrinticPenalty;
                     return tr;
                 }
             }

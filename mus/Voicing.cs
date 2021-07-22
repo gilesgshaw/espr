@@ -8,7 +8,7 @@ namespace mus
 
         //counts from root
         //constructor trusts the information given.
-        public class VoicingS : Valued
+        public class VoicingS : TreeValued
         {
             public IntervalS S { get; }
             public IntervalS A { get; }
@@ -32,11 +32,11 @@ namespace mus
             //    return a + b;
             //}
 
-            public override double Penalty
+            public override double IntrinticPenalty
             {
                 get
                 {
-                    var tr = base.Penalty;
+                    var tr = base.IntrinticPenalty;
 
                     //inversion
                     if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
@@ -118,7 +118,7 @@ namespace mus
 
         //counts from root
         //constructor trusts the information given.
-        public class VoicingC : Valued
+        public class VoicingC : TreeValued
         {
             public IntervalC S { get; }
             public IntervalC A { get; }
@@ -135,11 +135,11 @@ namespace mus
             //    return a + b;
             //}
 
-            public override double Penalty
+            public override double IntrinticPenalty
             {
                 get
                 {
-                    var tr = base.Penalty;
+                    var tr = base.IntrinticPenalty;
 
                     //spacing
                     var Spacing = new int[] { T.Semis - B.Semis, A.Semis - T.Semis, S.Semis - A.Semis };
@@ -164,7 +164,7 @@ namespace mus
                 }
             }
 
-            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(new Valued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
+            public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(new TreeValued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
             {
                 S = s;
                 A = a;

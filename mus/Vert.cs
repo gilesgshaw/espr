@@ -4,14 +4,14 @@
     {
 
         //'based off of' tonic
-        public class Vert : Valued
+        public class Vert : TreeValued
         {
             public Chord Chord { get; }
             public VoicingC Voicing { get; }
 
             //public VoicingC Absolute { get; }
 
-            public Vert(Chord chord, VoicingC voicing) : base(new Valued[] { voicing, chord })
+            public Vert(Chord chord, VoicingC voicing) : base(new TreeValued[] { voicing, chord })
             {
                 Chord = chord;
                 Voicing = voicing;

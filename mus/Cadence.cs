@@ -4,17 +4,17 @@
     {
 
         //as currently using, fields may be null.
-        public class Cadence : Valued
+        public class Cadence : TreeValued
         {
             public Vert Antepenultimate { get; }
             public Vert Penultimate { get; }
             public Vert Ultimate { get; }
 
-            public override double Penalty
+            public override double IntrinticPenalty
             {
                 get
                 {
-                    var tr = base.Penalty;
+                    var tr = base.IntrinticPenalty;
                     if (Antepenultimate != null &&
                         Antepenultimate.Chord.Root.ResidueNumber == 1 && Antepenultimate.Voicing.B.ResidueNumber == 4 &&
                         Penultimate.Chord.Root.ResidueNumber == 4 && Penultimate.Voicing.B.ResidueNumber == 1 &&

@@ -12,7 +12,7 @@ namespace mus
         //for later should maybe store the pitches directly...
         //and in fact they are probably the 'independant' data.
 
-        public class Passage : Valued, IEquatable<Passage>
+        public class Passage : TreeValued, IEquatable<Passage>
         {
             public IntervalS Tonic { get; }
             public Vert[] Verts { get; }
@@ -27,11 +27,11 @@ namespace mus
 
             //public IntervalC[][] Pitches { get; } //satb
 
-            public override double Penalty
+            public override double IntrinticPenalty
             {
                 get
                 {
-                    var tr = base.Penalty;
+                    var tr = base.IntrinticPenalty;
                     for (int i = 1; i < Chords.Length; i++)
                     {
 
@@ -91,7 +91,7 @@ namespace mus
                 return Cadence;
             }
 
-            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts.Concat(new Valued[] { GetCadence(verts) }).ToArray())
+            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts.Concat(new TreeValued[] { GetCadence(verts) }))
             {
                 Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
