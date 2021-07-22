@@ -58,11 +58,24 @@ namespace mus
 
             public virtual double IntrinsicPenalty { get; }
 
-            public double Penalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
+            public virtual double TemporaryPenalty { get; }
+
+            public double Penalty { get => Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty); }
+
+            public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
+
+            protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty, double temporaryPenalty)
+            {
+                IntrinsicPenalty = intrinticPenalty;
+                TemporaryPenalty = temporaryPenalty;
+                Children = children;
+                Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
+            }
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
             {
                 IntrinsicPenalty = intrinticPenalty;
+                TemporaryPenalty = 0;
                 Children = children;
                 Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
             }
@@ -70,6 +83,15 @@ namespace mus
             protected TreeValued()
             {
                 IntrinsicPenalty = 0;
+                TemporaryPenalty = 0;
+                Children = Enumerable.Empty<TreeValued>();
+                Decendants = Children;
+            }
+
+            protected TreeValued(double intrinticPenalty, double temporaryPenalty)
+            {
+                IntrinsicPenalty = intrinticPenalty;
+                TemporaryPenalty = temporaryPenalty;
                 Children = Enumerable.Empty<TreeValued>();
                 Decendants = Children;
             }
@@ -77,6 +99,7 @@ namespace mus
             protected TreeValued(double intrinticPenalty)
             {
                 IntrinsicPenalty = intrinticPenalty;
+                TemporaryPenalty = 0;
                 Children = Enumerable.Empty<TreeValued>();
                 Decendants = Children;
             }
@@ -84,6 +107,7 @@ namespace mus
             protected TreeValued(IEnumerable<TreeValued> children)
             {
                 IntrinsicPenalty = 0;
+                TemporaryPenalty = 0;
                 Children = children;
                 Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
             }
