@@ -73,6 +73,13 @@ namespace mus
             private int Serial { get; }
 
 
+            protected void AddChildren(IEnumerable<TreeValued> additional)
+            {
+                Children = Children.Concat(additional);
+                ComputeDecendants();
+            }
+
+
             private void ComputeDecendants()
             {
                 Decendants = Children.SelectMany((x) => x.Decendants).Distinct().Concat(Children);
