@@ -17,11 +17,11 @@ namespace mus
                 Variety = variety;
             }
 
-            public override double IntrinticPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinticPenalty;
+                    var tr = base.IntrinsicPenalty;
                     return tr;
                 }
             }

@@ -56,34 +56,34 @@ namespace mus
 
             public IEnumerable<TreeValued> Decendants { get; }
 
-            public virtual double IntrinticPenalty { get; }
+            public virtual double IntrinsicPenalty { get; }
 
-            public double Penalty { get => Decendants.Aggregate(IntrinticPenalty, (x, y) => x + y.IntrinticPenalty); }
+            public double Penalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
             {
-                IntrinticPenalty = intrinticPenalty;
+                IntrinsicPenalty = intrinticPenalty;
                 Children = children;
                 Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
             }
 
             protected TreeValued()
             {
-                IntrinticPenalty = 0;
+                IntrinsicPenalty = 0;
                 Children = Enumerable.Empty<TreeValued>();
                 Decendants = Children;
             }
 
             protected TreeValued(double intrinticPenalty)
             {
-                IntrinticPenalty = intrinticPenalty;
+                IntrinsicPenalty = intrinticPenalty;
                 Children = Enumerable.Empty<TreeValued>();
                 Decendants = Children;
             }
 
             protected TreeValued(IEnumerable<TreeValued> children)
             {
-                IntrinticPenalty = 0;
+                IntrinsicPenalty = 0;
                 Children = children;
                 Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
             }

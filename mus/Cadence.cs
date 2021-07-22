@@ -10,11 +10,11 @@
             public Vert Penultimate { get; }
             public Vert Ultimate { get; }
 
-            public override double IntrinticPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinticPenalty;
+                    var tr = base.IntrinsicPenalty;
                     if (Antepenultimate != null &&
                         Antepenultimate.Chord.Root.ResidueNumber == 1 && Antepenultimate.Voicing.B.ResidueNumber == 4 &&
                         Penultimate.Chord.Root.ResidueNumber == 4 && Penultimate.Voicing.B.ResidueNumber == 1 &&

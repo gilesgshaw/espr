@@ -32,11 +32,11 @@ namespace mus
             //    return a + b;
             //}
 
-            public override double IntrinticPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinticPenalty;
+                    var tr = base.IntrinsicPenalty;
 
                     //inversion
                     if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
@@ -135,11 +135,11 @@ namespace mus
             //    return a + b;
             //}
 
-            public override double IntrinticPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinticPenalty;
+                    var tr = base.IntrinsicPenalty;
 
                     //spacing
                     var Spacing = new int[] { T.Semis - B.Semis, A.Semis - T.Semis, S.Semis - A.Semis };

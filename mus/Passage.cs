@@ -27,11 +27,11 @@ namespace mus
 
             //public IntervalC[][] Pitches { get; } //satb
 
-            public override double IntrinticPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinticPenalty;
+                    var tr = base.IntrinsicPenalty;
                     for (int i = 1; i < Chords.Length; i++)
                     {
 
