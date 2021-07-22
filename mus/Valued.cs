@@ -44,5 +44,45 @@ namespace mus
             }
         }
 
+        //must be a tree...
+        public abstract class TreeValued
+        {
+            public IEnumerable<TreeValued> Children { get; }
+
+            public IEnumerable<TreeValued> Decendants { get; }
+
+            public virtual double IntrinticPenalty { get; }
+
+            public double Penalty { get => Decendants.Aggregate(IntrinticPenalty, (x, y) => x + y.IntrinticPenalty); }
+
+            protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
+            {
+                IntrinticPenalty = intrinticPenalty;
+                Children = children;
+                Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
+            }
+
+            protected TreeValued()
+            {
+                IntrinticPenalty = 0;
+                Children = Enumerable.Empty<TreeValued>();
+                Decendants = Children;
+            }
+
+            protected TreeValued(double intrinticPenalty)
+            {
+                IntrinticPenalty = intrinticPenalty;
+                Children = Enumerable.Empty<TreeValued>();
+                Decendants = Children;
+            }
+
+            protected TreeValued(IEnumerable<TreeValued> children)
+            {
+                IntrinticPenalty = 0;
+                Children = children;
+                Decendants = children.SelectMany((x) => x.Decendants).Distinct().Concat(children);
+            }
+        }
+
     }
 }
