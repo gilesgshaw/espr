@@ -21,6 +21,7 @@ namespace mus
                 Displacement = displacement;
             }
 
+            //may need fixing up based on intended usage
             public Situation Left
             {
                 get
@@ -29,6 +30,7 @@ namespace mus
                 }
             }
 
+            //may need fixing up based on intended usage
             public Situation Right
             {
                 get

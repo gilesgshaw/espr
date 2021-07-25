@@ -102,15 +102,15 @@ namespace mus
 
 
             public IntervalS Tonic { get; }
-            public Vert[] Verts { get; }
-            public Chord[] Chords { get; }
+            public Vert[] Verts { get; } //length at least 1
+            public Chord[] Chords { get; } //length at least 1
 
             //public Cadence Cadence { get; }
 
             //accepts these as trusted redundant information.
 
-            public Passage Left { get; }
-            public Passage Right { get; }
+            public Passage Left { get; } //will be null rather then 'empty'
+            public Passage Right { get; } //will be null rather then 'empty'
 
             //public IntervalC[][] Pitches { get; } //satb
 
@@ -203,6 +203,7 @@ namespace mus
                 return true;
             }
 
+            //may want improving
             public override int GetHashCode()
             {
                 return -1971104453 + EqualityComparer<Vert[]>.Default.GetHashCode(Verts);
