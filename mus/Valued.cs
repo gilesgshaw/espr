@@ -82,7 +82,7 @@ namespace mus
 
             private void ComputeDecendants()
             {
-                Decendants = Children.SelectMany((x) => x.Decendants).Distinct().Concat(Children);
+                Decendants = Children.SelectMany((x) => x.Decendants).Concat(Children).Distinct();
             }
 
 
