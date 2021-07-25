@@ -15,7 +15,7 @@ namespace mus
             //not yet implemented tolerence
             public static IEnumerable<Passage> GetPairs(Situation situation, double[] tolerence)
             {
-                if (situation.Terminal)
+                if (situation.Displacement == 0)
                 {
                     foreach (var final in situation.Context.Bank[situation.Sop[1]].Where((x) => x.Chord.Root.ResidueNumber == 0 && x.Voicing.B.ResidueNumber == 0))
                     {
@@ -96,20 +96,20 @@ namespace mus
 
             public Context Context;
             public int[] Sop;
-            public bool Terminal;
+            public int Displacement;
 
-            public Situation(Context context, int[] sop, bool terminal)
+            public Situation(Context context, int[] sop, int displacement)
             {
                 Context = context;
                 Sop = sop;
-                Terminal = terminal;
+                Displacement = displacement;
             }
 
             public Situation Left
             {
                 get
                 {
-                    return new Situation(Context, Sop.Take(Sop.Length - 1).ToArray(), false);
+                    return new Situation(Context, Sop.Take(Sop.Length - 1).ToArray(), Displacement + 1);
                 }
             }
 
@@ -117,7 +117,7 @@ namespace mus
             {
                 get
                 {
-                    return new Situation(Context, Sop.Skip(1).ToArray(), Terminal);
+                    return new Situation(Context, Sop.Skip(1).ToArray(), Displacement);
                 }
             }
 
@@ -130,7 +130,7 @@ namespace mus
             {
                 if (other == null ||
                     !ReferenceEquals(Context, other.Context) ||
-                    Terminal != other.Terminal ||
+                    Displacement != other.Displacement ||
                     Sop.Length != other.Sop.Length) return false;
                 for (int i = 0; i < Sop.Length; i++)
                 {
@@ -144,7 +144,7 @@ namespace mus
             {
                 int hashCode = 280880954;
                 hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(Context);
-                hashCode = hashCode * -1521134295 + Terminal.GetHashCode();
+                hashCode = hashCode * -1521134295 + Displacement.GetHashCode();
                 return hashCode;
             }
 
