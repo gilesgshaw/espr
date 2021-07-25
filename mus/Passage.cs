@@ -19,6 +19,12 @@ namespace mus
             #region Static
 
             //not yet implemented tolerence
+            public static IEnumerable<Passage> GetSingletons(Situation situation, double[] tolerence)
+            {
+                return Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
+            }
+
+            //not yet implemented tolerence
             public static IEnumerable<Passage> GetPairs(Situation situation, double[] tolerence)
             {
                 if (situation.Displacement == 0)
@@ -58,13 +64,18 @@ namespace mus
                 }
             }
 
-            //at least 2
+            //at least 1
             public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
 
-            //at least 2
+            //at least 1
             public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence)
             {
-                if (situation.Sop.Length == 2)
+                if (situation.Sop.Length == 1)
+                {
+                    //exactly 1
+                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetSingletons(situation, tolerence)));
+                }
+                else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
                     if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetPairs(situation, tolerence)));
