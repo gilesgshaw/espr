@@ -63,7 +63,17 @@ namespace mus
 
             public virtual double TemporaryPenalty { get; }
 
-            public double Penalty { get => Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty); }
+            public double Penalty
+            {
+                get
+                {
+                    if (iPenalty == null) iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty);
+                    //iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty);
+                    return iPenalty.Value;
+                }
+            }
+
+            private double? iPenalty { get; set; }
 
             public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
 
