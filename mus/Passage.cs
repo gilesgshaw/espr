@@ -136,6 +136,7 @@ namespace mus
                     if (Chords.Length == 2) // Length 2
                     {
 
+                        //Voice leading
                         var RootChange = Verts[1].Chord.Root.ResidueSemis - Verts[0].Chord.Root.ResidueSemis;
                         var SChange = Verts[1].Voicing.S.Semis - Verts[0].Voicing.S.Semis;
                         var AChange = Verts[1].Voicing.A.Semis - Verts[0].Voicing.A.Semis;
@@ -146,6 +147,7 @@ namespace mus
                         tr += Abs(RootChange + TChange);
                         tr += Abs(RootChange + BChange);
 
+                        //Chord transition
                         if (Chords[1].Root == Chords[0].Root && Verts[1].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
                         {
                             tr += 50;
@@ -155,6 +157,7 @@ namespace mus
                             tr += 35;
                         }
 
+                        //Paralells
                         var Notes = new (IntervalS, IntervalS)[] {
                             (Verts[0].Voicing.S.Residue + Verts[0].Chord.Root, Verts[1].Voicing.S.Residue + Verts[1].Chord.Root),
                             (Verts[0].Voicing.A.Residue + Verts[0].Chord.Root, Verts[1].Voicing.A.Residue + Verts[1].Chord.Root),
@@ -177,7 +180,6 @@ namespace mus
                         }
 
                     }
-
 
                     return tr;
                 }
