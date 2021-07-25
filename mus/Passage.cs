@@ -125,39 +125,41 @@ namespace mus
 
             //public IntervalC[][] Pitches { get; } //satb
 
+            //curently takes account that L/R are children (down to singletons)
             public override double IntrinsicPenalty
             {
                 get
                 {
                     var tr = base.IntrinsicPenalty;
-                    for (int i = 1; i < Chords.Length; i++)
+
+
+                    if (Chords.Length == 2) // Length 2
                     {
 
-                        var RootChange = Verts[i].Chord.Root.ResidueSemis - Verts[i - 1].Chord.Root.ResidueSemis;
-                        var SChange = Verts[i].Voicing.S.Semis - Verts[i - 1].Voicing.S.Semis;
-                        var AChange = Verts[i].Voicing.A.Semis - Verts[i - 1].Voicing.A.Semis;
-                        var TChange = Verts[i].Voicing.T.Semis - Verts[i - 1].Voicing.T.Semis;
-                        var BChange = Verts[i].Voicing.B.Semis - Verts[i - 1].Voicing.B.Semis;
+                        var RootChange = Verts[1].Chord.Root.ResidueSemis - Verts[0].Chord.Root.ResidueSemis;
+                        var SChange = Verts[1].Voicing.S.Semis - Verts[0].Voicing.S.Semis;
+                        var AChange = Verts[1].Voicing.A.Semis - Verts[0].Voicing.A.Semis;
+                        var TChange = Verts[1].Voicing.T.Semis - Verts[0].Voicing.T.Semis;
+                        var BChange = Verts[1].Voicing.B.Semis - Verts[0].Voicing.B.Semis;
                         tr += Abs(RootChange + SChange);
                         tr += Abs(RootChange + AChange);
                         tr += Abs(RootChange + TChange);
                         tr += Abs(RootChange + BChange);
 
-                        if (Chords[i].Root == Chords[i - 1].Root && Verts[i].Voicing.B.Residue == Verts[i - 1].Voicing.B.Residue)
+                        if (Chords[1].Root == Chords[0].Root && Verts[1].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
                         {
                             tr += 50;
                         }
-
-                        if (Chords[i].Root == Chords[i - 1].Root)
+                        if (Chords[1].Root == Chords[0].Root)
                         {
                             tr += 35;
                         }
 
                         var Notes = new (IntervalS, IntervalS)[] {
-                            (Verts[i - 1].Voicing.S.Residue + Verts[i - 1].Chord.Root, Verts[i].Voicing.S.Residue + Verts[i].Chord.Root),
-                            (Verts[i - 1].Voicing.A.Residue + Verts[i - 1].Chord.Root, Verts[i].Voicing.A.Residue + Verts[i].Chord.Root),
-                            (Verts[i - 1].Voicing.T.Residue + Verts[i - 1].Chord.Root, Verts[i].Voicing.T.Residue + Verts[i].Chord.Root),
-                            (Verts[i - 1].Voicing.B.Residue + Verts[i - 1].Chord.Root, Verts[i].Voicing.B.Residue + Verts[i].Chord.Root)
+                            (Verts[0].Voicing.S.Residue + Verts[0].Chord.Root, Verts[1].Voicing.S.Residue + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.A.Residue + Verts[0].Chord.Root, Verts[1].Voicing.A.Residue + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.T.Residue + Verts[0].Chord.Root, Verts[1].Voicing.T.Residue + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.B.Residue + Verts[0].Chord.Root, Verts[1].Voicing.B.Residue + Verts[1].Chord.Root)
                         };
                         var Ints = Array.ConvertAll(Notes, (x) => x.Item2 - x.Item1);
                         for (int i1 = 0; i1 < 4; i1++)
@@ -175,6 +177,8 @@ namespace mus
                         }
 
                     }
+
+
                     return tr;
                 }
             }
@@ -197,6 +201,7 @@ namespace mus
                 Left = left;
                 Right = right;
                 //Cadence = GetCadence(verts);
+                if (Left != null) AddChildren(new TreeValued[] { Left, Right }); //if 2+, register children.
             }
 
             public override bool Equals(object obj)
