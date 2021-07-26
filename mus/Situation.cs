@@ -11,7 +11,7 @@ namespace mus
         {
 
             public Context Context;
-            public int[] Sop;
+            public int[] Sop; //length at least 1
             public int Displacement;
 
             public Situation(Context context, int[] sop, int displacement)
@@ -21,20 +21,22 @@ namespace mus
                 Displacement = displacement;
             }
 
-            //may need fixing up based on intended usage
+            //will be null rather then 'empty'
             public Situation Left
             {
                 get
                 {
+                    if (Sop.Length == 1) return null;
                     return new Situation(Context, Sop.Take(Sop.Length - 1).ToArray(), Displacement + 1);
                 }
             }
 
-            //may need fixing up based on intended usage
+            //will be null rather then 'empty'
             public Situation Right
             {
                 get
                 {
+                    if (Sop.Length == 1) return null;
                     return new Situation(Context, Sop.Skip(1).ToArray(), Displacement);
                 }
             }
