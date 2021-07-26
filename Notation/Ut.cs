@@ -158,6 +158,47 @@ namespace Notation
     public static class Ut
     {
 
+        public static void PrintPretty<T>(T top, Func<T, string> names, Func<T, IEnumerable<T>> children, Action<string> Callback)
+        {
+
+            Callback(names(top));
+            Callback("\n");
+
+            var c = children(top).Count() - 1;
+            foreach (var child in children(top))
+            {
+                PrintPretty(child, names, children, Callback, "", c == 0);
+                c--;
+            }
+
+        }
+
+        private static void PrintPretty<T>(T top, Func<T, string> names, Func<T, IEnumerable<T>> children, Action<string> Callback, string indent, bool last)
+        {
+
+            Callback(indent);
+            if (last)
+            {
+                Callback("└─");
+                indent += "  ";
+            }
+            else
+            {
+                Callback("├─");
+                indent += "| ";
+            }
+            Callback(names(top));
+            Callback("\n");
+
+            var c = children(top).Count() - 1;
+            foreach (var child in children(top))
+            {
+                PrintPretty(child, names, children, Callback, indent, c == 0);
+                c--;
+            }
+
+        }
+
         public static Pen GetPen(NamedColor col)
         {
             switch (col)
