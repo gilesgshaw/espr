@@ -133,6 +133,22 @@ namespace mus
                     var tr = base.IntrinsicPenalty;
 
 
+                    if (Chords.Length == 1) // Length 1
+                    {
+
+                        //Bad chords
+                        if (Chords[0].Root.ResidueNumber == 5 && Verts[0].Voicing.B.ResidueNumber == 2)
+                        {
+                            tr += 35;
+                        }
+                        if (Chords[0].Root.ResidueNumber == 1 && Verts[0].Voicing.B.ResidueNumber == 0)
+                        {
+                            tr += 15;
+                        }
+
+                    }
+
+
                     if (Chords.Length == 2) // Length 2
                     {
 
@@ -146,15 +162,27 @@ namespace mus
                         tr += Abs(RootChange + AChange);
                         tr += Abs(RootChange + TChange);
                         tr += Abs(RootChange + BChange);
+                        int numStatic = 0;
+                        if (SChange == -RootChange) numStatic += 1;
+                        if (AChange == -RootChange) numStatic += 1;
+                        if (TChange == -RootChange) numStatic += 1;
+                        if (BChange == -RootChange) numStatic += 3;
+                        tr += numStatic * 4;
 
                         //Chord transition
                         if (Chords[1].Root == Chords[0].Root && Verts[1].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
                         {
                             tr += 50;
                         }
-                        if (Chords[1].Root == Chords[0].Root)
+                        switch ((Chords[1].Root - Chords[0].Root).ResidueNumber)
                         {
-                            tr += 35;
+                            case 3: tr += -10; break;
+                            case 5: tr += -5; break;
+                            case 4: tr += 0; break;
+                            case 1: tr += 3; break;
+                            case 6: tr += 15; break;
+                            case 2: tr += 25; break;
+                            case 0: tr += 35; break;
                         }
 
                         //Paralells
@@ -179,7 +207,41 @@ namespace mus
                             }
                         }
 
+                        //Overlapping
+                        var AbsNotes = new (IntervalC, IntervalC)[] {
+                            (Verts[0].Voicing.S + Verts[0].Chord.Root, Verts[1].Voicing.S + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.A + Verts[0].Chord.Root, Verts[1].Voicing.A + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.T + Verts[0].Chord.Root, Verts[1].Voicing.T + Verts[1].Chord.Root),
+                            (Verts[0].Voicing.B + Verts[0].Chord.Root, Verts[1].Voicing.B + Verts[1].Chord.Root)
+                        };
+                        for (int i1 = 0; i1 < 3; i1++)
+                        {
+                            int i2 = i1 + 1;
+
+                            if (AbsNotes[i1].Item1 < AbsNotes[i2].Item2)
+                            {
+                                tr += 45;
+                            }
+                            if (AbsNotes[i1].Item2 < AbsNotes[i2].Item1)
+                            {
+                                tr += 45;
+                            }
+                        }
+
                     }
+
+
+                    if (Chords.Length == 3) // Length 3
+                    {
+
+                        //Chord transition 1 to 3
+                        if (Chords[2].Root == Chords[0].Root && Verts[2].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
+                        {
+                            tr += 65;
+                        }
+
+                    }
+
 
                     return tr;
                 }
