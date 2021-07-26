@@ -129,7 +129,7 @@ namespace Chorale
         private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var result = test();
-            foreach (var item in result.Item1)
+            foreach (var item in result.Item1.Where((x) => x != null))
             {
                 CreatePB(item, result.Item2);
             }
