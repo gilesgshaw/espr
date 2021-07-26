@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using static mus.notation;
+using static Notation.Ut;
 
 namespace Notation
 {
@@ -132,6 +133,7 @@ namespace Notation
             public int WholeDivisionPower;
             public int Dot;
             public float timeW; //temporary
+            public NamedColor? col;
 
             public void Draw(Graphics g, Bar Info, int stems, int restRankFromTopLine)
             {
@@ -149,14 +151,19 @@ namespace Notation
                     PositionY = Info.Top + RankSp * ranknumber;
                     pen = Pens.Black;
                     brush = Brushes.Black;
+                    if (col.HasValue)
+                    {
+                        pen = GetPen(col.Value);
+                        brush = GetBrush(col.Value);
+                    }
 
                     if (stems == -1 || stems == 0 && ranknumber <= 4) //up
                     {
-                        g.DrawLine(Pens.Black, Info.X + RankSp, PositionY, Info.X + RankSp, PositionY - L.stemlength);
+                        g.DrawLine(pen, Info.X + RankSp, PositionY, Info.X + RankSp, PositionY - L.stemlength);
                     }
                     else                                              //down
                     {
-                        g.DrawLine(Pens.Black, Info.X - RankSp, PositionY, Info.X - RankSp, PositionY + L.stemlength);
+                        g.DrawLine(pen, Info.X - RankSp, PositionY, Info.X - RankSp, PositionY + L.stemlength);
                     }
 
                     for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
@@ -170,6 +177,11 @@ namespace Notation
                     PositionY = Info.Top + RankSp * restRankFromTopLine;
                     pen = Pens.Blue;
                     brush = Brushes.Blue;
+                    if (col.HasValue)
+                    {
+                        pen = GetPen(col.Value);
+                        brush = GetBrush(col.Value);
+                    }
 
                 }
 
