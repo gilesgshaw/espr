@@ -99,8 +99,8 @@ namespace Notation
                     DrawVoice(g, clef, voices[0], 0, 4, rect, barWidthW);
                     break;
                 case 2:
-                    DrawVoice(g, clef, voices[0], -1, 1, rect, barWidthW);
                     DrawVoice(g, clef, voices[1], 1, 7, rect, barWidthW);
+                    DrawVoice(g, clef, voices[0], -1, 1, rect, barWidthW);
                     break;
                 default:
                     throw new NotImplementedException();
