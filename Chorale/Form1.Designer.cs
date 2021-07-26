@@ -33,13 +33,15 @@
             this.getCadencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.getCadencesToolStripMenuItem});
+            this.getCadencesToolStripMenuItem,
+            this.cacheToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(511, 24);
@@ -60,6 +62,13 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(511, 267);
             this.flowLayoutPanel1.TabIndex = 3;
+            // 
+            // cacheToolStripMenuItem
+            // 
+            this.cacheToolStripMenuItem.Name = "cacheToolStripMenuItem";
+            this.cacheToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.cacheToolStripMenuItem.Text = "Cache";
+            this.cacheToolStripMenuItem.Click += new System.EventHandler(this.cacheToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -83,6 +92,7 @@
         private System.Windows.Forms.ToolStripMenuItem getCadencesToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolStripMenuItem cacheToolStripMenuItem;
     }
 }
 
