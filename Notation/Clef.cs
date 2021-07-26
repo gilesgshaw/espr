@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Chorale
+namespace Notation
 {
     public partial class Display
     {

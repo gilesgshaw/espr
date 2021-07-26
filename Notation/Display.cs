@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using static mus.notation;
 
-namespace Chorale
+namespace Notation
 {
 
     // what supported, no key signatures, no ledger lines, all as dots with no accidentals, or squares

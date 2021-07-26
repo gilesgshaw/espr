@@ -2,7 +2,7 @@
 using System.Drawing;
 using static mus.notation;
 
-namespace Chorale
+namespace Notation
 {
     public partial class Display
     {
