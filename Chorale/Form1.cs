@@ -62,7 +62,7 @@ namespace Chorale
                     for (int SubIndex = Index, loopTo1 = Math.Min(Notes.Length - 1, Index + 3); SubIndex <= loopTo1; SubIndex++)
                     {
                         if (Notes[SubIndex].Length > 0)
-                            voice1.Add(new Display.Event() { Pitch = Notes[SubIndex][0], WholeDivisionPower = 2 });
+                            voice1.Add(new Display.Event() { Pitch = Notes[SubIndex][0], WholeDivisionPower = 2, col = NamedColor.Blue });
                         if (Notes[SubIndex].Length > 1)
                             voice2.Add(new Display.Event() { Pitch = Notes[SubIndex][1], WholeDivisionPower = 2 });
                     }
