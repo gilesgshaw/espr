@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static mus.notation;
 using Notation;
+using static Notation.Ut;
+using System.Diagnostics;
 
 namespace Chorale
 {
@@ -133,6 +135,12 @@ namespace Chorale
             {
                 CreatePB(item, result.Item2);
             }
+            PrintPretty(result.Item3, (x) => Situation.Cache[x].Count.ToString(), (x) =>
+            {
+                if (x.Left.Sop.Length == 1) return new Situation[] { };
+                return new[] { x.Left, x.Right };
+            }
+            , (x) => Debug.Write(x));
         }
     }
 }
