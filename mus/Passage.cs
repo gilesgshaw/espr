@@ -25,6 +25,14 @@ namespace mus
             public Passage Left { get; } //will be null rather then 'empty'
             public Passage Right { get; } //will be null rather then 'empty'
 
+            //temporary routine to help refactoring
+            private Passage TruncatedBy(int left_, int right)
+            {
+                if (left_ > 0) return  Left.TruncatedBy(left_ - 1, right);
+                if (right > 0) return Right.TruncatedBy(left_, right - 1);
+                return this;
+            }
+
             //public IntervalC[][] Pitches { get; } //satb
 
             //curently takes account that L/R are children (down to singletons)
