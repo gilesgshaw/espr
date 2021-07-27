@@ -51,7 +51,9 @@ namespace mus
         }
 
 
-        //Is actually a directed acyclic graph
+        //In current design, the same child object is counted every time it appears
+        //So this whole 'serial' thing is basically redundant,
+        //since equality comparison should not be needed
         public abstract class TreeValued : Valuable, IEquatable<TreeValued>
         {
 
@@ -100,7 +102,7 @@ namespace mus
             //HERE: check this is calculated correctly.
             private void ComputeDecendants()
             {
-                Decendants = Children.SelectMany((x) => x.Item2.Decendants.Select((y) => (y.Item1 * x.Item1, y.Item2))).Concat(Children).Distinct();
+                Decendants = Children.SelectMany((x) => x.Item2.Decendants.Select((y) => (y.Item1 * x.Item1, y.Item2))).Concat(Children);
             }
 
 
