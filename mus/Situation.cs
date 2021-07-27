@@ -7,6 +7,7 @@ namespace mus
     public static partial class notation
     {
 
+        //should make this properly immutable
         public class Situation : IEquatable<Situation>
         {
 
@@ -107,36 +108,35 @@ namespace mus
             #endregion
 
 
-            public Context Context;
-            public int[] Sop; //length at least 1
-            public int Displacement;
+            public Context Context { get; }
+            public int[] Sop { get; } //length at least 1
+            public int Displacement { get; }
 
-            public Situation(Context context, int[] sop, int displacement)
+            private Situation(Context context, int[] sop, int displacement)
             {
                 Context = context;
                 Sop = sop;
                 Displacement = displacement;
+                if (Sop.Length == 1) return;
+                Left = Instance(context, Sop.Take(Sop.Length - 1).ToArray(), displacement + 1);
+                Right = Instance(context, Sop.Skip(1).ToArray(), displacement);
             }
 
-            //will be null rather then 'empty'
-            public Situation Left
+            private static List<Situation> Instances = new List<Situation>();
+
+            public static Situation Instance(Context context, int[] sop, int displacement)
             {
-                get
-                {
-                    if (Sop.Length == 1) return null;
-                    return new Situation(Context, Sop.Take(Sop.Length - 1).ToArray(), Displacement + 1);
-                }
+                var tempNew = new Situation(context, sop, displacement);
+                if (!Instances.Contains(tempNew)) Instances.Add(tempNew);
+                return Instances.First((x) => x.Equals(tempNew));
             }
 
-            //will be null rather then 'empty'
-            public Situation Right
-            {
-                get
-                {
-                    if (Sop.Length == 1) return null;
-                    return new Situation(Context, Sop.Skip(1).ToArray(), Displacement);
-                }
-            }
+
+            //These will be null rather then 'empty'
+            public Situation Left { get; }
+            public Situation Right { get; }
+
+
 
             public override bool Equals(object obj)
             {
