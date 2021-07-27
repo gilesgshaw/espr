@@ -55,9 +55,9 @@ namespace mus
         public abstract class TreeValued : Valuable, IEquatable<TreeValued>
         {
 
-            public IEnumerable<TreeValued> Children { get; private set; }
+            public IEnumerable<(double, TreeValued)> Children { get; private set; }
 
-            public IEnumerable<TreeValued> Decendants { get; private set; }
+            public IEnumerable<(double, TreeValued)> Decendants { get; private set; }
 
             public virtual double IntrinsicPenalty { get; }
 
@@ -67,15 +67,16 @@ namespace mus
             {
                 get
                 {
-                    if (iPenalty == null) iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty);
-                    //iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.IntrinsicPenalty);
+                    //HERE: check this is calculated correctly.
+                    if (iPenalty == null) iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.Item1 * y.Item2.IntrinsicPenalty);
                     return iPenalty.Value;
                 }
             }
 
             private double? iPenalty { get; set; }
 
-            public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.IntrinsicPenalty); }
+            //HERE: check this is calculated correctly.
+            public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.Item1 * y.Item2.IntrinsicPenalty); }
 
 
 
@@ -85,18 +86,28 @@ namespace mus
 
             protected void AddChildren(IEnumerable<TreeValued> additional)
             {
+                Children = Children.Concat(additional.Select((x) => (1D, x)));
+                ComputeDecendants();
+            }
+
+            protected void AddChildren(IEnumerable<(double, TreeValued)> additional)
+            {
                 Children = Children.Concat(additional);
                 ComputeDecendants();
             }
 
 
+            //HERE: check this is calculated correctly.
             private void ComputeDecendants()
             {
-                Decendants = Children.SelectMany((x) => x.Decendants).Concat(Children).Distinct();
+                Decendants = Children.SelectMany((x) => x.Item2.Decendants.Select((y) => (y.Item1 * x.Item1, y.Item2))).Concat(Children).Distinct();
             }
 
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty, double temporaryPenalty)
+                : this(children.Select((x) => (1D, x)), intrinticPenalty, temporaryPenalty) { }
+
+            protected TreeValued(IEnumerable<(double, TreeValued)> children, double intrinticPenalty, double temporaryPenalty)
             {
                 Serial = NextSerial;
                 NextSerial++;
@@ -107,6 +118,9 @@ namespace mus
             }
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
+                : this(children.Select((x) => (1D, x)), intrinticPenalty) { }
+
+            protected TreeValued(IEnumerable<(double, TreeValued)> children, double intrinticPenalty)
             {
                 Serial = NextSerial;
                 NextSerial++;
@@ -122,7 +136,7 @@ namespace mus
                 NextSerial++;
                 IntrinsicPenalty = 0;
                 TemporaryPenalty = 0;
-                Children = Enumerable.Empty<TreeValued>();
+                Children = Enumerable.Empty<(double, TreeValued)>();
                 ComputeDecendants();
             }
 
@@ -132,7 +146,7 @@ namespace mus
                 NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = temporaryPenalty;
-                Children = Enumerable.Empty<TreeValued>();
+                Children = Enumerable.Empty<(double, TreeValued)>();
                 ComputeDecendants();
             }
 
@@ -142,11 +156,14 @@ namespace mus
                 NextSerial++;
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = 0;
-                Children = Enumerable.Empty<TreeValued>();
+                Children = Enumerable.Empty<(double, TreeValued)>();
                 ComputeDecendants();
             }
 
             protected TreeValued(IEnumerable<TreeValued> children)
+                : this(children.Select((x) => (1D, x))) { }
+
+            protected TreeValued(IEnumerable<(double, TreeValued)> children)
             {
                 Serial = NextSerial;
                 NextSerial++;
