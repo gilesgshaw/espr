@@ -25,26 +25,15 @@ namespace mus
             public Passage Left { get; } //will be null rather then 'empty'
             public Passage Right { get; } //will be null rather then 'empty'
 
-            //temporary routine to help refactoring
-            private Passage TruncatedBy(int left_, int right)
-            {
-                if (left_ > 0) return  Left.TruncatedBy(left_ - 1, right);
-                if (right > 0) return Right.TruncatedBy(left_, right - 1);
-                return this;
-            }
-
             //public IntervalC[][] Pitches { get; } //satb
 
-
-            #region temporary measure, while 'IntrinsicPenalty' actually returns penaulty intrinsic to all subpassages
-
-            private double VeryIntrinsicPenalty
+            public override double IntrinsicPenalty
             {
                 get
                 {
-                    var tr = 0;
-
-
+                    var tr = base.IntrinsicPenalty;
+                    
+                    
                     if (Chords.Length == 1) // Length 1
                     {
 
@@ -159,25 +148,6 @@ namespace mus
                 }
             }
 
-            public override double IntrinsicPenalty
-            {
-                get
-                {
-                    var tr = base.IntrinsicPenalty;
-                    for (int startpos = 0; startpos < Verts.Length; startpos++)
-                    {
-                        for (int endpos = startpos; endpos < Verts.Length; endpos++)
-                        {
-                            tr += TruncatedBy(startpos, Verts.Length - endpos - 1).VeryIntrinsicPenalty;
-                        }
-                    }
-                    return tr;
-                }
-            }
-
-            #endregion
-
-
             //private static Cadence GetCadence(Vert[] verts)
             //{
             //    Cadence Cadence = default;
@@ -188,7 +158,7 @@ namespace mus
             //    return Cadence;
             //}
 
-            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base(verts) //.Concat(new TreeValued[] { GetCadence(verts) }))
+            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base() //.Concat(new TreeValued[] { GetCadence(verts) }))
             {
                 Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
@@ -196,7 +166,18 @@ namespace mus
                 Left = left;
                 Right = right;
                 //Cadence = GetCadence(verts);
-                //as a temporary measure, subpassages are not officially registered as children.
+                if (verts.Length == 1)
+                {
+                    AddChildren(verts);
+                }
+                else if (verts.Length == 2)
+                {
+                    AddChildren(new (double, TreeValued)[] { (1, Left), (1, Right) });
+                }
+                else
+                {
+                    AddChildren(new (double, TreeValued)[] { (1, Left), (1, Right), (-1, Left.Right) });
+                }
             }
 
             public override bool Equals(object obj)
