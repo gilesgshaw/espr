@@ -59,8 +59,6 @@ namespace mus
 
             public IEnumerable<(double, TreeValued)> Children { get; private set; }
 
-            public IEnumerable<(double, TreeValued)> Decendants { get; private set; }
-
             public virtual double IntrinsicPenalty { get; }
 
             public virtual double TemporaryPenalty { get; }
@@ -70,15 +68,24 @@ namespace mus
                 get
                 {
                     //HERE: check this is calculated correctly.
-                    if (iPenalty == null) iPenalty = Decendants.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.Item1 * y.Item2.IntrinsicPenalty);
+                    if (iPenalty == null) iPenalty = Children.Aggregate(IntrinsicPenalty + TemporaryPenalty, (x, y) => x + y.Item1 * y.Item2.ResidualPenalty);
                     return iPenalty.Value;
                 }
             }
 
             private double? iPenalty { get; set; }
 
-            //HERE: check this is calculated correctly.
-            public double ResidualPenalty { get => Decendants.Aggregate(IntrinsicPenalty, (x, y) => x + y.Item1 * y.Item2.IntrinsicPenalty); }
+            public double ResidualPenalty
+            {
+                get
+                {
+                    //HERE: check this is calculated correctly.
+                    if (iResidualPenalty == null) iResidualPenalty = Children.Aggregate(IntrinsicPenalty, (x, y) => x + y.Item1 * y.Item2.ResidualPenalty);
+                    return iResidualPenalty.Value;
+                }
+            }
+
+            private double? iResidualPenalty { get; set; }
 
 
 
@@ -89,20 +96,11 @@ namespace mus
             protected void AddChildren(IEnumerable<TreeValued> additional)
             {
                 Children = Children.Concat(additional.Select((x) => (1D, x)));
-                ComputeDecendants();
             }
 
             protected void AddChildren(IEnumerable<(double, TreeValued)> additional)
             {
                 Children = Children.Concat(additional);
-                ComputeDecendants();
-            }
-
-
-            //HERE: check this is calculated correctly.
-            private void ComputeDecendants()
-            {
-                Decendants = Children.SelectMany((x) => x.Item2.Decendants.Select((y) => (y.Item1 * x.Item1, y.Item2))).Concat(Children);
             }
 
 
@@ -116,7 +114,6 @@ namespace mus
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = temporaryPenalty;
                 Children = children;
-                ComputeDecendants();
             }
 
             protected TreeValued(IEnumerable<TreeValued> children, double intrinticPenalty)
@@ -129,7 +126,6 @@ namespace mus
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = 0;
                 Children = children;
-                ComputeDecendants();
             }
 
             protected TreeValued()
@@ -139,7 +135,6 @@ namespace mus
                 IntrinsicPenalty = 0;
                 TemporaryPenalty = 0;
                 Children = Enumerable.Empty<(double, TreeValued)>();
-                ComputeDecendants();
             }
 
             protected TreeValued(double intrinticPenalty, double temporaryPenalty)
@@ -149,7 +144,6 @@ namespace mus
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = temporaryPenalty;
                 Children = Enumerable.Empty<(double, TreeValued)>();
-                ComputeDecendants();
             }
 
             protected TreeValued(double intrinticPenalty)
@@ -159,7 +153,6 @@ namespace mus
                 IntrinsicPenalty = intrinticPenalty;
                 TemporaryPenalty = 0;
                 Children = Enumerable.Empty<(double, TreeValued)>();
-                ComputeDecendants();
             }
 
             protected TreeValued(IEnumerable<TreeValued> children)
@@ -172,7 +165,6 @@ namespace mus
                 IntrinsicPenalty = 0;
                 TemporaryPenalty = 0;
                 Children = children;
-                ComputeDecendants();
             }
 
 
