@@ -35,12 +35,14 @@ namespace mus
 
             //public IntervalC[][] Pitches { get; } //satb
 
-            //curently takes account that L/R are children (down to singletons)
-            public override double IntrinsicPenalty
+
+            #region temporary measure, while 'IntrinsicPenalty' actually returns penaulty intrinsic to all subpassages
+
+            private double VeryIntrinsicPenalty
             {
                 get
                 {
-                    var tr = base.IntrinsicPenalty;
+                    var tr = 0;
 
 
                     if (Chords.Length == 1) // Length 1
@@ -157,6 +159,25 @@ namespace mus
                 }
             }
 
+            public override double IntrinsicPenalty
+            {
+                get
+                {
+                    var tr = base.IntrinsicPenalty;
+                    for (int startpos = 0; startpos < Verts.Length; startpos++)
+                    {
+                        for (int endpos = startpos; endpos < Verts.Length; endpos++)
+                        {
+                            tr += TruncatedBy(startpos, Verts.Length - endpos - 1).VeryIntrinsicPenalty;
+                        }
+                    }
+                    return tr;
+                }
+            }
+
+            #endregion
+
+
             //private static Cadence GetCadence(Vert[] verts)
             //{
             //    Cadence Cadence = default;
@@ -175,7 +196,7 @@ namespace mus
                 Left = left;
                 Right = right;
                 //Cadence = GetCadence(verts);
-                if (Left != null) AddChildren(new TreeValued[] { Left, Right }); //if 2+, register children.
+                //as a temporary measure, subpassages are not officially registered as children.
             }
 
             public override bool Equals(object obj)
