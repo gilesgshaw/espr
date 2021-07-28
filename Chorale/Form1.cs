@@ -72,34 +72,52 @@ namespace Chorale
 
             public Bitmap GetBitmap()
             {
-                var bars1 = new List<Display.Event[][]>();
-                var bars2 = new List<Display.Event[][]>();
-                for (int Index = 0, loopTo = S.Length - 1; Index <= loopTo; Index += 4)
+
+                var Stave1Events = new List<Display.Event>();
+                var Stave2Events = new List<Display.Event>();
+
+                for (int i = 0; i < S.Length; i++)
                 {
-                    var voice1 = new List<Display.Event>();
-                    var voice2 = new List<Display.Event>();
-                    for (int SubIndex = Index, loopTo1 = Math.Min(S.Length - 1, Index + 3); SubIndex <= loopTo1; SubIndex++)
+                    Stave1Events.Add(new Display.Event()
                     {
-                        voice1.Add(new Display.Event() { Pitch = S[SubIndex].Pitch, WholeDivisionPower = 2, col = NamedColor.Blue });
-                        voice2.Add(new Display.Event() { Pitch = A[SubIndex].Pitch, WholeDivisionPower = 2 });
-                    }
-
-                    bars1.Add(new[] { voice1.ToArray(), voice2.ToArray() });
-                    voice1 = new List<Display.Event>();
-                    voice2 = new List<Display.Event>();
-                    for (int SubIndex = Index, loopTo2 = Math.Min(S.Length - 1, Index + 3); SubIndex <= loopTo2; SubIndex++)
+                        BarNumber = i / 4,
+                        timeW = (float)i / 4 - (i / 4),
+                        WholeDivisionPower = 2,
+                        Voice = 0,
+                        Pitch = S[i].Pitch,
+                        col = NamedColor.Blue
+                    });
+                    Stave1Events.Add(new Display.Event()
                     {
-                        voice1.Add(new Display.Event() { Pitch = T[SubIndex].Pitch, WholeDivisionPower = 2 });
-                        voice2.Add(new Display.Event() { Pitch = B[SubIndex].Pitch, WholeDivisionPower = 2 });
-                    }
-
-                    bars2.Add(new[] { voice1.ToArray(), voice2.ToArray() });
+                        BarNumber = i / 4,
+                        timeW = (float)i / 4 - (i / 4),
+                        WholeDivisionPower = 2,
+                        Voice = 1,
+                        Pitch = A[i].Pitch
+                    });
+                    Stave2Events.Add(new Display.Event()
+                    {
+                        BarNumber = i / 4,
+                        timeW = (float)i / 4 - (i / 4),
+                        WholeDivisionPower = 2,
+                        Voice = 0,
+                        Pitch = T[i].Pitch
+                    });
+                    Stave2Events.Add(new Display.Event()
+                    {
+                        BarNumber = i / 4,
+                        timeW = (float)i / 4 - (i / 4),
+                        WholeDivisionPower = 2,
+                        Voice = 1,
+                        Pitch = B[i].Pitch
+                    });
                 }
 
-                var part1 = new Display.Stave() { Bars = bars1.ToArray(), Clef = new Display.Clef(10, 5, "Treble"), TimeSignature = Display.TimeSignature.Common, Key = Key };
-                var part2 = new Display.Stave() { Bars = bars2.ToArray(), Clef = new Display.Clef(-2, 5, "Bass"), TimeSignature = Display.TimeSignature.Common, Key = Key };
-                var obj = new Display() { Staves = new[] { part1, part2 } };
+                var stave1 = new Display.Stave() { NumberOfBars = (S.Length - 1) / 4 + 1, Events = Stave1Events.ToArray(), Clef = new Display.Clef(10, 5, "Treble"), TimeSignature = Display.TimeSignature.Common, Key = Key };
+                var stave2 = new Display.Stave() { NumberOfBars = (S.Length - 1) / 4 + 1, Events = Stave2Events.ToArray(), Clef = new Display.Clef(-2, 5, "Bass"), TimeSignature = Display.TimeSignature.Common, Key = Key };
+                var obj = new Display() { Staves = new[] { stave1, stave2 } };
                 return obj.Draw();
+
             }
 
         }

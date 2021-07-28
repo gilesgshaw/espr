@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using static mus.notation;
@@ -17,7 +18,7 @@ namespace Notation
 
         public Bitmap Draw()
         {
-            var BodyX = L.BarsLeft + Staves.Aggregate(0, (x, y) => Math.Max(x, y.Bars.Count())) * L.BarWidth;
+            var BodyX = L.BarsLeft + Staves.Aggregate(0, (x, y) => Math.Max(x, y.NumberOfBars)) * L.BarWidth;
             var BodyY = L.StaveHeight + (Staves.Length - 1) * L.StaveDisplacement;
             Bitmap DrawRet = new Bitmap(
                 (int)(L.MainMarginX + BodyX + L.MainMarginX),
@@ -39,16 +40,22 @@ namespace Notation
             public Clef Clef;
             public TimeSignature TimeSignature;
             public Key Key;
-            public Event[][][] Bars;
+
+            //factoring this in now.
+            public Event[] Events; //code assumes this has bar numbers, voice numbers, and times already set.
+
+            //this needs to be set
+            public int NumberOfBars; //and is currently ignored when enumerating bars for voice counting
 
             public void Draw(Graphics g, PointF offset)
             {
+
                 var Sig__Rect = L.SignatureFromStave;
 
                 var Bars_Rect = new RectangleF(
                     L.BarsLeft,
                     0,
-                    Bars.Length * L.BarWidth,
+                    NumberOfBars * L.BarWidth,
                     L.StaveHeight);
 
                 var Me___Rect = new RectangleF(
@@ -62,9 +69,9 @@ namespace Notation
                 Sig__Rect = Sig__Rect.Translate(offset);
 
 
-                var BarsRects = Bars_Rect.PartitionH(Bars.Length);
+                var BarsRects = Bars_Rect.PartitionH(NumberOfBars);
                 g.DrawLine(Pens.Black, Me___Rect.X, Me___Rect.Y, Me___Rect.X, Me___Rect.Bottom);
-                for (int index = 0; index < Bars.Length; index++)
+                for (int index = 0; index < NumberOfBars; index++)
                 {
                     g.DrawLine(Pens.Black, BarsRects[index].Right, BarsRects[index].Top, BarsRects[index].Right, BarsRects[index].Bottom);
                 }
@@ -73,10 +80,7 @@ namespace Notation
                 Clef.Draw(g, Sig__Rect);
                 Key.DrawSig(g, Sig__Rect, Clef);
 
-                for (int index = 0; index < Bars.Length; index++)
-                {
-                    DrawBar(g, Clef, Bars[index], BarsRects[index], TimeSignature.BarLengthW, L.MarginL, L.MarginR);
-                }
+                DrawEvents(g, Clef, Events, BarsRects[0], TimeSignature.BarLengthW, L.MarginL, L.MarginR);
 
                 for (int line = 0; line <= Clef.NumSpaces; line++)
                 {
@@ -84,47 +88,52 @@ namespace Notation
                     var y = Me___Rect.Top + prop * Me___Rect.Height;
                     g.DrawLine(Pens.Black, Me___Rect.Left, y, Me___Rect.Right, y);
                 }
+
             }
 
         }
 
-        // must have at least one voice
-        private static void DrawBar(Graphics g, Clef clef, Event[][] voices, RectangleF rect, float barWidthW, float MarginL, float MarginR)
+        // probably goes wrong if a bar has no voices, or something like that.
+        private static void DrawEvents(Graphics g, Clef clef, IEnumerable<Event> events, RectangleF initialRect, float barWidthW, float MarginL, float MarginR)
         {
-            rect.Width -= MarginL + MarginR;
-            rect.X += MarginL;
-            switch (voices.Length)
-            {
-                case 1:
-                    DrawVoice(g, clef, voices[0], 0, 4, rect, barWidthW);
-                    break;
-                case 2:
-                    DrawVoice(g, clef, voices[1], 1, 7, rect, barWidthW);
-                    DrawVoice(g, clef, voices[0], -1, 1, rect, barWidthW);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+            float barWidth = initialRect.Width;
+            initialRect.Width -= MarginL + MarginR;
+            initialRect.X += MarginL;
 
-        // use stem direction
-        private static void DrawVoice(Graphics g, Clef clef, Event[] events, int stems, int restRankFromTopLine, RectangleF rect, float barWidthW)
-        {
-
-            float timeWh = 0;
-            for (int i = 0; i < events.Length; i++)
+            //this is correct, assuming there are no 'empty' bars or voices.
+            int NumberOfBars = (int)events.Max((z) => (int?)(z.BarNumber + 1));
+            int[] NumberOfVoices = new int[NumberOfBars];
+            for (int bn = 0; bn < NumberOfBars; bn++)
             {
-                events[i].timeW = timeWh;
-                timeWh += (float)Math.Pow(2, -events[i].WholeDivisionPower) * (2 - (float)Math.Pow(2, -events[i].Dot));
+                NumberOfVoices[bn] = (int)events.Where((z) => z.BarNumber == bn).Max((z) => (int?)(z.Voice + 1));
             }
 
+            int[][] arrStems = new int[NumberOfBars][];
+            int[][] arrRestRankFromTopLine = new int[NumberOfBars][];
+            for (int bn = 0; bn < NumberOfBars; bn++)
+            {
+                switch (NumberOfVoices[bn])
+                {
+                    case 1:
+                        arrStems[bn] = new int[] { 0, 0 };
+                        arrRestRankFromTopLine[bn] = new int[] { 4, 4 };
+                        break;
+                    case 2:
+                        arrStems[bn] = new int[] { -1, 1 };
+                        arrRestRankFromTopLine[bn] = new int[] { 1, 7 };
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            // use stem direction (not sure what this comment was meant to mean)
             foreach (Event Event in events)
             {
                 //HERE - need to consider key.
-                var Info = new Bar(default, clef, rect.Top, rect.Height, rect.Left + (Event.timeW / barWidthW * rect.Width));
-                Event.Draw(g, Info, stems, restRankFromTopLine);
+                var Info = new Bar(default, clef, initialRect.Top, initialRect.Height, initialRect.Left + (Event.timeW / barWidthW * initialRect.Width) + Event.BarNumber * barWidth);
+                Event.Draw(g, Info, arrStems[Event.BarNumber][Event.Voice], arrRestRankFromTopLine[Event.BarNumber][Event.Voice]);
             }
-
         }
 
         public struct Event
@@ -132,8 +141,10 @@ namespace Notation
             public Pitch? Pitch;
             public int WholeDivisionPower;
             public int Dot;
-            public float timeW; //temporary
+            public float timeW; //currently refactoring in
+            public int BarNumber; //currently refactoring in
             public NamedColor? col;
+            public int Voice; //currently refactoring in
 
             public void Draw(Graphics g, Bar Info, int stems, int restRankFromTopLine)
             {
