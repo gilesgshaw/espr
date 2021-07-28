@@ -14,93 +14,83 @@ namespace mus
 
             #region Static
 
-            //not yet implemented tolerence
-            public static void AddInternalSingletons(Situation situation, double[] tolerence)
-            {
-                var ta = Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
-                Cache.Add(situation, new List<Passage>(ta));
-            }
-
-            //not yet implemented tolerence
-            public static void AddInternalPairs(Situation situation, double[] tolerence)
-            {
-                var ta = new List<Passage>();
-                if (situation.Displacement == 0)
-                {
-                    foreach (var final in GetExterenal(situation.Right, tolerence).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
-                    {
-                        foreach (var pp in GetExterenal(situation.Left, tolerence).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
-                        {
-                            switch (pp.Verts[0].Chord.Root.ResidueNumber)
-                            {
-                                case 4:
-                                    ta.Add(new Passage(
-                                        situation.Context.Tonic,
-                                        new Vert[] { pp.Verts[0], final.Verts[0] },
-                                        pp,
-                                        final
-                                        ));
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var final in GetExterenal(situation.Right, tolerence))
-                    {
-                        foreach (var pp in GetExterenal(situation.Left, tolerence))
-                        {
-                            ta.Add(new Passage(
-                                situation.Context.Tonic,
-                                new Vert[] { pp.Verts[0], final.Verts[0] },
-                                pp,
-                                final
-                                ));
-                        }
-                    }
-                }
-                Cache.Add(situation, ta);
-            }
-
             //at least 1
             public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
 
             //at least 1
             public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence)
             {
+                if (!Cache.ContainsKey(situation))
+                {
+                    AddInternal(situation, tolerence);
+                }
+                return Cache[situation];
+            }
+            
+            //at least 1
+            private static void AddInternal(Situation situation, double[] tolerence)
+            {
                 if (situation.Sop.Length == 1)
                 {
                     //exactly 1
-                    if (!Cache.ContainsKey(situation)) AddInternalSingletons(situation, tolerence);
+                    //not yet implemented tolerence
+                    var ta = Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
+                    Cache.Add(situation, new List<Passage>(ta));
                 }
                 else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
-                    if (!Cache.ContainsKey(situation)) AddInternalPairs(situation, tolerence);
+                    //not yet implemented tolerence
+                    var ta = new List<Passage>();
+                    if (situation.Displacement == 0)
+                    {
+                        foreach (var final in GetExterenal(situation.Right, tolerence).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
+                        {
+                            foreach (var pp in GetExterenal(situation.Left, tolerence).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
+                            {
+                                switch (pp.Verts[0].Chord.Root.ResidueNumber)
+                                {
+                                    case 4:
+                                        ta.Add(new Passage(
+                                            situation.Context.Tonic,
+                                            new Vert[] { pp.Verts[0], final.Verts[0] },
+                                            pp,
+                                            final
+                                            ));
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var final in GetExterenal(situation.Right, tolerence))
+                        {
+                            foreach (var pp in GetExterenal(situation.Left, tolerence))
+                            {
+                                ta.Add(new Passage(
+                                    situation.Context.Tonic,
+                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    pp,
+                                    final
+                                    ));
+                            }
+                        }
+                    }
+                    Cache.Add(situation, ta);
                 }
                 else
                 {
                     //at least 3
-                    if (!Cache.ContainsKey(situation)) AddInternal(situation, tolerence);
-                }
-                foreach (var item in Cache[situation])
-                {
-                    yield return item;
-                }
-            }
-
-            //at least 3
-            private static void AddInternal(Situation situation, double[] tolerence)
-            {
-                var list = new List<Passage>();
-                Cache.Add(situation, list);
-                foreach (var l in GetExterenal(situation.Left, tolerence))
-                {
-                    foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => x.Left == l.Right))
+                    var list = new List<Passage>();
+                    Cache.Add(situation, list);
+                    foreach (var l in GetExterenal(situation.Left, tolerence))
                     {
-                        var obj = new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
-                        if (obj.Penalty <= tolerence[obj.Verts.Length]) list.Add(obj);
+                        foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => ReferenceEquals(x.Left, l.Right)))
+                        {
+                            var obj = new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
+                            if (obj.Penalty <= tolerence[obj.Verts.Length]) list.Add(obj);
+                        }
                     }
                 }
             }
