@@ -79,7 +79,7 @@ namespace mus
                 else
                 {
                     //at least 3
-                    AddExterenal(situation, tolerence);
+                    if (!Cache.ContainsKey(situation)) AddInternal(situation, tolerence);
                 }
                 foreach (var item in Cache[situation])
                 {
@@ -88,11 +88,8 @@ namespace mus
             }
 
             //at least 3
-            //tolerence dosen't matter if already present.
-            public static void AddExterenal(Situation situation, double[] tolerence)
+            private static void AddInternal(Situation situation, double[] tolerence)
             {
-                if (Cache.ContainsKey(situation)) return;
-
                 var list = new List<Passage>();
                 Cache.Add(situation, list);
                 foreach (var l in GetExterenal(situation.Left, tolerence))
