@@ -75,7 +75,7 @@ namespace mus
                         tr += Abs(RootChange + TChange) + 2.5 * Max(0, Abs(RootChange + TChange) - 4);
                         tr += 0.5 * Abs(RootChange + BChange) + 1.5 * Max(0, Abs(RootChange + BChange) - 6) * (Verts[1].Voicing.B.ResidueNumber + Verts[0].Voicing.B.ResidueNumber + 1);
                         double numStatic = 0;
-                        if (SChange == -RootChange) numStatic += 1;
+                        if (SChange == -RootChange) numStatic += 1; //This should be left in!
                         if (AChange == -RootChange) numStatic += 1;
                         if (TChange == -RootChange) numStatic += 1.5;
                         if (BChange == -RootChange) numStatic += 2.5;
