@@ -32,8 +32,8 @@ namespace mus
                 get
                 {
                     var tr = base.IntrinsicPenalty;
-                    
-                    
+
+
                     if (Chords.Length == 1) // Length 1
                     {
 
