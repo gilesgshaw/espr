@@ -22,10 +22,24 @@ namespace Chorale
             InitializeComponent();
         }
 
-        private class MIDIData
+        private class ChoraleData
         {
 
-            public Pitch[][] Notes;
+            public struct Beat
+            {
+                public Pitch Pitch { get; }
+
+                public Beat(Pitch pitch)
+                {
+                    Pitch = pitch;
+                }
+            }
+
+            public Beat[] S;
+            public Beat[] A;
+            public Beat[] T;
+            public Beat[] B;
+
             public Display.Key Key;
 
             private static MidiOut midiOut;
@@ -37,22 +51,22 @@ namespace Chorale
 
                 int channel = 1;
 
-                for (int i = 0; i < Notes.Length; i++)
+                for (int i = 0; i < S.Length; i++)
                 {
 
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][0].MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][1].MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][2].MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][3].MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
 
-                    System.Threading.Thread.Sleep(i == Notes.Length - 1 ? 1400 : 800);
+                    System.Threading.Thread.Sleep(i == S.Length - 1 ? 1400 : 800);
 
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][0].MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][1].MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][2].MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, Notes[i][3].MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
 
-                    System.Threading.Thread.Sleep(i == Notes.Length - 1 ? 0 : 100);
+                    System.Threading.Thread.Sleep(i == S.Length - 1 ? 0 : 100);
                 }
             }
 
@@ -60,27 +74,23 @@ namespace Chorale
             {
                 var bars1 = new List<Display.Event[][]>();
                 var bars2 = new List<Display.Event[][]>();
-                for (int Index = 0, loopTo = Notes.Length - 1; Index <= loopTo; Index += 4)
+                for (int Index = 0, loopTo = S.Length - 1; Index <= loopTo; Index += 4)
                 {
                     var voice1 = new List<Display.Event>();
                     var voice2 = new List<Display.Event>();
-                    for (int SubIndex = Index, loopTo1 = Math.Min(Notes.Length - 1, Index + 3); SubIndex <= loopTo1; SubIndex++)
+                    for (int SubIndex = Index, loopTo1 = Math.Min(S.Length - 1, Index + 3); SubIndex <= loopTo1; SubIndex++)
                     {
-                        if (Notes[SubIndex].Length > 0)
-                            voice1.Add(new Display.Event() { Pitch = Notes[SubIndex][0], WholeDivisionPower = 2, col = NamedColor.Blue });
-                        if (Notes[SubIndex].Length > 1)
-                            voice2.Add(new Display.Event() { Pitch = Notes[SubIndex][1], WholeDivisionPower = 2 });
+                        voice1.Add(new Display.Event() { Pitch = S[SubIndex].Pitch, WholeDivisionPower = 2, col = NamedColor.Blue });
+                        voice2.Add(new Display.Event() { Pitch = A[SubIndex].Pitch, WholeDivisionPower = 2 });
                     }
 
                     bars1.Add(new[] { voice1.ToArray(), voice2.ToArray() });
                     voice1 = new List<Display.Event>();
                     voice2 = new List<Display.Event>();
-                    for (int SubIndex = Index, loopTo2 = Math.Min(Notes.Length - 1, Index + 3); SubIndex <= loopTo2; SubIndex++)
+                    for (int SubIndex = Index, loopTo2 = Math.Min(S.Length - 1, Index + 3); SubIndex <= loopTo2; SubIndex++)
                     {
-                        if (Notes[SubIndex].Length > 2)
-                            voice1.Add(new Display.Event() { Pitch = Notes[SubIndex][2], WholeDivisionPower = 2 });
-                        if (Notes[SubIndex].Length > 3)
-                            voice2.Add(new Display.Event() { Pitch = Notes[SubIndex][3], WholeDivisionPower = 2 });
+                        voice1.Add(new Display.Event() { Pitch = T[SubIndex].Pitch, WholeDivisionPower = 2 });
+                        voice2.Add(new Display.Event() { Pitch = B[SubIndex].Pitch, WholeDivisionPower = 2 });
                     }
 
                     bars2.Add(new[] { voice1.ToArray(), voice2.ToArray() });
@@ -101,21 +111,25 @@ namespace Chorale
             var Data = data.Verts;
 
             var result = Data.ToArray();
-            var Notes = new Pitch[result.Length][];
+            var S = new ChoraleData.Beat[result.Length];
+            var A = new ChoraleData.Beat[result.Length];
+            var T = new ChoraleData.Beat[result.Length];
+            var B = new ChoraleData.Beat[result.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
-                Notes[i] = new Pitch[] {
-                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.S)),
-                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.A)),
-                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.T)),
-                    new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.B))
-                };
+                S[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.S)));
+                A[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.A)));
+                T[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.T)));
+                B[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.B)));
             }
 
-            var nData = new MIDIData()
+            var nData = new ChoraleData()
             {
-                Notes = Notes,
+                S = S,
+                A = A,
+                T = T,
+                B = B,
                 Key = new Display.Key(data.Tonic, SigMode)
             };
 
