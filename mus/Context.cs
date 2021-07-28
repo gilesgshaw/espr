@@ -50,9 +50,13 @@ namespace mus
                 tChords.Add(new Chord(I, major, 0));
                 tChords.Add(new Chord(I, majorR, 0));
                 tChords.Add(new Chord(II, minor, 5));
+                tChords.Add(new Chord(II, minor7, -6));
                 tChords.Add(new Chord(IV, major, 0));
                 tChords.Add(new Chord(V, major, 0));
+                tChords.Add(new Chord(V, dominant7, -8));
                 tChords.Add(new Chord(VI, minor, 5));
+                tChords.Add(new Chord(VII, dim, 4));
+                tChords.Add(new Chord(VII, hdim7, -4));
 
                 Chords = tChords.ToArray();
 
