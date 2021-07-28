@@ -28,10 +28,13 @@ namespace Chorale
             public Pitch[][] Notes;
             public Display.Key Key;
 
-            private static MidiOut midiOut = new MidiOut(0);
+            private static MidiOut midiOut;
 
             public void Play()
             {
+
+                if (midiOut == null) midiOut = new MidiOut(0);
+
                 int channel = 1;
 
                 for (int i = 0; i < Notes.Length; i++)
