@@ -18,18 +18,18 @@ namespace mus
             public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
 
             //at least 1
-            public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence)
+            public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence, int[] maxes)
             {
                 if (!Cache.ContainsKey(situation))
                 {
-                    AddInternal(situation, tolerence);
+                    AddInternal(situation, tolerence, maxes);
                 }
                 return Cache[situation];
             }
 
             //at least 1
-            //tolerence only applies to child routines
-            private static IEnumerable<Passage> GetInternal(Situation situation, double[] tolerence)
+            //tolerence etc... only applies to child routines
+            private static IEnumerable<Passage> GetInternal(Situation situation, double[] tolerence, int[] maxes)
             {
                 if (situation.Sop.Length == 1)
                 {
@@ -44,9 +44,9 @@ namespace mus
                     //exactly 2
                     if (situation.Displacement == 0)
                     {
-                        foreach (var final in GetExterenal(situation.Right, tolerence).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
+                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
+                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
                             {
                                 switch (pp.Verts[0].Chord.Root.ResidueNumber)
                                 {
@@ -64,9 +64,9 @@ namespace mus
                     }
                     else
                     {
-                        foreach (var final in GetExterenal(situation.Right, tolerence))
+                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes))
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence))
+                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes))
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
@@ -81,9 +81,9 @@ namespace mus
                 else
                 {
                     //at least 3
-                    foreach (var l in GetExterenal(situation.Left, tolerence))
+                    foreach (var l in GetExterenal(situation.Left, tolerence, maxes))
                     {
-                        foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => ReferenceEquals(x.Left, l.Right)))
+                        foreach (var r in GetExterenal(situation.Right, tolerence, maxes).Where((x) => ReferenceEquals(x.Left, l.Right)))
                         {
                             yield return new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
                         }
@@ -92,9 +92,11 @@ namespace mus
             }
 
             //at least 1
-            private static void AddInternal(Situation situation, double[] tolerence)
+            private static void AddInternal(Situation situation, double[] tolerence, int[] maxes)
             {
-                Cache.Add(situation, new List<Passage>(GetInternal(situation, tolerence).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Length])));
+                var fullList = GetInternal(situation, tolerence, maxes).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Length]).ToArray();
+                Array.Sort(fullList, Valuer<Passage>.instance);
+                Cache.Add(situation, new List<Passage>(fullList.Take(maxes[situation.Sop.Length])));
             }
 
             #endregion
