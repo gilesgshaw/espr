@@ -15,14 +15,16 @@ namespace mus
             #region Static
 
             //not yet implemented tolerence
-            public static IEnumerable<Passage> GetSingletons(Situation situation, double[] tolerence)
+            public static void AddInternalSingletons(Situation situation, double[] tolerence)
             {
-                return Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
+                var ta = Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
+                Cache.Add(situation, new List<Passage>(ta));
             }
 
             //not yet implemented tolerence
-            public static IEnumerable<Passage> GetPairs(Situation situation, double[] tolerence)
+            public static void AddInternalPairs(Situation situation, double[] tolerence)
             {
+                var ta = new List<Passage>();
                 if (situation.Displacement == 0)
                 {
                     foreach (var final in situation.Context.Bank[situation.Sop[1]].Where((x) => x.Chord.Root.ResidueNumber == 0 && x.Voicing.B.ResidueNumber == 0))
@@ -32,12 +34,12 @@ namespace mus
                             switch (pp.Chord.Root.ResidueNumber)
                             {
                                 case 4:
-                                    yield return new Passage(
+                                    ta.Add(new Passage(
                                         situation.Context.Tonic,
                                         new Vert[] { pp, final },
                                         new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
                                         new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
-                                        );
+                                        ));
                                     break;
                             }
                         }
@@ -49,15 +51,16 @@ namespace mus
                     {
                         foreach (var pp in situation.Context.Bank[situation.Sop[0]])
                         {
-                            yield return new Passage(
+                            ta.Add(new Passage(
                                 situation.Context.Tonic,
                                 new Vert[] { pp, final },
                                 new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
                                 new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
-                                );
+                                ));
                         }
                     }
                 }
+                Cache.Add(situation, ta);
             }
 
             //at least 1
@@ -69,12 +72,12 @@ namespace mus
                 if (situation.Sop.Length == 1)
                 {
                     //exactly 1
-                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetSingletons(situation, tolerence)));
+                    if (!Cache.ContainsKey(situation)) AddInternalSingletons(situation, tolerence);
                 }
                 else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
-                    if (!Cache.ContainsKey(situation)) Cache.Add(situation, new List<Passage>(GetPairs(situation, tolerence)));
+                    if (!Cache.ContainsKey(situation)) AddInternalPairs(situation, tolerence);
                 }
                 else
                 {
