@@ -27,18 +27,18 @@ namespace mus
                 var ta = new List<Passage>();
                 if (situation.Displacement == 0)
                 {
-                    foreach (var final in situation.Context.Bank[situation.Sop[1]].Where((x) => x.Chord.Root.ResidueNumber == 0 && x.Voicing.B.ResidueNumber == 0))
+                    foreach (var final in GetExterenal(situation.Right, tolerence).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                     {
-                        foreach (var pp in situation.Context.Bank[situation.Sop[0]].Where((x) => x.Voicing.B.ResidueNumber == 0))
+                        foreach (var pp in GetExterenal(situation.Left, tolerence).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
                         {
-                            switch (pp.Chord.Root.ResidueNumber)
+                            switch (pp.Verts[0].Chord.Root.ResidueNumber)
                             {
                                 case 4:
                                     ta.Add(new Passage(
                                         situation.Context.Tonic,
-                                        new Vert[] { pp, final },
-                                        new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
-                                        new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
+                                        new Vert[] { pp.Verts[0], final.Verts[0] },
+                                        pp,
+                                        final
                                         ));
                                     break;
                             }
@@ -47,15 +47,15 @@ namespace mus
                 }
                 else
                 {
-                    foreach (var final in situation.Context.Bank[situation.Sop[1]])
+                    foreach (var final in GetExterenal(situation.Right, tolerence))
                     {
-                        foreach (var pp in situation.Context.Bank[situation.Sop[0]])
+                        foreach (var pp in GetExterenal(situation.Left, tolerence))
                         {
                             ta.Add(new Passage(
                                 situation.Context.Tonic,
-                                new Vert[] { pp, final },
-                                new Passage(situation.Context.Tonic, new Vert[] { pp }, null, null),
-                                new Passage(situation.Context.Tonic, new Vert[] { final }, null, null)
+                                new Vert[] { pp.Verts[0], final.Verts[0] },
+                                pp,
+                                final
                                 ));
                         }
                     }
