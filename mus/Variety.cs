@@ -8,6 +8,7 @@ namespace mus
         //this uses the wrong convention really
         public class Variety
         {
+            //THESE ARE NAMED CONFUSINGLY!
             public virtual int? PQ1 { get; }
             public virtual int? PQ2 { get; }
             public virtual int? PQ3 { get; }
