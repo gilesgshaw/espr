@@ -71,16 +71,15 @@ namespace mus
                         var AChange = Verts[1].Voicing.A.Semis - Verts[0].Voicing.A.Semis;
                         var TChange = Verts[1].Voicing.T.Semis - Verts[0].Voicing.T.Semis;
                         var BChange = Verts[1].Voicing.B.Semis - Verts[0].Voicing.B.Semis;
-                        tr += Abs(RootChange + SChange);
-                        tr += Abs(RootChange + AChange);
-                        tr += Abs(RootChange + TChange);
-                        tr += Abs(RootChange + BChange);
-                        int numStatic = 0;
+                        tr += Abs(RootChange + AChange) + 2.5 * Max(0, Abs(RootChange + AChange) - 4);
+                        tr += Abs(RootChange + TChange) + 2.5 * Max(0, Abs(RootChange + TChange) - 4);
+                        tr += 0.5 * Abs(RootChange + BChange) + 1.5 * Max(0, Abs(RootChange + BChange) - 6) * (Verts[1].Voicing.B.ResidueNumber + Verts[0].Voicing.B.ResidueNumber + 1);
+                        double numStatic = 0;
                         if (SChange == -RootChange) numStatic += 1;
                         if (AChange == -RootChange) numStatic += 1;
-                        if (TChange == -RootChange) numStatic += 1;
-                        if (BChange == -RootChange) numStatic += 3;
-                        tr += numStatic * 4;
+                        if (TChange == -RootChange) numStatic += 1.5;
+                        if (BChange == -RootChange) numStatic += 2.5;
+                        tr += numStatic * numStatic * 3;
 
                         //Resolving 7th
                         if (Verts[0].Voicing.S.ResidueNumber == 6 && ((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number != 1) tr += 70;
@@ -108,8 +107,8 @@ namespace mus
                             case 3: tr += -10; break;
                             case 5: tr += -5; break;
                             case 4: tr += 0; break;
-                            case 1: tr += 3; break;
-                            case 6: tr += 15; break;
+                            case 1: tr += 5; break;
+                            case 6: tr += 20; break;
                             case 2: tr += 25; break;
                             case 0: tr += 35; break;
                         }

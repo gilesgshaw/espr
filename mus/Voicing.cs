@@ -48,8 +48,8 @@ namespace mus
                     profile[T.ResidueNumber]++;
                     profile[A.ResidueNumber]++;
                     profile[S.ResidueNumber]++;
-                    if (profile[2] >= 2) tr += 50;
-                    if (profile[4] >= 2) tr += 20;
+                    if (profile[2] >= 2) tr += 15;
+                    if (profile[4] >= 2) tr += 6;
 
                     return tr;
                 }
@@ -145,7 +145,7 @@ namespace mus
                     //spacing
                     var Spacing = new int[] { T.Semis - B.Semis, A.Semis - T.Semis, S.Semis - A.Semis };
                     var Optimal = new int[] { 11, 6, 4 };
-                    var ZeroVal = new int[] { 05, 3, 2 };
+                    var ZeroVal = new double[] { 6, 3, 1.5 };
                     for (int i = 0; i < 3; i++)
                     {
                         var spacing = Spacing[i];
@@ -153,7 +153,7 @@ namespace mus
                         var zeroVal = ZeroVal[i];
                         if (spacing == 0)
                         {
-                            tr += Abs(optimal - zeroVal);
+                            tr += zeroVal;
                         }
                         else
                         {

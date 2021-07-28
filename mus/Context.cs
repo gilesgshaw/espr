@@ -24,7 +24,7 @@ namespace mus
 
                 Tonic = tonic;
 
-                bRange = (31 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
+                bRange = (29 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
                 tRange = (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis);
                 aRange = (45 - Tonic.ResidueSemis, 59 - Tonic.ResidueSemis);
                 sRange = (48 - Tonic.ResidueSemis, 65 - Tonic.ResidueSemis);
@@ -49,12 +49,12 @@ namespace mus
 
                 tChords.Add(new Chord(I, major, 0));
                 tChords.Add(new Chord(I, majorR, 0));
-                tChords.Add(new Chord(II, minor, 5));
+                tChords.Add(new Chord(II, minor, 3));
                 tChords.Add(new Chord(II, minor7, -6));
                 tChords.Add(new Chord(IV, major, 0));
                 tChords.Add(new Chord(V, major, 0));
                 tChords.Add(new Chord(V, dominant7, -8));
-                tChords.Add(new Chord(VI, minor, 5));
+                tChords.Add(new Chord(VI, minor, 3));
                 tChords.Add(new Chord(VII, dim, 4));
                 tChords.Add(new Chord(VII, hdim7, -4));
 
