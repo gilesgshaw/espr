@@ -34,13 +34,18 @@ namespace mus
                 var major = new Variety(0, null, 0, null, 0, null, null);
                 var majorR = new Variety(0, null, 0, null, null, null, null);
                 var minor = new Variety(0, null, -1, null, 0, null, null);
-                var dominant = new Variety(0, null, 0, null, 0, null, -1);
+                var dim = new Variety(0, null, -1, null, -1, null, null);
+                var dominant7 = new Variety(0, null, 0, null, 0, null, -1);
+                var minor7 = new Variety(0, null, -1, null, 0, null, -1);
+                var hdim7 = new Variety(0, null, -1, null, -1, null, -1);
 
                 var I = IntervalS.GetNew(0, 0);
                 var II = IntervalS.GetNew(1, 0);
+                var III = IntervalS.GetNew(2, 0);
                 var IV = IntervalS.GetNew(3, 0);
                 var V = IntervalS.GetNew(4, 0);
                 var VI = IntervalS.GetNew(5, 0);
+                var VII = IntervalS.GetNew(6, 0);
 
                 tChords.Add(new Chord(I, major, 0));
                 tChords.Add(new Chord(I, majorR, 0));
