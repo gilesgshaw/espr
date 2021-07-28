@@ -26,22 +26,22 @@ namespace mus
                 }
                 return Cache[situation];
             }
-            
+
             //at least 1
-            private static void AddInternal(Situation situation, double[] tolerence)
+            //tolerence only applies to child routines
+            private static IEnumerable<Passage> GetInternal(Situation situation, double[] tolerence)
             {
                 if (situation.Sop.Length == 1)
                 {
                     //exactly 1
-                    //not yet implemented tolerence
-                    var ta = Array.ConvertAll(situation.Context.Bank[situation.Sop[0]], (x) => new Passage(situation.Context.Tonic, new Vert[] { x }, null, null));
-                    Cache.Add(situation, new List<Passage>(ta));
+                    foreach (var item in situation.Context.Bank[situation.Sop[0]])
+                    {
+                        yield return new Passage(situation.Context.Tonic, new Vert[] { item }, null, null);
+                    }
                 }
                 else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
-                    //not yet implemented tolerence
-                    var ta = new List<Passage>();
                     if (situation.Displacement == 0)
                     {
                         foreach (var final in GetExterenal(situation.Right, tolerence).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
@@ -51,12 +51,12 @@ namespace mus
                                 switch (pp.Verts[0].Chord.Root.ResidueNumber)
                                 {
                                     case 4:
-                                        ta.Add(new Passage(
+                                        yield return new Passage(
                                             situation.Context.Tonic,
                                             new Vert[] { pp.Verts[0], final.Verts[0] },
                                             pp,
                                             final
-                                            ));
+                                            );
                                         break;
                                 }
                             }
@@ -68,31 +68,33 @@ namespace mus
                         {
                             foreach (var pp in GetExterenal(situation.Left, tolerence))
                             {
-                                ta.Add(new Passage(
+                                yield return new Passage(
                                     situation.Context.Tonic,
                                     new Vert[] { pp.Verts[0], final.Verts[0] },
                                     pp,
                                     final
-                                    ));
+                                    );
                             }
                         }
                     }
-                    Cache.Add(situation, ta);
                 }
                 else
                 {
                     //at least 3
-                    var list = new List<Passage>();
-                    Cache.Add(situation, list);
                     foreach (var l in GetExterenal(situation.Left, tolerence))
                     {
                         foreach (var r in GetExterenal(situation.Right, tolerence).Where((x) => ReferenceEquals(x.Left, l.Right)))
                         {
-                            var obj = new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
-                            if (obj.Penalty <= tolerence[obj.Verts.Length]) list.Add(obj);
+                            yield return new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
                         }
                     }
                 }
+            }
+
+            //at least 1
+            private static void AddInternal(Situation situation, double[] tolerence)
+            {
+                Cache.Add(situation, new List<Passage>(GetInternal(situation, tolerence).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Length])));
             }
 
             #endregion
