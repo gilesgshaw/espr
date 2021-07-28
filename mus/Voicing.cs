@@ -40,6 +40,7 @@ namespace mus
 
                     //inversion
                     if (B.ResidueNumber != 0 && B.ResidueNumber != 2) tr += 100;
+                    if (Variety.PQ5 == -1 && B.ResidueNumber == 0) tr += 70;
 
                     //doubling
                     int[] profile = new int[7];
