@@ -39,6 +39,7 @@ namespace Chorale
             public Beat[] A;
             public Beat[] T;
             public Beat[] B;
+            public (string, string)[] ChordNames;
 
             public Display.Key Key;
 
@@ -111,6 +112,12 @@ namespace Chorale
                         Voice = 1,
                         Pitch = B[i].Pitch
                     });
+                    Stave1Events.Add(new Display.ChordSymbol()
+                    {
+                        BarNumber = i / 4,
+                        timeW = (float)i / 4 - (i / 4),
+                        Text = ChordNames[i]
+                    });
                 }
 
                 var stave1 = new Display.Stave() { NumberOfBars = (S.Length - 1) / 4 + 1, Events = Stave1Events.ToArray(), Clef = new Display.Clef(10, 5, "Treble"), TimeSignature = Display.TimeSignature.Common, Key = Key };
@@ -133,13 +140,41 @@ namespace Chorale
             var A = new ChoraleData.Beat[result.Length];
             var T = new ChoraleData.Beat[result.Length];
             var B = new ChoraleData.Beat[result.Length];
+            var C = new (string, string)[result.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
+
                 S[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.S)));
                 A[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.A)));
                 T[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.T)));
                 B[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.B)));
+
+                if (data.Chords[i].Variety.Symbol.Item1)
+                { //lower
+                    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToLower(), data.Chords[i].Variety.Symbol.Item2);
+                }
+                else
+                { //upper
+                    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToUpper(), data.Chords[i].Variety.Symbol.Item2);
+                }
+                switch (data.Verts[i].Voicing.B.ResidueNumber)
+                {
+                    case 0:
+                        break;
+                    case 2:
+                        C[i].Item2 += "b";
+                        break;
+                    case 4:
+                        C[i].Item2 += "c";
+                        break;
+                    case 6:
+                        C[i].Item2 += "d";
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+
             }
 
             var nData = new ChoraleData()
@@ -148,6 +183,7 @@ namespace Chorale
                 A = A,
                 T = T,
                 B = B,
+                ChordNames = C,
                 Key = new Display.Key(data.Tonic, SigMode)
             };
 
