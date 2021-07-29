@@ -128,26 +128,63 @@ namespace Notation
             }
 
             // use stem direction (not sure what this comment was meant to mean)
-            foreach (Event Event in events)
+            foreach (var Event in events)
             {
                 //HERE - need to consider key.
                 var Info = new Bar(default, clef, initialRect.Top, initialRect.Height, initialRect.Left + (Event.timeW / barWidthW * initialRect.Width) + Event.BarNumber * barWidth);
-                Event.Draw(g, Info, arrStems[Event.BarNumber][Event.Voice], arrRestRankFromTopLine[Event.BarNumber][Event.Voice]);
+                Event.Draw(g, Info, arrStems, arrRestRankFromTopLine);
             }
         }
 
-        public struct Event
+        public interface Event
         {
-            public Pitch? Pitch;
-            public int WholeDivisionPower;
-            public int Dot;
-            public float timeW; //currently refactoring in
-            public int BarNumber; //currently refactoring in
-            public NamedColor? col;
-            public int Voice; //currently refactoring in
 
-            public void Draw(Graphics g, Bar Info, int stems, int restRankFromTopLine)
+            void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine);
+            int BarNumber { get; }
+            int Voice { get; }
+            float timeW { get; }
+
+        }
+
+        //this is a little hacky at the moment.
+        //currently drawn below stave, using calibri 12 and 9.
+        public struct ChordSymbol : Event
+        {
+            public float timeW { get; set; }
+            public int BarNumber { get; set; }
+            public NamedColor? col { get; set; }
+            public int Voice { get => -1; }
+            public (string, string) Text { get; set; }
+
+            private static Font BigFont = new Font("calibri", 12);
+            private static Font SmallFont = new Font("calibri", 9);
+
+            public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
             {
+                Brush brush = Brushes.BlueViolet;
+                if (col.HasValue) brush = GetBrush(col.Value);
+                var sz1 = g.MeasureString(Text.Item1, BigFont);
+                var sz2 = g.MeasureString(Text.Item2, SmallFont);
+                g.DrawString(Text.Item1, BigFont, brush, 2 + Info.X - sz1.Width / 2 - sz2.Width / 2, Info.Bottom + 34 - sz1.Height / 2);
+                g.DrawString(Text.Item2, SmallFont, brush, -2 + Info.X + sz1.Width / 2 - sz2.Width / 2, Info.Bottom + 34 - sz1.Height / 2);
+            }
+        }
+
+        public struct Note : Event
+        {
+            public Pitch? Pitch { get; set; }
+            public int WholeDivisionPower { get; set; }
+            public int Dot { get; set; }
+            public float timeW { get; set; } //currently refactoring in
+            public int BarNumber { get; set; } //currently refactoring in
+            public NamedColor? col { get; set; }
+            public int Voice { get; set; } //currently refactoring in
+
+            public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
+            {
+
+                int stems = arrStems[BarNumber][Voice];
+                int restRankFromTopLine = arrRestRankFromTopLine[BarNumber][Voice];
 
                 var RankSp = Info.Height / Info.Clef.NumSpaces / 2;
 
