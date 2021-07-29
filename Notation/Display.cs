@@ -135,7 +135,7 @@ namespace Notation
                 Event.Draw(g, Info, arrStems, arrRestRankFromTopLine);
             }
         }
-        
+
         public interface Event
         {
 
