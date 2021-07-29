@@ -17,9 +17,12 @@ namespace mus
             public virtual int? PQ6 { get; }
             public virtual int? PQ7 { get; }
 
+            //true for lower case. false for upper case.
+            public virtual (bool, string) Symbol { get; }
+
             public Variety() { }
 
-            public Variety(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7)
+            public Variety(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7, (bool, string) symbol)
             {
                 PQ1 = pQ1;
                 PQ2 = pQ2;
@@ -28,6 +31,7 @@ namespace mus
                 PQ5 = pQ5;
                 PQ6 = pQ6;
                 PQ7 = pQ7;
+                Symbol = symbol;
             }
 
             public IntervalS? Interval(int number)

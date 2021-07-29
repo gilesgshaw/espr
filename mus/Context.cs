@@ -31,13 +31,13 @@ namespace mus
 
                 var tChords = new List<Chord>();
 
-                var major = new Variety(0, null, 0, null, 0, null, null);
-                var majorR = new Variety(0, null, 0, null, null, null, null);
-                var minor = new Variety(0, null, -1, null, 0, null, null);
-                var dim = new Variety(0, null, -1, null, -1, null, null);
-                var dominant7 = new Variety(0, null, 0, null, 0, null, -1);
-                var minor7 = new Variety(0, null, -1, null, 0, null, -1);
-                var hdim7 = new Variety(0, null, -1, null, -1, null, -1);
+                var major = new Variety(0, null, 0, null, 0, null, null, (false, ""));
+                var majorR = new Variety(0, null, 0, null, null, null, null, (false, ""));
+                var minor = new Variety(0, null, -1, null, 0, null, null, (true, ""));
+                var dim = new Variety(0, null, -1, null, -1, null, null, (true, ((char)0x006F).ToString()));
+                var dominant7 = new Variety(0, null, 0, null, 0, null, -1, (false, "7"));
+                var minor7 = new Variety(0, null, -1, null, 0, null, -1, (true, "7"));
+                var hdim7 = new Variety(0, null, -1, null, -1, null, -1, (true, ((char)0x00F8) + "7"));
 
                 var I = IntervalS.GetNew(0, 0);
                 var II = IntervalS.GetNew(1, 0);
