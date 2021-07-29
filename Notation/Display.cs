@@ -128,26 +128,39 @@ namespace Notation
             }
 
             // use stem direction (not sure what this comment was meant to mean)
-            foreach (Event Event in events)
+            foreach (var Event in events)
             {
                 //HERE - need to consider key.
                 var Info = new Bar(default, clef, initialRect.Top, initialRect.Height, initialRect.Left + (Event.timeW / barWidthW * initialRect.Width) + Event.BarNumber * barWidth);
-                Event.Draw(g, Info, arrStems[Event.BarNumber][Event.Voice], arrRestRankFromTopLine[Event.BarNumber][Event.Voice]);
+                Event.Draw(g, Info, arrStems, arrRestRankFromTopLine);
             }
         }
-
-        public struct Event
+        
+        public interface Event
         {
-            public Pitch? Pitch;
-            public int WholeDivisionPower;
-            public int Dot;
-            public float timeW; //currently refactoring in
-            public int BarNumber; //currently refactoring in
-            public NamedColor? col;
-            public int Voice; //currently refactoring in
 
-            public void Draw(Graphics g, Bar Info, int stems, int restRankFromTopLine)
+            void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine);
+            int BarNumber { get; }
+            int Voice { get; }
+            float timeW { get; }
+
+        }
+
+        public struct Note : Event
+        {
+            public Pitch? Pitch { get; set; }
+            public int WholeDivisionPower { get; set; }
+            public int Dot { get; set; }
+            public float timeW { get; set; } //currently refactoring in
+            public int BarNumber { get; set; } //currently refactoring in
+            public NamedColor? col { get; set; }
+            public int Voice { get; set; } //currently refactoring in
+
+            public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
             {
+
+                int stems = arrStems[BarNumber][Voice];
+                int restRankFromTopLine = arrRestRankFromTopLine[BarNumber][Voice];
 
                 var RankSp = Info.Height / Info.Clef.NumSpaces / 2;
 

@@ -78,7 +78,7 @@ namespace Chorale
 
                 for (int i = 0; i < S.Length; i++)
                 {
-                    Stave1Events.Add(new Display.Event()
+                    Stave1Events.Add(new Display.Note()
                     {
                         BarNumber = i / 4,
                         timeW = (float)i / 4 - (i / 4),
@@ -87,7 +87,7 @@ namespace Chorale
                         Pitch = S[i].Pitch,
                         col = NamedColor.Blue
                     });
-                    Stave1Events.Add(new Display.Event()
+                    Stave1Events.Add(new Display.Note()
                     {
                         BarNumber = i / 4,
                         timeW = (float)i / 4 - (i / 4),
@@ -95,7 +95,7 @@ namespace Chorale
                         Voice = 1,
                         Pitch = A[i].Pitch
                     });
-                    Stave2Events.Add(new Display.Event()
+                    Stave2Events.Add(new Display.Note()
                     {
                         BarNumber = i / 4,
                         timeW = (float)i / 4 - (i / 4),
@@ -103,7 +103,7 @@ namespace Chorale
                         Voice = 0,
                         Pitch = T[i].Pitch
                     });
-                    Stave2Events.Add(new Display.Event()
+                    Stave2Events.Add(new Display.Note()
                     {
                         BarNumber = i / 4,
                         timeW = (float)i / 4 - (i / 4),
