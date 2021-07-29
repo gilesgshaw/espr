@@ -34,6 +34,7 @@ namespace mus
                 if (situation.Sop.Length == 1)
                 {
                     //exactly 1
+                    //could check if this is a final chord (i.e. should be I or V)
                     foreach (var item in situation.Context.Bank[situation.Sop[0]])
                     {
                         yield return new Passage(situation.Context.Tonic, new Vert[] { item }, null, null);
@@ -42,28 +43,39 @@ namespace mus
                 else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
-                    if (situation.Displacement == 0)
+                    if (situation.Displacement == 0) //check if this is a cadence
                     {
+                        //   perfect V-I
                         foreach (var final in GetExterenal(situation.Right, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes).Where((x) => x.Verts[0].Voicing.B.ResidueNumber == 0))
+                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                             {
-                                switch (pp.Verts[0].Chord.Root.ResidueNumber)
-                                {
-                                    case 4:
-                                        yield return new Passage(
-                                            situation.Context.Tonic,
-                                            new Vert[] { pp.Verts[0], final.Verts[0] },
-                                            pp,
-                                            final
-                                            );
-                                        break;
-                                }
+                                yield return new Passage(
+                                    situation.Context.Tonic,
+                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    pp,
+                                    final
+                                    );
+                            }
+                        }
+                        // imperfect ?-V
+                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0
+                        && !x.Verts[0].Chord.Variety.PQ7.HasValue))
+                        {
+                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes))
+                            {
+                                yield return new Passage(
+                                    situation.Context.Tonic,
+                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    pp,
+                                    final
+                                    );
                             }
                         }
                     }
                     else
                     {
+                        // anything goes.
                         foreach (var final in GetExterenal(situation.Right, tolerence, maxes))
                         {
                             foreach (var pp in GetExterenal(situation.Left, tolerence, maxes))
