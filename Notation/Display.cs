@@ -146,6 +146,30 @@ namespace Notation
 
         }
 
+        //this is a little hacky at the moment.
+        //currently drawn below stave, using calibri 12 and 9.
+        public struct ChordSymbol : Event
+        {
+            public float timeW { get; set; }
+            public int BarNumber { get; set; }
+            public NamedColor? col { get; set; }
+            public int Voice { get => -1; }
+            public (string, string) Text { get; set; }
+
+            private static Font BigFont = new Font("calibri", 12);
+            private static Font SmallFont = new Font("calibri", 9);
+
+            public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
+            {
+                Brush brush = Brushes.BlueViolet;
+                if (col.HasValue) brush = GetBrush(col.Value);
+                var sz1 = g.MeasureString(Text.Item1, BigFont);
+                var sz2 = g.MeasureString(Text.Item2, SmallFont);
+                g.DrawString(Text.Item1, BigFont, brush, 2 + Info.X - sz1.Width / 2 - sz2.Width / 2, Info.Bottom + 34 - sz1.Height / 2);
+                g.DrawString(Text.Item2, SmallFont, brush, -2 + Info.X + sz1.Width / 2 - sz2.Width / 2, Info.Bottom + 34 - sz1.Height / 2);
+            }
+        }
+
         public struct Note : Event
         {
             public Pitch? Pitch { get; set; }
