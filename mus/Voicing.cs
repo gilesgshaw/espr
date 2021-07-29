@@ -48,8 +48,8 @@ namespace mus
                     profile[T.ResidueNumber]++;
                     profile[A.ResidueNumber]++;
                     profile[S.ResidueNumber]++;
-                    if (profile[2] >= 2) tr += 15;
-                    if (profile[4] >= 2) tr += 6;
+                    if (profile[2] >= 2) tr += 30;
+                    if (profile[4] >= 2) tr += 7;
 
                     return tr;
                 }

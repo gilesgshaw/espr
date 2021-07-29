@@ -210,9 +210,9 @@ namespace Notation
 
             public readonly static float BarsLeft = SignatureFromStave.Right + PostSignatureMargin;
 
-            public readonly static float MarginL = BarLineMargin * 1.5f;
-            public readonly static float MarginR = BarLineMargin * -0.5f;
+            public readonly static float MarginR = BarLineMargin - MarginL;
 
+            public const float MarginL = 16;
             public const float stemlength = 17;
             public const float MainMarginX = 30;
             public const float MainMarginY = 30;
@@ -220,9 +220,9 @@ namespace Notation
             public const float SignatureWidth = 80;
             public const float PostSignatureMargin = 9;
             public const float BarLineMargin = 8;
-            public const float StaffSpacing = 57;
+            public const float StaffSpacing = 67;
             public const float StaveHeight = 40;
-            public const float BarWidth = 85;
+            public const float BarWidth = 140;
         }
 
         //private??
