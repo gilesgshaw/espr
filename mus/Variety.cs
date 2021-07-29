@@ -18,9 +18,7 @@ namespace mus
             public virtual int? PQ7 { get; }
 
             //true for lower case. false for upper case.
-            public virtual (bool, string) Symbol { get; }
-
-            public Variety() { }
+            public (bool, string) Symbol { get; }
 
             public Variety(int? pQ1, int? pQ2, int? pQ3, int? pQ4, int? pQ5, int? pQ6, int? pQ7, (bool, string) symbol)
             {
@@ -34,15 +32,27 @@ namespace mus
                 Symbol = symbol;
             }
 
-            public IntervalS? Interval(int number)
+            protected Variety((bool, string) symbol)
             {
-                if (PQualByOffset(number).HasValue) return IntervalS.GetNew(number, PQualByOffset(number).Value);
+                Symbol = symbol;
+            }
+
+            public IntervalS? PIntervalS(int residue)
+            {
+                if (PQualByOffset(residue).HasValue) return IntervalS.GetNew(residue, PQualByOffset(residue).Value);
                 return null;
             }
 
-            public int? PQualByOffset(int number)
+            public IntervalC? PIntervalC(int number)
             {
-                switch (number)
+                int residue = mod(7, number);
+                if (PQualByOffset(residue).HasValue) return new IntervalC(number, PQualByOffset(residue).Value, 0);
+                return null;
+            }
+
+            public int? PQualByOffset(int residue)
+            {
+                switch (residue)
                 {
                     case 0:
                         {

@@ -102,7 +102,7 @@ namespace mus
 
                                 if (complete)
                                 {
-                                    yield return new VoicingS((IntervalS)c.Interval(s), (IntervalS)c.Interval(a), (IntervalS)c.Interval(t), (IntervalS)c.Interval(b), c);
+                                    yield return new VoicingS((IntervalS)c.PIntervalS(s), (IntervalS)c.PIntervalS(a), (IntervalS)c.PIntervalS(t), (IntervalS)c.PIntervalS(b), c);
                                 }
 
                                 profile[s]--;

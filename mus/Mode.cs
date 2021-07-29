@@ -24,7 +24,7 @@ namespace mus
             public override int? PQ6 => this.Q6;
             public override int? PQ7 => this.Q7;
 
-            public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7) : base()
+            public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7, (bool, string) symbol) : base(symbol)
             {
                 Q1 = q1;
                 Q2 = q2;
@@ -35,9 +35,10 @@ namespace mus
                 Q7 = q7;
             }
 
-            public static readonly Mode Zero = new Mode();
+            //the point of this is that it is just 'white notes' from C
+            public static readonly Mode Zero = new Mode((false, null));
 
-            private Mode() : base()
+            private Mode((bool, string) symbol) : base(symbol)
             {
             }
 
@@ -51,6 +52,17 @@ namespace mus
                        Q5 == mode.Q5 &&
                        Q6 == mode.Q6 &&
                        Q7 == mode.Q7;
+            }
+            
+            public IntervalS IntervalS(int residue)
+            {
+                return notation.IntervalS.GetNew(residue, QualByOffset(residue));
+            }
+
+            public IntervalC IntervalC(int number)
+            {
+                int residue = mod(7, number);
+                return new IntervalC(number, QualByOffset(residue), 0);
             }
 
             public int QualByOffset(int offset)
