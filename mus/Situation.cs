@@ -45,12 +45,18 @@ namespace mus
                 else if (situation.Sop.Length == 2)
                 {
                     //exactly 2
+
+                    var BankR = GetExterenal(situation.Right, tolerence, maxes);
+                    var BankL = GetExterenal(situation.Left, tolerence, maxes);
+                    // querey these now to make sure they are actually run, in case the full thing fails
+                    // maybe it would be faster to properly evaluate them now.
+
                     if (situation.Displacement == 0) //check if this is a cadence
                     {
                         //   perfect V-I
-                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
+                        foreach (var final in BankR.Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 0 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0))
+                            foreach (var pp in BankL.Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0))
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
@@ -61,10 +67,10 @@ namespace mus
                             }
                         }
                         // imperfect ?-V
-                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes).Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0
+                        foreach (var final in BankR.Where((x) => x.Verts[0].Chord.Root.ResidueNumber == 4 && x.Verts[0].Voicing.B.ResidueNumber == 0
                         && !x.Verts[0].Chord.Variety.PQ7.HasValue))
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes))
+                            foreach (var pp in BankL)
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
@@ -78,9 +84,9 @@ namespace mus
                     else
                     {
                         // anything goes.
-                        foreach (var final in GetExterenal(situation.Right, tolerence, maxes))
+                        foreach (var final in BankR)
                         {
-                            foreach (var pp in GetExterenal(situation.Left, tolerence, maxes))
+                            foreach (var pp in BankL)
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
@@ -95,9 +101,14 @@ namespace mus
                 else
                 {
                     //at least 3
-                    foreach (var l in GetExterenal(situation.Left, tolerence, maxes))
+
+		    var BankR = GetExterenal(situation.Right, tolerence, maxes);
+                    var BankL = GetExterenal(situation.Left, tolerence, maxes);
+                    // see comments above
+
+                    foreach (var l in BankL)
                     {
-                        foreach (var r in GetExterenal(situation.Right, tolerence, maxes).Where((x) => ReferenceEquals(x.Left, l.Right)))
+                        foreach (var r in BankR.Where((x) => ReferenceEquals(x.Left, l.Right)))
                         {
                             yield return new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
                         }
