@@ -24,9 +24,8 @@ namespace Notation
                 int position = 0;
                 for (int ScaleDegree = 0; ScaleDegree <= 6; ScaleDegree++)
                 {
-                    var AbsoluteNote = Tonic + Scale.PIntervalS(ScaleDegree).Value;
-                    int offset = AbsoluteNote.ResidueSemis - Mode.Zero.PIntervalS(AbsoluteNote.ResidueNumber).Value.ResidueSemis;
-                    switch (offset)
+                    var AbsoluteNote = Tonic + Scale.IntervalS(ScaleDegree);
+                    switch (Mode.Zero.Accidental(AbsoluteNote))
                     {
                         case 0:
                             {

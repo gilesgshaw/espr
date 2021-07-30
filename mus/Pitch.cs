@@ -78,7 +78,7 @@ namespace mus
             //should this throw the exception?
             public override string ToString()
             {
-                string acc = AccidentalSymbol(FromC0.Quality - Mode.Zero.QualByOffset(FromC0.ResidueNumber));
+                string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0));
                 switch (FromC0.ResidueNumber)
                 {
                     case 0:

@@ -53,6 +53,13 @@ namespace mus
                        Q6 == mode.Q6 &&
                        Q7 == mode.Q7;
             }
+
+            public int Accidental(IntervalS note)
+            {
+                var residue = note.ResidueNumber;
+                var expected = IntervalS(residue);
+                return (note - expected).ResidueSemis;
+            }
             
             public IntervalS IntervalS(int residue)
             {
