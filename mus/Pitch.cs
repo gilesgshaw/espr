@@ -4,9 +4,9 @@ namespace mus
 {
     public static partial class notation
     {
-        
+
         //should this throw the exception?
-        private static string AccidentalSymbol(int alt)
+        public static string AccidentalSymbol(int alt)
         {
             switch (alt)
             {
@@ -42,119 +42,78 @@ namespace mus
             }
         }
 
-        //SHOULD PROBABLY AVOID USING UNTIL EVERYTHING ELSE IS DEVELOPED.
         // compared by...
-        public struct Pitch : IEquatable<Pitch>, IComparable<Pitch>
+        public struct Pitch : IComparable<Pitch>, IEquatable<Pitch>
         {
-            public IntervalC IntervalFromC0;
+            public IntervalC FromC0 { get; set; }
+            public IntervalC FromM0 { get => this - MIDI0; set => this = MIDI0 + value; }
+            public IntervalC FromMC { get => this - MiddleC; set => this = MiddleC + value; }
+            public int MIDI => FromM0.Semis;
 
-            public Pitch(IntervalC IntervalFromC0)
-            {
-                this.IntervalFromC0 = IntervalFromC0;
-            }
 
-            public int MIDIPitch
-            {
-                get
-                {
-                    return 12 + IntervalFromC0.Semis;
-                }
-            }
+            public static readonly Pitch MIDI0 = new Pitch(new IntervalC(0, 0, -1));
+            public static readonly Pitch C0 = new Pitch(new IntervalC(0, 0, 0));
+            public static readonly Pitch MiddleC = new Pitch(new IntervalC(0, 0, 4));
 
-            public override int GetHashCode()
-            {
-                return IntervalFromC0.GetHashCode();
-            }
 
-            public int CompareTo(Pitch other)
-            {
-                return IntervalFromC0.CompareTo(other.IntervalFromC0);
-            }
+            public Pitch(IntervalC fromC0) => FromC0 = fromC0;
 
-            public static bool operator <(Pitch left, Pitch right)
-            {
-                return left.CompareTo(right) < 0;
-            }
 
-            public static bool operator >(Pitch left, Pitch right)
-            {
-                return left.CompareTo(right) > 0;
-            }
+            public static IntervalC operator -(Pitch a, Pitch b) => a.FromC0 - b.FromC0;
+            public static Pitch operator +(Pitch a, IntervalC b) => new Pitch(a.FromC0 + b);
 
-            public static bool operator <=(Pitch left, Pitch right)
-            {
-                return left.CompareTo(right) <= 0;
-            }
+            public static bool operator ==(Pitch left, Pitch right) => left.FromC0 == right.FromC0;
+            public static bool operator !=(Pitch left, Pitch right) => left.FromC0 != right.FromC0;
+            public bool Equals(Pitch other) => FromC0 == other.FromC0;
+            public int CompareTo(Pitch other) => FromC0.CompareTo(other.FromC0);
 
-            public static bool operator >=(Pitch left, Pitch right)
-            {
-                return left.CompareTo(right) >= 0;
-            }
+            public override bool Equals(object obj) => obj is Pitch pitch && Equals(pitch);
+            public static bool operator <(Pitch left, Pitch right) => left.CompareTo(right) < 0;
+            public static bool operator <=(Pitch left, Pitch right) => left.CompareTo(right) <= 0;
+            public static bool operator >(Pitch left, Pitch right) => left.CompareTo(right) > 0;
+            public static bool operator >=(Pitch left, Pitch right) => left.CompareTo(right) >= 0;
+            public override int GetHashCode() => 649032966 + FromC0.GetHashCode();
 
-            public static bool operator ==(Pitch a, Pitch b)
-            {
-                return a.IntervalFromC0 == b.IntervalFromC0;
-            }
-
-            public static bool operator !=(Pitch a, Pitch b)
-            {
-                return !(a == b);
-            }
-
-            public bool Equals(Pitch other)
-            {
-                return (this) == other;
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is Pitch && (Pitch)obj == (this);
-            }
-
-            public static IntervalC operator -(Pitch a, Pitch b)
-            {
-                return a.IntervalFromC0 - b.IntervalFromC0;
-            }
 
             //should this throw the exception?
             public override string ToString()
             {
-                string acc = AccidentalSymbol(IntervalFromC0.Quality - Mode.Zero.QualByOffset(IntervalFromC0.ResidueNumber));
-                switch (IntervalFromC0.ResidueNumber)
+                string acc = AccidentalSymbol(FromC0.Quality - Mode.Zero.QualByOffset(FromC0.ResidueNumber));
+                switch (FromC0.ResidueNumber)
                 {
                     case 0:
                         {
-                            return "C" + acc + IntervalFromC0.Octaves;
+                            return "C" + acc + FromC0.Octaves;
                         }
 
                     case 1:
                         {
-                            return "D" + acc + IntervalFromC0.Octaves;
+                            return "D" + acc + FromC0.Octaves;
                         }
 
                     case 2:
                         {
-                            return "E" + acc + IntervalFromC0.Octaves;
+                            return "E" + acc + FromC0.Octaves;
                         }
 
                     case 3:
                         {
-                            return "F" + acc + IntervalFromC0.Octaves;
+                            return "F" + acc + FromC0.Octaves;
                         }
 
                     case 4:
                         {
-                            return "G" + acc + IntervalFromC0.Octaves;
+                            return "G" + acc + FromC0.Octaves;
                         }
 
                     case 5:
                         {
-                            return "A" + acc + IntervalFromC0.Octaves;
+                            return "A" + acc + FromC0.Octaves;
                         }
 
                     case 6:
                         {
-                            return "B" + acc + IntervalFromC0.Octaves;
+                            return "B" + acc + FromC0.Octaves;
                         }
 
                 }

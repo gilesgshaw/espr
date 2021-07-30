@@ -194,7 +194,7 @@ namespace Notation
 
                 if (Pitch.HasValue)
                 {
-                    int ranknumber = (Info.Clef.MCRankFromTopLine - Pitch.Value.IntervalFromC0.Number + 4 * 7);
+                    int ranknumber = (Info.Clef.MCRankFromTopLine - Pitch.Value.FromMC.Number);
 
                     PositionY = Info.Top + RankSp * ranknumber;
                     pen = Pens.Black;

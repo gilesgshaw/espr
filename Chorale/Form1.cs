@@ -55,17 +55,17 @@ namespace Chorale
                 for (int i = 0; i < S.Length; i++)
                 {
 
-                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDIPitch, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDI, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDI, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDI, 100, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDI, 100, 50).GetAsShortMessage());
 
                     System.Threading.Thread.Sleep(i == S.Length - 1 ? 1400 : 800);
 
-                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
-                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDIPitch, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, S[i].Pitch.MIDI, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, A[i].Pitch.MIDI, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, T[i].Pitch.MIDI, 0, 50).GetAsShortMessage());
+                    midiOut.Send(new NoteOnEvent(0, channel, B[i].Pitch.MIDI, 0, 50).GetAsShortMessage());
 
                     System.Threading.Thread.Sleep(i == S.Length - 1 ? 0 : 100);
                 }
