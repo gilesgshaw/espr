@@ -37,6 +37,8 @@ namespace mus
                     //could check if this is a final chord (i.e. should be I or V)
                     foreach (var item in situation.Context.Bank[situation.Sop[0]])
                     {
+                        // currently enforcing that opening chord is I(a)
+                        if (situation.Initial && (item.Chord.Root.ResidueNumber != 0 || item.Voicing.B.ResidueNumber != 0)) continue;
                         yield return new Passage(situation.Context.Tonic, new Vert[] { item }, null, null);
                     }
                 }
@@ -117,22 +119,24 @@ namespace mus
             public Context Context { get; }
             public int[] Sop { get; } //length at least 1
             public int Displacement { get; }
+            public bool Initial { get; }
 
-            private Situation(Context context, int[] sop, int displacement)
+            private Situation(Context context, int[] sop, int displacement, bool initial)
             {
                 Context = context;
                 Sop = sop;
                 Displacement = displacement;
+                Initial = initial;
                 if (Sop.Length == 1) return;
-                Left = Instance(context, Sop.Take(Sop.Length - 1).ToArray(), displacement + 1);
-                Right = Instance(context, Sop.Skip(1).ToArray(), displacement);
+                Left = Instance(context, Sop.Take(Sop.Length - 1).ToArray(), displacement + 1, initial);
+                Right = Instance(context, Sop.Skip(1).ToArray(), displacement, false);
             }
 
             private static List<Situation> Instances = new List<Situation>();
 
-            public static Situation Instance(Context context, int[] sop, int displacement)
+            public static Situation Instance(Context context, int[] sop, int displacement, bool initial)
             {
-                var tempNew = new Situation(context, sop, displacement);
+                var tempNew = new Situation(context, sop, displacement, initial);
                 if (!Instances.Contains(tempNew)) Instances.Add(tempNew);
                 return Instances.First((x) => x.Equals(tempNew));
             }
@@ -154,6 +158,7 @@ namespace mus
                 if (other == null ||
                     !ReferenceEquals(Context, other.Context) ||
                     Displacement != other.Displacement ||
+                    Initial != other.Initial ||
                     Sop.Length != other.Sop.Length) return false;
                 for (int i = 0; i < Sop.Length; i++)
                 {
