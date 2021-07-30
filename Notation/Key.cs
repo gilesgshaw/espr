@@ -9,36 +9,29 @@ namespace Notation
 
         public struct Key
         {
-            public IntervalS Tonic { get; set; }
-            public Mode Scale { get; set; }
+            public IntervalS Tonic { get; set; } // from C
+            public Mode Mode { get; set; } // from Tonic
+
+            private static readonly Mode naturalMode = Mode.Zero; // the 'white notes' (i.e. from C)
 
             public Key(IntervalS tonic, Mode scale)
             {
                 Tonic = tonic;
-                Scale = scale;
+                Mode = scale;
             }
 
             public void DrawSig(Graphics g, RectangleF rect, Clef clef)
             {
                 var rankHeight = rect.Height / clef.NumSpaces / 2;
                 int position = 0;
-                for (int ScaleDegree = 0; ScaleDegree <= 6; ScaleDegree++)
+                for (int ScaleDegree = 0; ScaleDegree < 7; ScaleDegree++)
                 {
-                    var AbsoluteNote = Tonic + Scale.IntervalS(ScaleDegree);
-                    switch (Mode.Zero.Accidental(AbsoluteNote))
+                    var AbsoluteNote = Tonic + Mode.IntervalS(ScaleDegree);
+                    switch (naturalMode.Accidental(AbsoluteNote))
                     {
-                        case 0:
-                            {
-                                break;
-                            }
-
                         case 1:
                             {
-                                int currentrank = clef.MCRankFromTopLine - (int)AbsoluteNote.ResidueNumber;
-                                while (currentrank < 0)
-                                    currentrank += 7;
-                                while (currentrank >= 7)
-                                    currentrank -= 7;
+                                int currentrank = mod(7, clef.MCRankFromTopLine - AbsoluteNote.ResidueNumber);
                                 g.DrawString("#", new Font("calibri", 12f), Brushes.Black, new PointF(rect.Left + 27 + position * 8, rect.Top + currentrank * rankHeight - 10));
                                 position += 1;
                                 break;
@@ -46,20 +39,14 @@ namespace Notation
 
                         case -1:
                             {
-                                int currentrank = clef.MCRankFromTopLine - (int)AbsoluteNote.ResidueNumber;
-                                while (currentrank < 0)
-                                    currentrank += 7;
-                                while (currentrank >= 7)
-                                    currentrank -= 7;
+                                int currentrank = mod(7, clef.MCRankFromTopLine - AbsoluteNote.ResidueNumber);
                                 g.DrawString("b", new Font("calibri", 12f), Brushes.Black, new PointF(rect.Left + 27 + position * 8, rect.Top + currentrank * rankHeight - 10));
                                 position += 1;
                                 break;
                             }
 
-                        default:
-                            {
-                                throw new NotImplementedException();
-                            }
+                        case 0: break;
+                        default: throw new NotImplementedException();
                     }
                 }
             }
