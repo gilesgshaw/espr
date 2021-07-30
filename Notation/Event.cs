@@ -54,6 +54,8 @@ namespace Notation
             public NamedColor? col { get; set; }
             public int Voice { get; set; } //currently refactoring in
 
+            private static readonly Font AccFont = new Font("calibri", 13);
+
             public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
             {
 
@@ -77,6 +79,16 @@ namespace Notation
                     {
                         pen = GetPen(col.Value);
                         brush = GetBrush(col.Value);
+                    }
+
+                    //Accidental Symbol
+
+                    var acc = Info.QueryAccidental(Pitch.Value);
+                    if (acc.HasValue)
+                    {
+                        var text = AccidentalSymbol(acc.Value, true);
+                        var sz = g.MeasureString(text, AccFont);
+                        g.DrawString(text, AccFont, Brushes.Black, Info.X - 21, PositionY - sz.Height / 2);
                     }
 
                     if (stems == -1 || stems == 0 && ranknumber <= 4) //up
@@ -110,6 +122,24 @@ namespace Notation
                 bool solid;
                 switch (WholeDivisionPower) { case 2: solid = true; break; case 1: solid = false; break; default: throw new NotImplementedException(); }
                 g.DrawCenteredEllipse(pen, brush, solid, new PointF(Info.X, PositionY), new SizeF(RankSp * 2, RankSp * 2));
+            }
+        }
+
+        public struct AccReset : Event
+        {
+            public int BarNumber { get; set; }
+
+            public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
+            {
+                Info.ResetAccidentals();
+            }
+
+            public int Voice { get => -1; }
+            public float timeW { get => 0; }
+
+            public AccReset(int barNumber)
+            {
+                BarNumber = barNumber;
             }
         }
 

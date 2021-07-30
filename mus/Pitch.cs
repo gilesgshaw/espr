@@ -6,7 +6,7 @@ namespace mus
     {
 
         //should this throw the exception?
-        public static string AccidentalSymbol(int alt)
+        public static string AccidentalSymbol(int alt, bool giveNatural)
         {
             switch (alt)
             {
@@ -22,7 +22,7 @@ namespace mus
 
                 case 0:
                     {
-                        return string.Empty;
+                        return giveNatural ? "♮" : "";
                     }
 
                 case 1:
@@ -78,7 +78,7 @@ namespace mus
             //should this throw the exception?
             public override string ToString()
             {
-                string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0));
+                string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0), false);
                 switch (FromC0.ResidueNumber)
                 {
                     case 0:

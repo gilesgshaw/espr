@@ -12,6 +12,18 @@ namespace Notation
             public IntervalS Tonic { get; set; } // from C
             public Mode Mode { get; set; } // from Tonic
 
+            public Mode GetModeFromC()
+            {
+                return new Mode(
+                    (Tonic + Mode.IntervalS(0 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(1 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(2 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(3 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(4 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(5 - Tonic.ResidueNumber)).Quality,
+                    (Tonic + Mode.IntervalS(6 - Tonic.ResidueNumber)).Quality, Mode.Symbol);
+            }
+
             private static readonly Mode naturalMode = Mode.Zero; // the 'white notes' (i.e. from C)
 
             public Key(IntervalS tonic, Mode scale)
