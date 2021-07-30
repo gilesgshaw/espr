@@ -37,22 +37,23 @@ namespace mus
                 Symbol = symbol;
             }
 
-            public IntervalS? PIntervalS(int residue)
+            //will accept any 'number' and calculate residue.
+            public IntervalS? PIntervalS(int number)
             {
-                if (PQualByOffset(residue).HasValue) return IntervalS.GetNew(residue, PQualByOffset(residue).Value);
+                if (PQualByOffset(number).HasValue) return IntervalS.GetNew(number, PQualByOffset(number).Value);
                 return null;
             }
 
             public IntervalC? PIntervalC(int number)
             {
-                int residue = mod(7, number);
-                if (PQualByOffset(residue).HasValue) return new IntervalC(number, PQualByOffset(residue).Value, 0);
+                if (PQualByOffset(number).HasValue) return new IntervalC(number, PQualByOffset(number).Value, 0);
                 return null;
             }
 
-            public int? PQualByOffset(int residue)
+            //will accept any 'number' and calculate residue.
+            public int? PQualByOffset(int number)
             {
-                switch (residue)
+                switch (mod(7, number))
                 {
                     case 0:
                         {

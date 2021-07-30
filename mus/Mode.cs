@@ -60,18 +60,19 @@ namespace mus
                 var expected = IntervalS(residue);
                 return (note - expected).ResidueSemis;
             }
-            
-            public IntervalS IntervalS(int residue)
+
+            //will accept any 'number' and calculate residue.
+            public IntervalS IntervalS(int number)
             {
-                return notation.IntervalS.GetNew(residue, QualByOffset(residue));
+                return notation.IntervalS.GetNew(number, QualByOffset(number));
             }
 
             public IntervalC IntervalC(int number)
             {
-                int residue = mod(7, number);
-                return new IntervalC(number, QualByOffset(residue), 0);
+                return new IntervalC(number, QualByOffset(number), 0);
             }
 
+            //will accept any 'number' and calculate residue.
             public int QualByOffset(int offset)
             {
                 return (int)PQualByOffset(offset);

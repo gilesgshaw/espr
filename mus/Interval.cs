@@ -174,6 +174,7 @@ namespace mus
                 return QualityName(Quality, Degree.IsConsonant(ResidueNumber)) + " " + Degree.Interval(ResidueNumber);
             }
 
+            //will accept any 'number' and calculate residue.
             public static IntervalS GetNew(int number, int quality) => new IntervalS(new IntervalC(number, quality, 0));
 
             public static explicit operator IntervalS(IntervalC obj) => new IntervalS(obj);
