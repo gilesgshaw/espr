@@ -82,20 +82,32 @@ namespace mus
                         tr += numStatic * numStatic * 3;
 
                         //Resolving 7th
+                        //Can it resolve several chords later?
                         if (Verts[0].Voicing.S.ResidueNumber == 6 && ((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number != 1) tr += 70;
                         if (Verts[0].Voicing.A.ResidueNumber == 6 && ((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number != 1) tr += 70;
                         if (Verts[0].Voicing.T.ResidueNumber == 6 && ((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number != 1) tr += 70;
                         if (Verts[0].Voicing.B.ResidueNumber == 6 && ((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number != 1) tr += 70;
 
                         //Preparing 7th
-                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) > 1) tr += 70;
-                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) > 1) tr += 70;
-                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) > 1) tr += 70;
-                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) > 1) tr += 70;
+                        //Should a 7th be prepared in the previous chord? probably
+                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) == 1) tr += 35;
                         if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
                         if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
                         if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
                         if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
+
+                        //Movement after dim 7
+                        if (Verts[0].Chord.Variety.PQ7 == -2 &&
+                            (Verts[0].Voicing.B + Verts[0].Chord.Root) > (Verts[1].Voicing.B + Verts[1].Chord.Root)) tr += 15;
+                        if (Verts[0].Chord.Variety.PQ7 == -2 &&
+                            (Verts[0].Voicing.S + Verts[0].Chord.Root) < (Verts[1].Voicing.S + Verts[1].Chord.Root)) tr += 15;
 
                         //Chord transition
                         if (Chords[1].Root == Chords[0].Root && Verts[1].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
