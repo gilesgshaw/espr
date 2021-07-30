@@ -131,9 +131,8 @@ namespace Chorale
 
 
 
-        private PictureBox CreatePB(Passage data, Mode SigMode)
+        private PictureBox CreatePB(IEnumerable<(IntervalS, Vert)> Data, (IntervalS, Mode) Key)
         {
-            var Data = data.Verts;
 
             var result = Data.ToArray();
             var S = new ChoraleData.Beat[result.Length];
@@ -145,35 +144,35 @@ namespace Chorale
             for (int i = 0; i < result.Length; i++)
             {
 
-                S[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.S)));
-                A[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.A)));
-                T[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.T)));
-                B[i] = new ChoraleData.Beat(new Pitch(data.Tonic + (result[i].Chord.Root + result[i].Voicing.B)));
+                S[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.S)));
+                A[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.A)));
+                T[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.T)));
+                B[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.B)));
 
-                if (data.Chords[i].Variety.Symbol.Item1)
-                { //lower
-                    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToLower(), data.Chords[i].Variety.Symbol.Item2);
-                }
-                else
-                { //upper
-                    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToUpper(), data.Chords[i].Variety.Symbol.Item2);
-                }
-                switch (data.Verts[i].Voicing.B.ResidueNumber)
-                {
-                    case 0:
-                        break;
-                    case 2:
-                        C[i].Item2 += "b";
-                        break;
-                    case 4:
-                        C[i].Item2 += "c";
-                        break;
-                    case 6:
-                        C[i].Item2 += "d";
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                //if (data.Chords[i].Variety.Symbol.Item1)
+                //{ //lower
+                //    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToLower(), data.Chords[i].Variety.Symbol.Item2);
+                //}
+                //else
+                //{ //upper
+                //    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToUpper(), data.Chords[i].Variety.Symbol.Item2);
+                //}
+                //switch (data.Verts[i].Voicing.B.ResidueNumber)
+                //{
+                //    case 0:
+                //        break;
+                //    case 2:
+                //        C[i].Item2 += "b";
+                //        break;
+                //    case 4:
+                //        C[i].Item2 += "c";
+                //        break;
+                //    case 6:
+                //        C[i].Item2 += "d";
+                //        break;
+                //    default:
+                //        throw new NotImplementedException();
+                //}
 
             }
 
@@ -184,7 +183,7 @@ namespace Chorale
                 T = T,
                 B = B,
                 ChordNames = C,
-                Key = new Display.Key(data.Tonic, SigMode)
+                Key = new Display.Key(Key.Item1, Key.Item2)
             };
 
             var pb = new PictureBox();
@@ -192,8 +191,8 @@ namespace Chorale
             pb.Size = pb.Image.Size;
 
             flowLayoutPanel1.Controls.Add(pb);
-            toolTip1.SetToolTip(pb, data.Penalty.ToString());
-            pb.DoubleClick += (s, e) => MessageBox.Show(data.Penalty.ToString());
+            //toolTip1.SetToolTip(pb, data.Penalty.ToString());
+            //pb.DoubleClick += (s, e) => MessageBox.Show(data.Penalty.ToString());
             pb.Click += (s, e) => nData.Play();
 
             return pb;
@@ -201,17 +200,11 @@ namespace Chorale
 
         private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = test();
-            foreach (var item in result.Item1.Where((x) => x != null))
+            var result = tempClass.test();
+            foreach (var item in result)
             {
-                CreatePB(item, result.Item2);
+                CreatePB(item.Item1, item.Item2);
             }
-            PrintPretty(result.Item3, (x) => Situation.Cache[x].Count.ToString(), (x) =>
-            {
-                if (x.Left.Sop.Length == 1) return new Situation[] { };
-                return new[] { x.Left, x.Right };
-            }
-            , (x) => Debug.Write(x));
         }
 
         private void cacheToolStripMenuItem_Click(object sender, EventArgs e)
