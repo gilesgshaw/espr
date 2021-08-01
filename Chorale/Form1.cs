@@ -209,10 +209,7 @@ namespace Chorale
 
         private void cacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var item in Situation.Cache)
-            {
-                Debug.WriteLine(item.Value.Count + " " + item.Key.Sop.Length);
-            }
+            tempClass.test2();
         }
     }
 }
