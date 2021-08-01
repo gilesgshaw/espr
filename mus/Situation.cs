@@ -102,7 +102,7 @@ namespace mus
                 {
                     //at least 3
 
-		    var BankR = GetExterenal(situation.Right, tolerence, maxes);
+                    var BankR = GetExterenal(situation.Right, tolerence, maxes);
                     var BankL = GetExterenal(situation.Left, tolerence, maxes);
                     // see comments above
 
