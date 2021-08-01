@@ -6,11 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using static mus.notation;
 
 namespace mus
 {
-    public static partial class notation
+    public static class Ut
     {
 
         public static int mod(int b, int a)
