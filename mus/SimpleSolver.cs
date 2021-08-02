@@ -11,10 +11,10 @@ namespace mus
         {
 
             //at least 1
-            public static Dictionary<Situation, List<Passage>> Cache = new Dictionary<Situation, List<Passage>>();
+            public static Dictionary<PassageSt, List<Passage>> Cache = new Dictionary<PassageSt, List<Passage>>();
 
             //at least 1
-            public static IEnumerable<Passage> GetExterenal(Situation situation, double[] tolerence, int[] maxes)
+            public static IEnumerable<Passage> GetExterenal(PassageSt situation, double[] tolerence, int[] maxes)
             {
                 if (!Cache.ContainsKey(situation))
                 {
@@ -25,7 +25,7 @@ namespace mus
 
             //at least 1
             //tolerence etc... only applies to child routines
-            private static IEnumerable<Passage> GetInternal(Situation situation, double[] tolerence, int[] maxes)
+            private static IEnumerable<Passage> GetInternal(PassageSt situation, double[] tolerence, int[] maxes)
             {
                 if (situation.Sop.Length == 1)
                 {
@@ -113,7 +113,7 @@ namespace mus
             }
 
             //at least 1
-            private static void AddInternal(Situation situation, double[] tolerence, int[] maxes)
+            private static void AddInternal(PassageSt situation, double[] tolerence, int[] maxes)
             {
                 var fullList = GetInternal(situation, tolerence, maxes).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Length]).ToArray();
                 Array.Sort(fullList, Valuer<Passage>.instance);

@@ -8,14 +8,14 @@ namespace mus
     {
 
         //should make this properly immutable
-        public class Situation : IEquatable<Situation>
+        public class PassageSt : IEquatable<PassageSt>
         {
             public Context Context { get; }
             public int[] Sop { get; } //length at least 1
             public int Displacement { get; }
             public bool Initial { get; }
 
-            private Situation(Context context, int[] sop, int displacement, bool initial)
+            private PassageSt(Context context, int[] sop, int displacement, bool initial)
             {
                 Context = context;
                 Sop = sop;
@@ -26,28 +26,28 @@ namespace mus
                 Right = Instance(context, Sop.Skip(1).ToArray(), displacement, false);
             }
 
-            private static List<Situation> Instances = new List<Situation>();
+            private static List<PassageSt> Instances = new List<PassageSt>();
 
-            public static Situation Instance(Context context, int[] sop, int displacement, bool initial)
+            public static PassageSt Instance(Context context, int[] sop, int displacement, bool initial)
             {
-                var tempNew = new Situation(context, sop, displacement, initial);
+                var tempNew = new PassageSt(context, sop, displacement, initial);
                 if (!Instances.Contains(tempNew)) Instances.Add(tempNew);
                 return Instances.First((x) => x.Equals(tempNew));
             }
 
 
             //These will be null rather then 'empty'
-            public Situation Left { get; }
-            public Situation Right { get; }
+            public PassageSt Left { get; }
+            public PassageSt Right { get; }
 
 
 
             public override bool Equals(object obj)
             {
-                return Equals(obj as Situation);
+                return Equals(obj as PassageSt);
             }
 
-            public bool Equals(Situation other)
+            public bool Equals(PassageSt other)
             {
                 if (other == null ||
                     !ReferenceEquals(Context, other.Context) ||
@@ -70,12 +70,12 @@ namespace mus
                 return hashCode;
             }
 
-            public static bool operator ==(Situation left, Situation right)
+            public static bool operator ==(PassageSt left, PassageSt right)
             {
-                return EqualityComparer<Situation>.Default.Equals(left, right);
+                return EqualityComparer<PassageSt>.Default.Equals(left, right);
             }
 
-            public static bool operator !=(Situation left, Situation right)
+            public static bool operator !=(PassageSt left, PassageSt right)
             {
                 return !(left == right);
             }
