@@ -69,16 +69,6 @@ namespace mus
                 hashCode = hashCode * -1521134295 + Displacement.GetHashCode();
                 return hashCode;
             }
-
-            public static bool operator ==(PassageSt left, PassageSt right)
-            {
-                return EqualityComparer<PassageSt>.Default.Equals(left, right);
-            }
-
-            public static bool operator !=(PassageSt left, PassageSt right)
-            {
-                return !(left == right);
-            }
         }
 
     }

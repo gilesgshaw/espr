@@ -8,17 +8,13 @@ namespace mus
 
         public class Context
         {
-
             public IntervalS Tonic { get; }
-            //relative to tonic.
-            public (int, int) bRange { get; }
-            public (int, int) tRange { get; }
-            public (int, int) aRange { get; }
-            public (int, int) sRange { get; }
+            public (int, int) bRange { get; } //relative to tonic.
+            public (int, int) tRange { get; } //relative to tonic.
+            public (int, int) aRange { get; } //relative to tonic.
+            public (int, int) sRange { get; } //relative to tonic.
             public Chord[] Chords { get; }
-
-            //key is MIDI pitches
-            public Vert[][] Bank { get; }
+            public Vert[][] Bank { get; } //key is MIDI pitches
 
             public Context(IntervalS tonic, IEnumerable<Chord> chords)
             {
@@ -53,7 +49,6 @@ namespace mus
                 }
 
             }
-
         }
 
     }

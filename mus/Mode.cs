@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace mus
+﻿namespace mus
 {
     public static partial class notation
     {

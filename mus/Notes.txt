@@ -1,9 +1,26 @@
 ﻿//convention - major is 0
 //Number is traditionally stored as offset starting from 0...
+//convention - store tuples as SATB (check this!)
 
 //Rest position and stem directions are still based on 5 lines stave.
 
 //NAudio has different version in two strands of solution...
 
-//ISSUE: e.g. repeated chord is only counted once...
-CURRENLY WORKING ON THIS.
+//idea - work on bits of chorale that are 'narrowing down' the best...
+
+
+//private static string GetOrdinalSuffix(int n)
+//{
+//    if (n < 0)
+//        throw new ArgumentException();
+//    n = n % 100;
+//    if (n == 11 || n == 12 || n == 13)
+//        return "th";
+//    if (n % 10 == 1)
+//        return "st";
+//    if (n % 10 == 2)
+//        return "nd";
+//    if (n % 10 == 3)
+//        return "rd";
+//    return "th";
+//}

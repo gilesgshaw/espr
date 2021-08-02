@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using static System.Math;
 
 namespace mus
@@ -18,14 +17,9 @@ namespace mus
             public Vert[] Verts { get; } //length at least 1
             public Chord[] Chords { get; } //length at least 1
 
-            //public Cadence Cadence { get; }
-
-            //accepts these as trusted redundant information.
-
+            //accepts these as trusted redundant information:
             public Passage Left { get; } //will be null rather then 'empty'
             public Passage Right { get; } //will be null rather then 'empty'
-
-            //public IntervalC[][] Pitches { get; } //satb
 
             public override double IntrinsicPenalty
             {
@@ -187,24 +181,13 @@ namespace mus
                 }
             }
 
-            //private static Cadence GetCadence(Vert[] verts)
-            //{
-            //    Cadence Cadence = default;
-            //    if (verts.Length >= 3) Cadence = new Cadence(verts[verts.Length - 3], verts[verts.Length - 2], verts[verts.Length - 1]);
-            //    if (verts.Length == 2) Cadence = new Cadence(default, verts[verts.Length - 2], verts[verts.Length - 1]);
-            //    if (verts.Length == 1) Cadence = new Cadence(default, default, verts[verts.Length - 1]);
-            //    if (verts.Length == 0) Cadence = new Cadence(default, default, default);
-            //    return Cadence;
-            //}
-
-            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base() //.Concat(new TreeValued[] { GetCadence(verts) }))
+            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base()
             {
                 Tonic = tonic;
                 Chords = Array.ConvertAll(verts, (x) => x.Chord);
                 Verts = verts;
                 Left = left;
                 Right = right;
-                //Cadence = GetCadence(verts);
                 if (verts.Length == 1)
                 {
                     AddChildren(verts);
@@ -238,16 +221,6 @@ namespace mus
             public override int GetHashCode()
             {
                 return -1971104453 + EqualityComparer<Vert[]>.Default.GetHashCode(Verts);
-            }
-
-            public static bool operator ==(Passage left, Passage right)
-            {
-                return EqualityComparer<Passage>.Default.Equals(left, right);
-            }
-
-            public static bool operator !=(Passage left, Passage right)
-            {
-                return !(left == right);
             }
         }
 

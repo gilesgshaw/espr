@@ -17,21 +17,6 @@ namespace mus
 
             public Variety Variety { get; }
 
-            //public static VoicingS operator +(VoicingS a, IntervalS b)
-            //{
-            //    return new VoicingS(a.S + b, a.A + b, a.T + b, a.B + b);
-            //}
-
-            //public static VoicingS operator -(VoicingS a, IntervalS b)
-            //{
-            //    return new VoicingS(a.S - b, a.A - b, a.T - b, a.B - b);
-            //}
-
-            //public static VoicingS operator +(IntervalS b, VoicingS a)
-            //{
-            //    return a + b;
-            //}
-
             public override double IntrinsicPenalty
             {
                 get
@@ -114,7 +99,7 @@ namespace mus
                     profile[b]--;
                 }
 
-            } // IEnumerable<VoicingS> FromVariety(Variety c)
+            }
         }
 
         //counts from root
@@ -125,16 +110,6 @@ namespace mus
             public IntervalC A { get; }
             public IntervalC T { get; }
             public IntervalC B { get; }
-
-            //public static VoicingC operator +(VoicingC a, IntervalC b)
-            //{
-            //    return new VoicingC(a.S + b, a.A + b, a.T + b, a.B + b);
-            //}
-
-            //public static VoicingC operator +(IntervalC b, VoicingC a)
-            //{
-            //    return a + b;
-            //}
 
             public override double IntrinsicPenalty
             {

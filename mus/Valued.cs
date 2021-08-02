@@ -24,36 +24,10 @@ namespace mus
             double Penalty { get; }
         }
 
-        public abstract class Valued : Valuable
-        {
-
-            public virtual double Penalty { get; }
-
-            protected Valued()
-            {
-                Penalty = 0;
-            }
-
-            protected Valued(Valued[] children)
-            {
-                Penalty = children.Aggregate(0D, (x, y) => x + y.Penalty);
-            }
-
-            protected Valued(double penalty)
-            {
-                Penalty = penalty;
-            }
-
-            protected Valued(Valued[] children, double penalty)
-            {
-                Penalty = children.Aggregate(penalty, (x, y) => x + y.Penalty);
-            }
-        }
-
-
         //In current design, the same child object is counted every time it appears
         //So this whole 'serial' thing is basically redundant,
         //since equality comparison should not be needed
+        // However I'm leaving all this stuff here in case it becomes useful later.
         public abstract class TreeValued : Valuable, IEquatable<TreeValued>
         {
 
