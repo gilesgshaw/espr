@@ -17,15 +17,15 @@ namespace mus
 
         //solutions must be registerd by 1) problem 2) problem & lChild 3) problem & rChild
         private readonly List<TSolution> allSolutions;
-        private readonly Dictionary<TProblem, List<int>> solutionsTo;
-        private readonly Dictionary<(int, TProblem), List<int>> lParentsOf;
-        private readonly Dictionary<(int, TProblem), List<int>> rParentsOf;
+        private readonly Dictionary<TProblem, List<int>> solutionsTo; // keys present iff 'marked as attempted'
+        private readonly Dictionary<(int, TProblem), List<int>> lParentsOf; // don't assume certain keys are present
+        private readonly Dictionary<(int, TProblem), List<int>> rParentsOf; // don't assume certain keys are present
 
         //for singletons
+        //'mark as attempted' before calling
         private void Register(TProblem problem, TSolution solution)
         {
             var index = allSolutions.Count;
-            if (!solutionsTo.ContainsKey(problem)) solutionsTo.Add(problem, new List<int>());
             solutionsTo[problem].Add(index);
             allSolutions.Add(solution);
 
@@ -35,10 +35,10 @@ namespace mus
         }
 
         //for others
+        //'mark as attempted' before calling
         private void Register(TProblem problem, TSolution solution, int lChild, int rChild)
         {
             var index = allSolutions.Count;
-            if (!solutionsTo.ContainsKey(problem)) solutionsTo.Add(problem, new List<int>());
             solutionsTo[problem].Add(index);
             if (!lParentsOf.ContainsKey((rChild, problem))) lParentsOf.Add((rChild, problem), new List<int>());
             lParentsOf[(rChild, problem)].Add(index);
@@ -75,6 +75,7 @@ namespace mus
         //children must be solved already
         private void SolveInternal(TProblem problem)
         {
+            solutionsTo.Add(problem, new List<int>());
             if (Left(problem) == null)
             {
                 var results = GetInternalS(problem);
