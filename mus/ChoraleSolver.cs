@@ -3,7 +3,7 @@ using System.Linq;
 using static mus.notation;
 using mus;
 
-namespace Chorale
+namespace mus
 {
 
     public class ChoraleSolver : StringValuer<PassageSt, Passage>
