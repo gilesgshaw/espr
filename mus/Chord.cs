@@ -6,6 +6,8 @@ namespace mus
     {
 
         //Root is relative to tonic
+        // immutable, provided 'Variety' is
+        // currently vunerable to invalid inputs
         public class Chord : TreeValued
         {
             public IntervalS Root { get; }

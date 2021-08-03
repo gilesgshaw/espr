@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using static System.Math;
 
 namespace mus
@@ -7,15 +8,13 @@ namespace mus
     public static partial class notation
     {
 
-        //could do with some optimisation...
-        //for later should maybe store the pitches directly...
-        //and in fact they are probably the 'independant' data.
-
+        // immutable, provided 'Chord' and 'Vert' are
+        // currently vunerable to invalid inputs
         public class Passage : TreeValued, IEquatable<Passage>
         {
             public IntervalS Tonic { get; }
-            public Vert[] Verts { get; } //length at least 1
-            public Chord[] Chords { get; } //length at least 1
+            public ReadOnlyCollection<Vert> Verts { get; } //length at least 1
+            public ReadOnlyCollection<Chord> Chords { get; } //length at least 1
 
             //accepts these as trusted redundant information:
             public Passage Left { get; } //will be null rather then 'empty'
@@ -28,7 +27,7 @@ namespace mus
                     var tr = base.IntrinsicPenalty;
 
 
-                    if (Chords.Length == 1) // Length 1
+                    if (Chords.Count == 1) // Length 1
                     {
 
                         //Bad chords
@@ -56,7 +55,7 @@ namespace mus
                     }
 
 
-                    if (Chords.Length == 2) // Length 2
+                    if (Chords.Count == 2) // Length 2
                     {
 
                         //Voice leading
@@ -165,7 +164,7 @@ namespace mus
                     }
 
 
-                    if (Chords.Length == 3) // Length 3
+                    if (Chords.Count == 3) // Length 3
                     {
 
                         //Chord transition 1 to 3
@@ -181,18 +180,18 @@ namespace mus
                 }
             }
 
-            public Passage(IntervalS tonic, Vert[] verts, Passage left, Passage right) : base()
+            public Passage(IntervalS tonic, ReadOnlyCollection<Vert> verts, Passage left, Passage right) : base()
             {
                 Tonic = tonic;
-                Chords = Array.ConvertAll(verts, (x) => x.Chord);
+                Chords = Array.AsReadOnly(verts.Select((x) => x.Chord).ToArray());
                 Verts = verts;
                 Left = left;
                 Right = right;
-                if (verts.Length == 1)
+                if (verts.Count == 1)
                 {
                     AddChildren(verts);
                 }
-                else if (verts.Length == 2)
+                else if (verts.Count == 2)
                 {
                     AddChildren(new (double, TreeValued)[] { (1, Left), (1, Right) });
                 }
@@ -209,18 +208,31 @@ namespace mus
 
             public bool Equals(Passage other)
             {
-                if (other == null || other.Tonic != Tonic || Verts.Length != other.Verts.Length) return false;
-                for (int i = 0; i < Verts.Length; i++)
+                if (
+                    other == null ||
+                    other.Tonic != Tonic ||
+                    Verts.Count != other.Verts.Count
+                )
+                    return false;
+
+                for (int i = 0; i < Verts.Count; i++)
                 {
-                    if (!ReferenceEquals(Verts[i], other.Verts[i])) return false;
+                    if (
+                        !Verts[i].Equals(other.Verts[i])
+                    )
+                        return false;
                 }
+
                 return true;
             }
 
             //may want improving
             public override int GetHashCode()
             {
-                return -1971104453 + EqualityComparer<Vert[]>.Default.GetHashCode(Verts);
+                int hashCode = -1495229413;
+                hashCode = hashCode * -1521134295 + Tonic.GetHashCode();
+                hashCode = hashCode * -1521134295 + Verts.GetHashCode();
+                return hashCode;
             }
         }
 

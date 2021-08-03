@@ -4,6 +4,8 @@
     {
 
         //'based off of' tonic
+        // immutable, provided 'Chord' and 'VoicingC' are
+        // currently vunerable to invalid inputs
         public class Vert : TreeValued
         {
             public Chord Chord { get; }

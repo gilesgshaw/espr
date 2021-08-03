@@ -2,14 +2,15 @@
 using System.Linq;
 using static mus.notation;
 using mus;
+using System;
 
 namespace mus
 {
 
     public class ChoraleSolver : StringValuer<PassageSt, Passage>
     {
-        protected override int Capacity(PassageSt problem) => caps[problem.Sop.Length];
-        protected override double Tolerence(PassageSt problem) => tols[problem.Sop.Length];
+        protected override int Capacity(PassageSt problem) => caps[problem.Sop.Count];
+        protected override double Tolerence(PassageSt problem) => tols[problem.Sop.Count];
 
         private readonly int[] caps;
         private readonly double[] tols;
@@ -25,7 +26,7 @@ namespace mus
 
         protected override IEnumerable<(Passage, T)> Refine<T>(PassageSt situation, (Passage, T)[] solutions)
         {
-            if (situation.Sop.Length == 1 && situation.Initial)                // opening chord (i.e. I(a))
+            if (situation.Sop.Count == 1 && situation.Initial)                // opening chord (i.e. I(a))
             {
                 return base.Refine(situation, solutions.Where((x) =>
                 {
@@ -33,7 +34,7 @@ namespace mus
                 }
                 ).ToArray());
             }
-            else if (situation.Sop.Length == 2 && situation.Displacement == 0) // cadence
+            else if (situation.Sop.Count == 2 && situation.Displacement == 0) // cadence
             {
                 return base.Refine(situation, solutions.Where((x) =>
                 {
@@ -54,11 +55,11 @@ namespace mus
         }
 
 
-        protected override Passage Combine(Passage l, Passage r) => new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
+        protected override Passage Combine(Passage l, Passage r) => new Passage(l.Tonic, Array.AsReadOnly(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray()), l, r);
         protected override PassageSt Left(PassageSt parent) => parent.Left;
         protected override PassageSt Right(PassageSt parent) => parent.Right;
         protected override IEnumerable<Passage> SolveSingleton(PassageSt problem) =>
-            problem.Context.Bank[problem.Sop[0]].Select((x) => new Passage(problem.Context.Tonic, new[] { x }, null, null));
+            problem.Context.Bank[problem.Sop[0]].Select((x) => new Passage(problem.Context.Tonic, Array.AsReadOnly(new[] { x }), null, null));
     }
 
 }

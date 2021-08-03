@@ -7,6 +7,8 @@ namespace mus
     {
 
         //this uses the wrong convention really
+        //TODO: make immutable (as promised to rest of code)
+        //should probably seperate this from class 'Mode'
         public class Variety
         {
             //THESE ARE NAMED CONFUSINGLY!

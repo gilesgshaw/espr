@@ -8,6 +8,7 @@ namespace mus
 
         //counts from root
         //constructor trusts the information given.
+        // immutable, provided 'Variety' is
         public class VoicingS : TreeValued
         {
             public IntervalS S { get; }
@@ -104,6 +105,7 @@ namespace mus
 
         //counts from root
         //constructor trusts the information given.
+        // immutable
         public class VoicingC : TreeValued
         {
             public IntervalC S { get; }

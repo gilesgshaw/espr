@@ -6,6 +6,7 @@ namespace mus
     public static partial class notation
     {
 
+        //TODO: make immutable (as promised to rest of code)
         public class Context
         {
             public IntervalS Tonic { get; }

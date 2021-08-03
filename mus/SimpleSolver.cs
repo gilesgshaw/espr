@@ -27,7 +27,7 @@ namespace mus
             //tolerence etc... only applies to child routines
             private static IEnumerable<Passage> GetInternal(PassageSt situation, double[] tolerence, int[] maxes)
             {
-                if (situation.Sop.Length == 1)
+                if (situation.Sop.Count == 1)
                 {
                     //exactly 1
                     //could check if this is a final chord (i.e. should be I or V)
@@ -35,10 +35,10 @@ namespace mus
                     {
                         // currently enforcing that opening chord is I(a)
                         if (situation.Initial && (item.Chord.Root.ResidueNumber != 0 || item.Voicing.B.ResidueNumber != 0)) continue;
-                        yield return new Passage(situation.Context.Tonic, new Vert[] { item }, null, null);
+                        yield return new Passage(situation.Context.Tonic, Array.AsReadOnly(new Vert[] { item }), null, null);
                     }
                 }
-                else if (situation.Sop.Length == 2)
+                else if (situation.Sop.Count == 2)
                 {
                     //exactly 2
 
@@ -56,7 +56,7 @@ namespace mus
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
-                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    Array.AsReadOnly(new Vert[] { pp.Verts[0], final.Verts[0] }),
                                     pp,
                                     final
                                     );
@@ -70,7 +70,7 @@ namespace mus
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
-                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    Array.AsReadOnly(new Vert[] { pp.Verts[0], final.Verts[0] }),
                                     pp,
                                     final
                                     );
@@ -86,7 +86,7 @@ namespace mus
                             {
                                 yield return new Passage(
                                     situation.Context.Tonic,
-                                    new Vert[] { pp.Verts[0], final.Verts[0] },
+                                    Array.AsReadOnly(new Vert[] { pp.Verts[0], final.Verts[0] }),
                                     pp,
                                     final
                                     );
@@ -106,7 +106,7 @@ namespace mus
                     {
                         foreach (var r in BankR.Where((x) => ReferenceEquals(x.Left, l.Right)))
                         {
-                            yield return new Passage(l.Tonic, l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray(), l, r);
+                            yield return new Passage(l.Tonic, Array.AsReadOnly(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray()), l, r);
                         }
                     }
                 }
@@ -115,9 +115,9 @@ namespace mus
             //at least 1
             private static void AddInternal(PassageSt situation, double[] tolerence, int[] maxes)
             {
-                var fullList = GetInternal(situation, tolerence, maxes).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Length]).ToArray();
+                var fullList = GetInternal(situation, tolerence, maxes).Where((obj) => obj.Penalty <= tolerence[obj.Verts.Count]).ToArray();
                 Array.Sort(fullList, Valuer<Passage>.instance);
-                Cache.Add(situation, new List<Passage>(fullList.Take(maxes[situation.Sop.Length])));
+                Cache.Add(situation, new List<Passage>(fullList.Take(maxes[situation.Sop.Count])));
             }
 
         }

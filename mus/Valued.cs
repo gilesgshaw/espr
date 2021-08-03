@@ -31,7 +31,7 @@ namespace mus
         public abstract class TreeValued : Valuable, IEquatable<TreeValued>
         {
 
-            public IEnumerable<(double, TreeValued)> Children { get; private set; }
+            private IEnumerable<(double, TreeValued)> Children { get; set; }
 
             public virtual double IntrinsicPenalty { get; }
 
