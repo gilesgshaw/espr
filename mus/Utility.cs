@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace mus
 {
@@ -75,6 +77,12 @@ namespace mus
             {
                 return result - b;
             }
+        }
+
+        // TODO placeholder for a possibly faster method
+        public static ReadOnlyCollection<T> Comb<T>(ReadOnlyCollection<T> l, ReadOnlyCollection<T> r)
+        {
+            return Array.AsReadOnly(l.Take(1).Concat(r).ToArray());
         }
 
     }
