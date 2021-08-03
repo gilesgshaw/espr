@@ -11,7 +11,7 @@ namespace mus
         protected abstract TProblem Left(TProblem parent); //should return null if singleton
         protected abstract TProblem Right(TProblem parent); //should return null if singleton
         protected abstract IEnumerable<(TSolution, T)> Refine<T>(TProblem problem, (TSolution, T)[] solutions);
-        protected abstract TSolution Combine(TSolution left, TSolution right); //is only called with 'compatable' arguments
+        protected abstract bool Combine(TSolution left, TSolution right, out TSolution full); //is only called with 'compatable' arguments
 
         #region Registry
 
@@ -101,13 +101,15 @@ namespace mus
         //children must be solved already
         private IEnumerable<(TSolution, int, int)> GetInternalM(TProblem problem)
         {
+            TSolution tempSol = default;
             if (Right(Left(problem)) == null)
             {
                 foreach (var left in solutionsTo[Left(problem)])
                 {
                     foreach (var right in solutionsTo[Right(problem)])
                     {
-                        yield return (Combine(allSolutions[left], allSolutions[right]), left, right);
+                        if (Combine(allSolutions[left], allSolutions[right], out tempSol))
+                            yield return (tempSol, left, right);
                     }
                 }
             }
@@ -122,7 +124,8 @@ namespace mus
                     {
                         foreach (var right in r)
                         {
-                            yield return (Combine(allSolutions[left], allSolutions[right]), left, right);
+                            if (Combine(allSolutions[left], allSolutions[right], out tempSol))
+                                yield return (tempSol, left, right);
                         }
                     }
                 }

@@ -55,7 +55,12 @@ namespace mus
         }
 
 
-        protected override Passage Combine(Passage l, Passage r) => new Passage(l.Tonic, Array.AsReadOnly(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray()), l, r);
+        protected override bool Combine(Passage l, Passage r, out Passage full)
+        {
+            full = new Passage(l.Tonic, Array.AsReadOnly(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray()), l, r);
+            return true;
+        }
+
         protected override PassageSt Left(PassageSt parent) => parent.Left;
         protected override PassageSt Right(PassageSt parent) => parent.Right;
         protected override IEnumerable<Passage> SolveSingleton(PassageSt problem) =>
