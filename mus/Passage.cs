@@ -14,7 +14,9 @@ namespace mus
         {
             public IntervalS Tonic { get; }
             public ReadOnlyCollection<Vert> Verts { get; } //length at least 1
-            public ReadOnlyCollection<Chord> Chords { get; } //length at least 1
+
+            public ReadOnlyCollection<Chord> Chords { get; } // for convenience
+            public ReadOnlyCollection<(Pitch S, Pitch A, Pitch T, Pitch B)> Pitches { get; } // for convenience
 
             //accepts these as trusted redundant information:
             public Passage Left { get; } //will be null rather then 'empty'
@@ -182,11 +184,24 @@ namespace mus
 
             public Passage(IntervalS tonic, ReadOnlyCollection<Vert> verts, Passage left, Passage right) : base()
             {
+
                 Tonic = tonic;
-                Chords = Array.AsReadOnly(verts.Select((x) => x.Chord).ToArray());
                 Verts = verts;
+
+                Chords = Array.AsReadOnly(verts.Select((x) =>
+                    x.Chord
+                ).ToArray());
+
+                Pitches = Array.AsReadOnly(verts.Select((x) => (
+                    S: new Pitch(Tonic + (x.Chord.Root + x.Voicing.S)),
+                    A: new Pitch(Tonic + (x.Chord.Root + x.Voicing.A)),
+                    T: new Pitch(Tonic + (x.Chord.Root + x.Voicing.T)),
+                    B: new Pitch(Tonic + (x.Chord.Root + x.Voicing.B)))
+                ).ToArray());
+
                 Left = left;
                 Right = right;
+
                 if (verts.Count == 1)
                 {
                     AddChildren(verts);
@@ -199,6 +214,7 @@ namespace mus
                 {
                     AddChildren(new (double, TreeValued)[] { (1, Left), (1, Right), (-1, Left.Right) });
                 }
+
             }
 
             public override bool Equals(object obj)
@@ -208,7 +224,8 @@ namespace mus
 
             public bool Equals(Passage other)
             {
-                if (
+                if
+                (
                     other == null ||
                     other.Tonic != Tonic ||
                     Verts.Count != other.Verts.Count
@@ -216,12 +233,11 @@ namespace mus
                     return false;
 
                 for (int i = 0; i < Verts.Count; i++)
-                {
-                    if (
+                    if
+                    (
                         !Verts[i].Equals(other.Verts[i])
                     )
                         return false;
-                }
 
                 return true;
             }
