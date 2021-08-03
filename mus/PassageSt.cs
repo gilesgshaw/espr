@@ -10,12 +10,14 @@ namespace mus
 
         // immutable, provided 'Context' is
         // currently vunerable to invalid inputs
-        public class PassageSt : IEquatable<PassageSt>
+        public class PassageSt
         {
             public Context Context { get; }
-            public ReadOnlyCollection<int> Sop { get; } //length at least 1
+            public ReadOnlyCollection<int> Sop { get; } // length at least 1
             public int Displacement { get; }
             public bool Initial { get; }
+            public PassageSt Left { get; }            // null or  left child
+            public PassageSt Right { get; }           // null or right child
 
             private PassageSt(Context context, ReadOnlyCollection<int> sop, int displacement, bool initial)
             {
@@ -28,50 +30,51 @@ namespace mus
                 Right = Instance(context, Array.AsReadOnly(Sop.Skip(1).ToArray()), displacement, false);
             }
 
-            private static readonly List<PassageSt> Instances = new List<PassageSt>();
+            private static readonly HashSet<PassageSt> instances = new HashSet<PassageSt>(Equate.When<PassageSt>((x, y) =>
+            {
+                if (x == null && y == null) return true;
+                if (x == null || y == null) return false;
+
+                if
+                (
+                    !EqualityComparer<Context>.Default.Equals(x.Context, y.Context) ||
+                    x.Displacement != y.Displacement ||
+                    x.Initial != y.Initial ||
+                    x.Sop.Count != y.Sop.Count
+                )
+                    return false;
+
+                for (int i = 0; i < x.Sop.Count; i++)
+                {
+                    if (x.Sop[i] != y.Sop[i]) return false;
+                }
+
+                return true;
+
+            }, (x) =>
+            {
+                if (x == null) return 0;
+
+                int hashCode = 280880954;
+
+                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(x.Context);
+                hashCode = hashCode * -1521134295 + x.Displacement.GetHashCode();
+                hashCode = hashCode * -1521134295 + x.Initial.GetHashCode();
+
+                for (int i = 0; i < x.Sop.Count; i++)
+                {
+                    hashCode = hashCode * -1521134295 + x.Sop[i].GetHashCode();
+                }
+
+                return hashCode;
+
+            }));
 
             public static PassageSt Instance(Context context, ReadOnlyCollection<int> sop, int displacement, bool initial)
             {
                 var tempNew = new PassageSt(context, sop, displacement, initial);
-                if (!Instances.Contains(tempNew)) Instances.Add(tempNew);
-                return Instances.First((x) => x.Equals(tempNew));
-            }
-
-
-            //These will be null rather then 'empty'
-            public PassageSt Left { get; }
-            public PassageSt Right { get; }
-
-
-
-            public override bool Equals(object obj)
-            {
-                return Equals(obj as PassageSt);
-            }
-
-            public bool Equals(PassageSt other)
-            {
-                if (other == null ||
-                    !Context.Equals(other.Context) ||
-                    Displacement != other.Displacement ||
-                    Initial != other.Initial ||
-                    Sop.Count != other.Sop.Count) return false;
-                for (int i = 0; i < Sop.Count; i++)
-                {
-                    if (Sop[i] != other.Sop[i]) return false;
-                }
-                return true;
-            }
-
-            //This may not be great
-            public override int GetHashCode()
-            {
-                int hashCode = 280880954;
-                hashCode = hashCode * -1521134295 + Context.GetHashCode();
-                hashCode = hashCode * -1521134295 + Displacement.GetHashCode();
-                hashCode = hashCode * -1521134295 + Sop.GetHashCode();
-                hashCode = hashCode * -1521134295 + Initial.GetHashCode();
-                return hashCode;
+                if (instances.Add(tempNew)) return tempNew;
+                return instances.First((x) => instances.Comparer.Equals(x, tempNew));
             }
         }
 
