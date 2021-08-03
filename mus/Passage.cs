@@ -28,6 +28,48 @@ namespace mus
                 {
                     var tr = base.IntrinsicPenalty;
 
+                    // setup
+                    var PitchMx = Array.ConvertAll(Pitches.ToArray(),
+                        (x) => new Pitch[] {
+                            x.S,
+                            x.A,
+                            x.T,
+                            x.B
+                        });
+                    var PitchMxR = Array.ConvertAll(Pitches.ToArray(),
+                        (x) => new IntervalS[] {
+                            x.S.FromC0.Residue,
+                            x.A.FromC0.Residue,
+                            x.T.FromC0.Residue,
+                            x.B.FromC0.Residue
+                        });
+                    var TrsMx =
+                        Enumerable.Zip(PitchMx, PitchMx.Skip(1),
+                        (x, y) =>
+                        {
+                            return Enumerable.Zip(x, y,
+                                (a, b) => b - a)
+                            .ToArray();
+                        }
+                        ).ToArray();
+                    var TrsMxR =
+                        Enumerable.Zip(PitchMx, PitchMx.Skip(1),
+                        (x, y) =>
+                        {
+                            return Enumerable.Zip(x, y,
+                                (a, b) => (b - a).Residue)
+                            .ToArray();
+                        }
+                        ).ToArray();
+                    var TrsAr =
+                        Enumerable.Zip(Pitches, Pitches.Skip(1),
+                        (x, y) => (
+                            S: y.S - x.S,
+                            A: y.A - x.A,
+                            T: y.T - x.T,
+                            B: y.B - x.B
+                        )).ToArray();
+
 
                     if (Chords.Count == 1) // Length 1
                     {
@@ -61,48 +103,44 @@ namespace mus
                     {
 
                         //Voice leading
-                        var RootChange = Verts[1].Chord.Root.ResidueSemis - Verts[0].Chord.Root.ResidueSemis;
-                        var SChange = Verts[1].Voicing.S.Semis - Verts[0].Voicing.S.Semis;
-                        var AChange = Verts[1].Voicing.A.Semis - Verts[0].Voicing.A.Semis;
-                        var TChange = Verts[1].Voicing.T.Semis - Verts[0].Voicing.T.Semis;
-                        var BChange = Verts[1].Voicing.B.Semis - Verts[0].Voicing.B.Semis;
-                        tr += Abs(RootChange + AChange) + 2.5 * Max(0, Abs(RootChange + AChange) - 4);
-                        tr += Abs(RootChange + TChange) + 2.5 * Max(0, Abs(RootChange + TChange) - 4);
-                        tr += 0.5 * Abs(RootChange + BChange) + 1.5 * Max(0, Abs(RootChange + BChange) - 6) * (Verts[1].Voicing.B.ResidueNumber + Verts[0].Voicing.B.ResidueNumber + 1);
+                        tr += Abs(TrsAr[0].A.Semis) + 2.5 * Max(0, Abs(TrsAr[0].A.Semis) - 4);
+                        tr += Abs(TrsAr[0].T.Semis) + 2.5 * Max(0, Abs(TrsAr[0].T.Semis) - 4);
+                        tr += 0.5 * Abs(TrsAr[0].B.Semis) + (1.5 * Max(0, Abs(TrsAr[0].B.Semis) - 6)
+                            * (Verts[1].Voicing.B.ResidueNumber + Verts[0].Voicing.B.ResidueNumber + 1));
                         double numStatic = 0;
-                        if (SChange == -RootChange) numStatic += 1; //This should be left in!
-                        if (AChange == -RootChange) numStatic += 1;
-                        if (TChange == -RootChange) numStatic += 1.5;
-                        if (BChange == -RootChange) numStatic += 2.5;
+                        if (TrsAr[0].S.Semis == 0) numStatic += 1; //This should be left in!
+                        if (TrsAr[0].A.Semis == 0) numStatic += 1;
+                        if (TrsAr[0].T.Semis == 0) numStatic += 1.5;
+                        if (TrsAr[0].B.Semis == 0) numStatic += 2.5;
                         tr += numStatic * numStatic * 3;
 
                         //Resolving 7th
                         //Can it resolve several chords later?
-                        if (Verts[0].Voicing.S.ResidueNumber == 6 && ((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number != 1) tr += 70;
-                        if (Verts[0].Voicing.A.ResidueNumber == 6 && ((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number != 1) tr += 70;
-                        if (Verts[0].Voicing.T.ResidueNumber == 6 && ((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number != 1) tr += 70;
-                        if (Verts[0].Voicing.B.ResidueNumber == 6 && ((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number != 1) tr += 70;
+                        if (Verts[0].Voicing.S.ResidueNumber == 6 && TrsAr[0].S.Number != -1) tr += 70;
+                        if (Verts[0].Voicing.A.ResidueNumber == 6 && TrsAr[0].A.Number != -1) tr += 70;
+                        if (Verts[0].Voicing.T.ResidueNumber == 6 && TrsAr[0].T.Number != -1) tr += 70;
+                        if (Verts[0].Voicing.B.ResidueNumber == 6 && TrsAr[0].B.Number != -1) tr += 70;
 
                         //Preparing 7th
                         //Should a 7th be prepared in the previous chord? probably
-                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
-                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
-                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
-                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) >= 2) tr += 70;
-                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) == 1) tr += 35;
-                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) == 1) tr += 35;
-                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) == 1) tr += 35;
-                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) == 1) tr += 35;
-                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(((Verts[0].Voicing.S + Verts[0].Chord.Root) - (Verts[1].Voicing.S + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
-                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(((Verts[0].Voicing.A + Verts[0].Chord.Root) - (Verts[1].Voicing.A + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
-                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(((Verts[0].Voicing.T + Verts[0].Chord.Root) - (Verts[1].Voicing.T + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
-                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(((Verts[0].Voicing.B + Verts[0].Chord.Root) - (Verts[1].Voicing.B + Verts[1].Chord.Root)).Number) == 0) tr -= 6;
+                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(TrsAr[0].S.Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(TrsAr[0].A.Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(TrsAr[0].T.Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(TrsAr[0].B.Number) >= 2) tr += 70;
+                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(TrsAr[0].S.Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(TrsAr[0].A.Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(TrsAr[0].T.Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(TrsAr[0].B.Number) == 1) tr += 35;
+                        if (Verts[1].Voicing.S.ResidueNumber == 6 && Abs(TrsAr[0].S.Number) == 0) tr -= 6;
+                        if (Verts[1].Voicing.A.ResidueNumber == 6 && Abs(TrsAr[0].A.Number) == 0) tr -= 6;
+                        if (Verts[1].Voicing.T.ResidueNumber == 6 && Abs(TrsAr[0].T.Number) == 0) tr -= 6;
+                        if (Verts[1].Voicing.B.ResidueNumber == 6 && Abs(TrsAr[0].B.Number) == 0) tr -= 6;
 
                         //Movement after dim 7
                         if (Verts[0].Chord.Variety.PQ7 == -2 &&
-                            (Verts[0].Voicing.B + Verts[0].Chord.Root) > (Verts[1].Voicing.B + Verts[1].Chord.Root)) tr += 15;
+                            (Pitches[0].B) > (Pitches[1].B)) tr += 15;
                         if (Verts[0].Chord.Variety.PQ7 == -2 &&
-                            (Verts[0].Voicing.S + Verts[0].Chord.Root) < (Verts[1].Voicing.S + Verts[1].Chord.Root)) tr += 15;
+                            (Pitches[0].S) < (Pitches[1].S)) tr += 15;
 
                         //Chord transition
                         if (Chords[1].Root == Chords[0].Root && Verts[1].Voicing.B.Residue == Verts[0].Voicing.B.Residue)
@@ -121,20 +159,15 @@ namespace mus
                         }
 
                         //Paralells
-                        var Notes = new (IntervalS, IntervalS)[] {
-                            (Verts[0].Voicing.S.Residue + Verts[0].Chord.Root, Verts[1].Voicing.S.Residue + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.A.Residue + Verts[0].Chord.Root, Verts[1].Voicing.A.Residue + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.T.Residue + Verts[0].Chord.Root, Verts[1].Voicing.T.Residue + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.B.Residue + Verts[0].Chord.Root, Verts[1].Voicing.B.Residue + Verts[1].Chord.Root)
-                        };
-                        var Ints = Array.ConvertAll(Notes, (x) => x.Item2 - x.Item1);
                         for (int i1 = 0; i1 < 4; i1++)
                         {
                             for (int i2 = i1 + 1; i2 < 4; i2++)
                             {
-                                if (Ints[i1] == Ints[i2] && Ints[i1] != new IntervalS())
+                                if (TrsMxR[0][i1] == TrsMxR[0][i2] && TrsMxR[0][i1] != new IntervalS())
                                 {
-                                    if (Notes[i1].Item1 - Notes[i2].Item1 == new IntervalS(4, 7) || Notes[i1].Item1 - Notes[i2].Item1 == new IntervalS())
+                                    if (
+                                        PitchMxR[0][i1] - PitchMxR[0][i2] == new IntervalS(4, 7) ||
+                                        PitchMxR[0][i1] - PitchMxR[0][i2] == new IntervalS())
                                     {
                                         tr += 50;
                                     }
@@ -143,21 +176,15 @@ namespace mus
                         }
 
                         //Overlapping
-                        var AbsNotes = new (IntervalC, IntervalC)[] {
-                            (Verts[0].Voicing.S + Verts[0].Chord.Root, Verts[1].Voicing.S + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.A + Verts[0].Chord.Root, Verts[1].Voicing.A + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.T + Verts[0].Chord.Root, Verts[1].Voicing.T + Verts[1].Chord.Root),
-                            (Verts[0].Voicing.B + Verts[0].Chord.Root, Verts[1].Voicing.B + Verts[1].Chord.Root)
-                        };
                         for (int i1 = 0; i1 < 3; i1++)
                         {
                             int i2 = i1 + 1;
 
-                            if (AbsNotes[i1].Item1 < AbsNotes[i2].Item2)
+                            if (PitchMx[0][i1] < PitchMx[1][i2])
                             {
                                 tr += 45;
                             }
-                            if (AbsNotes[i1].Item2 < AbsNotes[i2].Item1)
+                            if (PitchMx[1][i1] < PitchMx[0][i2])
                             {
                                 tr += 45;
                             }
