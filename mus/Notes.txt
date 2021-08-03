@@ -24,3 +24,12 @@
 //        return "rd";
 //    return "th";
 //}
+
+            // Currently linq is used for searching (i.e. O(n)), which defeats the object of hashing
+            // Must work out how to get hld of that 'TryGetValue' method...
+            public static PhraseSt Instance(Context[] context, int[] sop, int displacement, bool initial)
+            {
+                var tempNew = new PhraseSt(context, sop, displacement, initial);
+                if (!Instances.Contains(tempNew)) Instances.Add(tempNew);
+                return Instances.First((x) => x.Equals(tempNew));
+            }
