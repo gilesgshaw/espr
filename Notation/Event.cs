@@ -95,10 +95,12 @@ namespace Notation
                     if (stems == -1 || stems == 0 && ranknumber <= 4) //up
                     {
                         g.DrawLine(pen, Info.X + RankSp, PositionY, Info.X + RankSp, PositionY - L.stemlength);
+                        if (WholeDivisionPower == 3) g.DrawLine(pen, Info.X + RankSp, PositionY - L.stemlength, Info.X + RankSp + 5, PositionY - L.stemlength + 7);
                     }
                     else                                              //down
                     {
                         g.DrawLine(pen, Info.X - RankSp, PositionY, Info.X - RankSp, PositionY + L.stemlength);
+                        if (WholeDivisionPower == 3) g.DrawLine(pen, Info.X - RankSp, PositionY + L.stemlength, Info.X - RankSp + 5, PositionY + L.stemlength - 7);
                     }
 
                     for (int ledgerRank = -2; ledgerRank >= ranknumber; ledgerRank -= 2)
@@ -121,7 +123,7 @@ namespace Notation
                 }
 
                 bool solid;
-                switch (WholeDivisionPower) { case 2: solid = true; break; case 1: solid = false; break; default: throw new NotImplementedException(); }
+                switch (WholeDivisionPower) { case 2: solid = true; break; case 1: solid = false; break; case 3: solid = true; break; default: throw new NotImplementedException(); }
                 g.DrawCenteredEllipse(pen, brush, solid, new PointF(Info.X, PositionY), new SizeF(RankSp * 2, RankSp * 2));
             }
         }
