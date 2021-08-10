@@ -16,8 +16,7 @@ namespace mus
         #region Registry
 
         //solutions must be registerd by 1) problem 2) problem & lChild 3) problem & rChild
-        private readonly List<TSolution> allSolutions;
-        private readonly Dictionary<TProblem, List<int>> solutionsTo; // keys present iff 'marked as attempted'
+        private readonly Dictionary<TProblem, List<TSolution>> allSolutionsTo; // keys present iff 'marked as attempted'
         private readonly Dictionary<(int, TProblem), List<int>> lParentsOf; // don't assume certain keys are present
         private readonly Dictionary<(int, TProblem), List<int>> rParentsOf; // don't assume certain keys are present
 
@@ -25,11 +24,9 @@ namespace mus
         //'mark as attempted' before calling
         private void Register(TProblem problem, TSolution solution)
         {
-            var index = allSolutions.Count;
-            solutionsTo[problem].Add(index);
-            allSolutions.Add(solution);
+            allSolutionsTo[problem].Add(solution);
 
-            //HERE to help with debugging, keep track of solutions with no parents (1 of 3)
+            //HERE to help with debugging, keep track of solutions with no parents (1 of 3) (may not work currently)
             //lParentsOf.Add((index, default), new List<int>());
             //rParentsOf.Add((index, default), new List<int>());
         }
@@ -38,15 +35,14 @@ namespace mus
         //'mark as attempted' before calling
         private void Register(TProblem problem, TSolution solution, int lChild, int rChild)
         {
-            var index = allSolutions.Count;
-            solutionsTo[problem].Add(index);
+            var index = allSolutionsTo[problem].Count;
             if (!lParentsOf.ContainsKey((rChild, problem))) lParentsOf.Add((rChild, problem), new List<int>());
             lParentsOf[(rChild, problem)].Add(index);
             if (!rParentsOf.ContainsKey((lChild, problem))) rParentsOf.Add((lChild, problem), new List<int>());
             rParentsOf[(lChild, problem)].Add(index);
-            allSolutions.Add(solution);
+            allSolutionsTo[problem].Add(solution);
 
-            //HERE to help with debugging, keep track of solutions with no parents (2 of 3)
+            //HERE to help with debugging, keep track of solutions with no parents (2 of 3) (may not work currently)
             //lParentsOf.Add((index, default), new List<int>());
             //rParentsOf.Add((index, default), new List<int>());
         }
@@ -55,7 +51,7 @@ namespace mus
 
         public void Ensure(TProblem problem)
         {
-            if (solutionsTo.ContainsKey(problem)) return;
+            if (allSolutionsTo.ContainsKey(problem)) return;
             if (Left(problem) != null)
             {
                 Ensure(Left(problem));
@@ -67,7 +63,7 @@ namespace mus
         public IEnumerable<TSolution> Solve(TProblem problem)
         {
             Ensure(problem);
-            return solutionsTo[problem].Select((x) => allSolutions[x]);
+            return allSolutionsTo[problem];
         }
 
         #region Internal
@@ -75,7 +71,7 @@ namespace mus
         //children must be solved already
         private void SolveInternal(TProblem problem)
         {
-            solutionsTo.Add(problem, new List<int>());
+            allSolutionsTo.Add(problem, new List<TSolution>());
             if (Left(problem) == null)
             {
                 var results = GetInternalS(problem);
@@ -89,7 +85,7 @@ namespace mus
                 var results = GetInternalM(problem);
                 foreach (var solution in Refine(problem, results.Select((x) => (x.Item1, x)).ToArray()))
                 {
-                    //HERE to help with debugging, keep track of solutions with no parents (3 of 3)
+                    //HERE to help with debugging, keep track of solutions with no parents (3 of 3) (may not work currently)
                     //if (lParentsOf.ContainsKey((solution.Item2.Item3, default))) lParentsOf.Remove((solution.Item2.Item3, default));
                     //if (rParentsOf.ContainsKey((solution.Item2.Item2, default))) rParentsOf.Remove((solution.Item2.Item2, default));
 
@@ -104,27 +100,29 @@ namespace mus
             TSolution tempSol = default;
             if (Right(Left(problem)) == null)
             {
-                foreach (var left in solutionsTo[Left(problem)])
+                for (int left = 0; left < allSolutionsTo[Left(problem)].Count; left++)
                 {
-                    foreach (var right in solutionsTo[Right(problem)])
+                    for (int right = 0; right < allSolutionsTo[Right(problem)].Count; right++)
                     {
-                        if (Combine(allSolutions[left], allSolutions[right], out tempSol))
+                        if (Combine(allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
                             yield return (tempSol, left, right);
                     }
                 }
             }
             else
             {
-                foreach (var child in solutionsTo[Right(Left(problem))]
-                    .Where((x) => lParentsOf.ContainsKey((x, Left(problem))) && rParentsOf.ContainsKey((x, Right(problem)))))
+                for (int child = 0; child < allSolutionsTo[Right(Left(problem))].Count; child++)
                 {
+                    //TODO could speed this up.
+                    if (!lParentsOf.ContainsKey((child, Left(problem))) ||
+                        !rParentsOf.ContainsKey((child, Right(problem)))) continue;
                     var l = lParentsOf[(child, Left(problem))];
                     var r = rParentsOf[(child, Right(problem))];
                     foreach (var left in l)
                     {
                         foreach (var right in r)
                         {
-                            if (Combine(allSolutions[left], allSolutions[right], out tempSol))
+                            if (Combine(allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
                                 yield return (tempSol, left, right);
                         }
                     }
@@ -144,8 +142,7 @@ namespace mus
 
         protected StringSolver(IEqualityComparer<TProblem> comparer)
         {
-            allSolutions = new List<TSolution>();
-            solutionsTo = new Dictionary<TProblem, List<int>>(comparer);
+            allSolutionsTo = new Dictionary<TProblem, List<TSolution>>(comparer);
             var wcomparer = Equate.When<(int, TProblem)>(
                 (x, y) => x.Item1 == y.Item1 && comparer.Equals(x.Item2, y.Item2),
                 (x) => 0x6B89D32A + x.Item1 * 0x45555529 + comparer.GetHashCode(x.Item2));
