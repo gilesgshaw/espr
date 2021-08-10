@@ -30,8 +30,8 @@ namespace mus
             allSolutions.Add(solution);
 
             //HERE to help with debugging, keep track of solutions with no parents (1 of 3)
-            lParentsOf.Add((index, default), new List<int>());
-            rParentsOf.Add((index, default), new List<int>());
+            //lParentsOf.Add((index, default), new List<int>());
+            //rParentsOf.Add((index, default), new List<int>());
         }
 
         //for others
@@ -47,8 +47,8 @@ namespace mus
             allSolutions.Add(solution);
 
             //HERE to help with debugging, keep track of solutions with no parents (2 of 3)
-            lParentsOf.Add((index, default), new List<int>());
-            rParentsOf.Add((index, default), new List<int>());
+            //lParentsOf.Add((index, default), new List<int>());
+            //rParentsOf.Add((index, default), new List<int>());
         }
 
         #endregion
@@ -90,8 +90,8 @@ namespace mus
                 foreach (var solution in Refine(problem, results.Select((x) => (x.Item1, x)).ToArray()))
                 {
                     //HERE to help with debugging, keep track of solutions with no parents (3 of 3)
-                    if (lParentsOf.ContainsKey((solution.Item2.Item3, default))) lParentsOf.Remove((solution.Item2.Item3, default));
-                    if (rParentsOf.ContainsKey((solution.Item2.Item2, default))) rParentsOf.Remove((solution.Item2.Item2, default));
+                    //if (lParentsOf.ContainsKey((solution.Item2.Item3, default))) lParentsOf.Remove((solution.Item2.Item3, default));
+                    //if (rParentsOf.ContainsKey((solution.Item2.Item2, default))) rParentsOf.Remove((solution.Item2.Item2, default));
 
                     Register(problem, solution.Item1, solution.Item2.Item2, solution.Item2.Item3);
                 }
