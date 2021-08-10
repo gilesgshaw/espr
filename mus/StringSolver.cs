@@ -8,7 +8,7 @@ namespace mus
     public abstract class StringSolver<TProblem, TSolution>
     {
         protected abstract IEnumerable<TSolution> SolveSingleton(TProblem problem);
-        protected abstract TProblem Left(TProblem parent); //should return null if singleton
+        protected abstract TProblem Left(TProblem parent); //should return null if singleton //TODO stop calliign this and Right all the time.
         protected abstract TProblem Right(TProblem parent); //should return null if singleton
         protected abstract IEnumerable<(TSolution, T)> Refine<T>(TProblem problem, (TSolution, T)[] solutions);
         protected abstract bool Combine(TSolution left, TSolution right, out TSolution full); //is only called with 'compatable' arguments
@@ -17,7 +17,7 @@ namespace mus
 
         //solutions must be registerd by 1) problem 2) problem & lChild 3) problem & rChild
         private readonly Dictionary<TProblem, List<TSolution>> allSolutionsTo; // keys present iff 'marked as attempted'
-        private readonly Dictionary<(int, TProblem), List<int>> lParentsOf; // don't assume certain keys are present
+        private readonly Dictionary<(int, TProblem), List<int>> lParentsOf; // don't assume certain keys are present //should be called 'extensions'
         private readonly Dictionary<(int, TProblem), List<int>> rParentsOf; // don't assume certain keys are present
 
         //for singletons
