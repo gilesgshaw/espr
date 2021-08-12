@@ -2,13 +2,103 @@
 
 namespace mus
 {
-
-    public static partial class notation
+    public static class Notation
     {
+
+        //should this throw the exception?
+        public static string AccidentalSymbol(int alt, bool giveNatural)
+        {
+            switch (alt)
+            {
+                case -2:
+                    {
+                        return "𝄫";
+                    }
+
+                case -1:
+                    {
+                        return "♭";
+                    }
+
+                case 0:
+                    {
+                        return giveNatural ? "♮" : "";
+                    }
+
+                case 1:
+                    {
+                        return "♯";
+                    }
+
+                case 2:
+                    {
+                        return "𝄪";
+                    }
+
+                default:
+                    {
+                        throw new NotImplementedException();
+                    }
+            }
+        }
+
+        public static string QualityName(int value, bool cons)
+        {
+            if (cons)
+            {
+                if (value < -1)
+                {
+                    return (-value) + "-Diminished";
+                }
+                else if (value == -1)
+                {
+                    return "Diminished";
+                }
+                else if (value == 0)
+                {
+                    return "Perfect";
+                }
+                else if (value == 1)
+                {
+                    return "Augmented";
+                }
+                else
+                {
+                    return value + "-Augmented";
+                }
+            }
+            else
+            {
+                if (value < -2)
+                {
+                    return (-1 - value) + "-Diminished";
+                }
+                else if (value == -2)
+                {
+                    return "Diminished";
+                }
+                else if (value == -1)
+                {
+                    return "Minor";
+                }
+                else if (value == 0)
+                {
+                    return "Major";
+                }
+                else if (value == 1)
+                {
+                    return "Augmented";
+                }
+                else
+                {
+                    return value + "-Augmented";
+                }
+            }
+        }
+
         //offset is from 0 to 6
         public static class Degree
         {
-
             public static int Semis(int offset)
             {
                 switch (offset)

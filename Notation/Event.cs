@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using static mus.notation;
 using static Notation.Ut;
 using static mus.Ut;
+using mus;
 
 namespace Notation
 {
@@ -87,7 +87,7 @@ namespace Notation
                     var acc = Info.QueryAccidental(Pitch.Value);
                     if (acc.HasValue)
                     {
-                        var text = AccidentalSymbol(acc.Value, true);
+                        var text = mus.Notation.AccidentalSymbol(acc.Value, true);
                         var sz = g.MeasureString(text, AccFont);
                         g.DrawString(text, AccFont, Brushes.Black, Info.X - 21, PositionY - sz.Height / 2);
                     }

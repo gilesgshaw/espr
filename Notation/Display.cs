@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using static mus.notation;
 using static Notation.Ut;
 using static mus.Ut;
 

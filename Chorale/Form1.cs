@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static mus.notation;
+using mus;
 using Notation;
 using static Notation.Ut;
 using System.Diagnostics;
