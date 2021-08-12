@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using static mus.Notation;
-using static mus.Ut;
+using static mus.Gen.Ut;
+using mus.Gen;
 using static System.Math;
 
-namespace mus
+namespace mus.Chorale
 {
 
     // immutable, provided 'Chord', 'Variety' and 'Vert' are

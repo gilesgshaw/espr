@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     public static class SimpleSolver

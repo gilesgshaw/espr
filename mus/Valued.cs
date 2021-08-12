@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace mus
+namespace mus.Gen
 {
 
     class Valuer<T> : IComparer<T> where T : Valuable

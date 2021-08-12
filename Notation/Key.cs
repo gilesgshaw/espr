@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using static Notation.Ut;
-using static mus.Ut;
+using static mus.Gen.Ut;
 using mus;
 
 namespace Notation

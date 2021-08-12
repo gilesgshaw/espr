@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System;
 using static Notation.Ut;
-using static mus.Ut;
+using static mus.Gen.Ut;
 
 namespace Notation
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace mus
+namespace mus.Chorale
 {
 
     //TODO: make immutable (as promised to rest of code)
@@ -34,7 +34,7 @@ namespace mus
             }
             foreach (var chord in Chords)
             {
-                foreach (var inst in chord.Instances(bRange, tRange, aRange, sRange))
+                foreach (var inst in Instances(chord, bRange, tRange, aRange, sRange))
                 {
                     var item = new Vert(chord, inst);
                     tBank[12 + Tonic.ResidueSemis + item.Chord.Root.ResidueSemis + item.Voicing.S.Semis].Add(item);
@@ -47,6 +47,23 @@ namespace mus
                 Bank[i] = tBank[i].ToArray();
             }
 
+        }
+
+        //I think ranges count from tonic.
+        //returns relative voicings
+        private static IEnumerable<VoicingC> Instances(Chord ch, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
+        {
+            foreach (var v in VoicingS.FromVariety(ch.Variety))
+            {
+                foreach (var V in VoicingC.FromSimple(v,
+                    (bRange.Item1 - ch.Root.ResidueSemis, bRange.Item2 - ch.Root.ResidueSemis),
+                    (tRange.Item1 - ch.Root.ResidueSemis, tRange.Item2 - ch.Root.ResidueSemis),
+                    (aRange.Item1 - ch.Root.ResidueSemis, aRange.Item2 - ch.Root.ResidueSemis),
+                    (sRange.Item1 - ch.Root.ResidueSemis, sRange.Item2 - ch.Root.ResidueSemis)))
+                {
+                    yield return V;
+                }
+            }
         }
     }
 

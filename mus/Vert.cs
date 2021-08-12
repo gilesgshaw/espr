@@ -1,4 +1,6 @@
-﻿namespace mus
+﻿using mus.Gen;
+
+namespace mus.Chorale
 {
 
     //'based off of' tonic

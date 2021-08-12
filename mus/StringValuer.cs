@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace mus
+namespace mus.Gen
 {
 
     public abstract class StringValuer<TProblem, TSolution> : StringSolver<TProblem, TSolution> where TSolution : Valuable

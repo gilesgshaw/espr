@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace mus
+namespace mus.Gen
 {
 
     //thread very-unsafe at the moment.

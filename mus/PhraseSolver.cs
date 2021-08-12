@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     public class PhraseSolver : StringValuer<PhraseSt, Phrase>

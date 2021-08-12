@@ -2,8 +2,9 @@
 using System.Linq;
 using mus;
 using System;
+using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     public class ChoraleSolver : StringValuer<PassageSt, Passage>

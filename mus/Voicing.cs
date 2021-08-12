@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using static System.Math;
+using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     //counts from root

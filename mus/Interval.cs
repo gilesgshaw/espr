@@ -1,5 +1,5 @@
 ﻿using System;
-using static mus.Ut;
+using static mus.Gen.Ut;
 using static mus.Notation;
 
 namespace mus

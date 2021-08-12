@@ -2,8 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using static System.Math;
+using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     // immutable, provided 'Chord' and 'Vert' are

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using mus;
+using mus.Chorale;
 using Notation;
 using static Notation.Ut;
 using System.Diagnostics;
