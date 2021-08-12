@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using mus.Gen;
 
-namespace mus
+namespace mus.Chorale
 {
 
     //Root is relative to tonic
