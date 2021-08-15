@@ -8,22 +8,22 @@ namespace mus.Gen
 
     public static class Equate
     {
-        public static xEqualityComparer<T> When<T>(Func<T, T, bool> equals, Func<T, int> getHashCode)
+        public static XEqualityComparer<T> When<T>(Func<T, T, bool> equals, Func<T, int> getHashCode)
         {
-            return new xEqualityComparer<T>(equals, getHashCode);
+            return new XEqualityComparer<T>(equals, getHashCode);
         }
     }
 
-    public class xEqualityComparer<T> : IEqualityComparer<T>
+    public class XEqualityComparer<T> : IEqualityComparer<T>
     {
-        public xEqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode)
+        public XEqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode)
         {
             iEquals = equals;
             iGetHashCode = getHashCode;
         }
 
-        private Func<T, T, bool> iEquals;
-        private Func<T, int> iGetHashCode;
+        private readonly Func<T, T, bool> iEquals;
+        private readonly Func<T, int> iGetHashCode;
 
         public bool Equals(T x, T y)
         {
@@ -38,20 +38,20 @@ namespace mus.Gen
 
     public static class Compare
     {
-        public static xComparer<T> With<T>(Func<T, T, int> compare)
+        public static XComparer<T> With<T>(Func<T, T, int> compare)
         {
-            return new xComparer<T>(compare);
+            return new XComparer<T>(compare);
         }
     }
 
-    public class xComparer<T> : IComparer<T>
+    public class XComparer<T> : IComparer<T>
     {
-        public xComparer(Func<T, T, int> compare)
+        public XComparer(Func<T, T, int> compare)
         {
             iCompare = compare;
         }
 
-        private Func<T, T, int> iCompare;
+        private readonly Func<T, T, int> iCompare;
 
         public int Compare(T x, T y)
         {
@@ -62,6 +62,7 @@ namespace mus.Gen
     public static class Ut
     {
 
+#pragma warning disable IDE1006 // Naming Styles
         public static int mod(int b, int a)
         {
             int result = a % b;
@@ -78,6 +79,7 @@ namespace mus.Gen
                 return result - b;
             }
         }
+#pragma warning restore IDE1006 // Naming Styles
 
         // TODO placeholder for a possibly faster method
         public static ReadOnlyCollection<T> Comb<T>(ReadOnlyCollection<T> l, ReadOnlyCollection<T> r)

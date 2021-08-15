@@ -13,9 +13,9 @@ namespace mus
         public int MIDI => FromM0.Semis;
 
 
-        public static readonly Pitch MIDI0 = new Pitch(new IntervalC(0, 0, -1));
-        public static readonly Pitch C0 = new Pitch(new IntervalC(0, 0, 0));
-        public static readonly Pitch MiddleC = new Pitch(new IntervalC(0, 0, 4));
+        public static Pitch MIDI0 { get; } = new Pitch(new IntervalC(0, 0, -1));
+        public static Pitch C0 { get; } = new Pitch(new IntervalC(0, 0, 0));
+        public static Pitch MiddleC { get; } = new Pitch(new IntervalC(0, 0, 4));
 
 
         public Pitch(IntervalC fromC0) => FromC0 = fromC0;

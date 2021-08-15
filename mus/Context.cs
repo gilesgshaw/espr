@@ -8,10 +8,10 @@ namespace mus.Chorale
     public class Context
     {
         public IntervalS Tonic { get; }
-        public (int, int) bRange { get; } //relative to tonic.
-        public (int, int) tRange { get; } //relative to tonic.
-        public (int, int) aRange { get; } //relative to tonic.
-        public (int, int) sRange { get; } //relative to tonic.
+        public (int, int) RangeB { get; } //relative to tonic.
+        public (int, int) RangeT { get; } //relative to tonic.
+        public (int, int) RangeA { get; } //relative to tonic.
+        public (int, int) RangeS { get; } //relative to tonic.
         public Chord[] Chords { get; }
         public Vert[][] Bank { get; } //key is MIDI pitches
 
@@ -20,10 +20,10 @@ namespace mus.Chorale
 
             Tonic = tonic;
 
-            bRange = (29 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
-            tRange = (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis);
-            aRange = (45 - Tonic.ResidueSemis, 59 - Tonic.ResidueSemis);
-            sRange = (48 - Tonic.ResidueSemis, 65 - Tonic.ResidueSemis);
+            RangeB = (29 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
+            RangeT = (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis);
+            RangeA = (45 - Tonic.ResidueSemis, 59 - Tonic.ResidueSemis);
+            RangeS = (48 - Tonic.ResidueSemis, 65 - Tonic.ResidueSemis);
 
             Chords = chords.ToArray();
 
@@ -32,9 +32,9 @@ namespace mus.Chorale
             {
                 tBank[i] = new List<Vert>();
             }
-            foreach (var chord in Chords)
+            foreach (Chord chord in Chords)
             {
-                foreach (var inst in Instances(chord, bRange, tRange, aRange, sRange))
+                foreach (VoicingC inst in Instances(chord, RangeB, RangeT, RangeA, RangeS))
                 {
                     var item = new Vert(chord, inst);
                     tBank[12 + Tonic.ResidueSemis + item.Chord.Root.ResidueSemis + item.Voicing.S.Semis].Add(item);
@@ -53,17 +53,13 @@ namespace mus.Chorale
         //returns relative voicings
         private static IEnumerable<VoicingC> Instances(Chord ch, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
         {
-            foreach (var v in VoicingS.FromVariety(ch.Variety))
-            {
-                foreach (var V in VoicingC.FromSimple(v,
-                    (bRange.Item1 - ch.Root.ResidueSemis, bRange.Item2 - ch.Root.ResidueSemis),
-                    (tRange.Item1 - ch.Root.ResidueSemis, tRange.Item2 - ch.Root.ResidueSemis),
-                    (aRange.Item1 - ch.Root.ResidueSemis, aRange.Item2 - ch.Root.ResidueSemis),
-                    (sRange.Item1 - ch.Root.ResidueSemis, sRange.Item2 - ch.Root.ResidueSemis)))
-                {
-                    yield return V;
-                }
-            }
+            return from v in VoicingS.FromVariety(ch.Variety)
+                   from V in VoicingC.FromSimple(v,
+                       (bRange.Item1 - ch.Root.ResidueSemis, bRange.Item2 - ch.Root.ResidueSemis),
+                       (tRange.Item1 - ch.Root.ResidueSemis, tRange.Item2 - ch.Root.ResidueSemis),
+                       (aRange.Item1 - ch.Root.ResidueSemis, aRange.Item2 - ch.Root.ResidueSemis),
+                       (sRange.Item1 - ch.Root.ResidueSemis, sRange.Item2 - ch.Root.ResidueSemis))
+                   select V;
         }
     }
 

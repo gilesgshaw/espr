@@ -5,7 +5,7 @@ using System.Linq;
 namespace mus.Gen
 {
 
-    class Valuer<T> : IComparer<T> where T : Valuable
+    class Valuer<T> : IComparer<T> where T : IValuable
     {
         public int Compare(T x, T y)
         {
@@ -17,7 +17,7 @@ namespace mus.Gen
         public readonly static Valuer<T> instance = new Valuer<T>();
     }
 
-    public interface Valuable
+    public interface IValuable
     {
         double Penalty { get; }
     }
@@ -26,7 +26,7 @@ namespace mus.Gen
     //So this whole 'serial' thing is basically redundant,
     //since equality comparison should not be needed
     // However I'm leaving all this stuff here in case it becomes useful later.
-    public abstract class TreeValued : Valuable, IEquatable<TreeValued>
+    public abstract class TreeValued : IValuable, IEquatable<TreeValued>
     {
 
         private IEnumerable<(double, TreeValued)> Children { get; set; }

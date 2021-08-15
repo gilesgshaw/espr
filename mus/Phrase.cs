@@ -116,21 +116,21 @@ namespace mus.Chorale
                 var tr = base.IntrinsicPenalty;
 
                 // setup
-                var PitchMx = Array.ConvertAll(Pitches.ToArray(),
+                Pitch[][] PitchMx = Array.ConvertAll(Pitches.ToArray(),
                     (x) => new Pitch[] {
                             x.S,
                             x.A,
                             x.T,
                             x.B
                     });
-                var PitchMxR = Array.ConvertAll(Pitches.ToArray(),
+                IntervalS[][] PitchMxR = Array.ConvertAll(Pitches.ToArray(),
                     (x) => new IntervalS[] {
                             x.S.FromC0.Residue,
                             x.A.FromC0.Residue,
                             x.T.FromC0.Residue,
                             x.B.FromC0.Residue
                     });
-                var TrsMx =
+                IntervalC[][] TrsMx =
                     Enumerable.Zip(PitchMx, PitchMx.Skip(1),
                     (x, y) =>
                     {
@@ -139,7 +139,7 @@ namespace mus.Chorale
                         .ToArray();
                     }
                     ).ToArray();
-                var TrsMxR =
+                IntervalS[][] TrsMxR =
                     Enumerable.Zip(PitchMx, PitchMx.Skip(1),
                     (x, y) =>
                     {
@@ -148,7 +148,7 @@ namespace mus.Chorale
                         .ToArray();
                     }
                     ).ToArray();
-                var TrsAr =
+                (IntervalC S, IntervalC A, IntervalC T, IntervalC B)[] TrsAr =
                     Enumerable.Zip(Pitches, Pitches.Skip(1),
                     (x, y) => (
                         S: y.S - x.S,

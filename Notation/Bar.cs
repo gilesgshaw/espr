@@ -18,7 +18,7 @@ namespace Notation
 
             public float X { get; private set; }
 
-            private Dictionary<int, IntervalC> accs; //counting from middle C
+            private readonly Dictionary<int, IntervalC> accs; //counting from middle C
 
             public Bar(Key sig, Clef clef, float top, float height, float initialX)
             {

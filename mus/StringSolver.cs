@@ -74,16 +74,16 @@ namespace mus.Gen
             allSolutionsTo.Add(problem, new List<TSolution>());
             if (Left(problem) == null)
             {
-                var results = GetInternalS(problem);
-                foreach (var solution in Refine(problem, results.Select((x) => (x, (object)null)).ToArray()))
+                IEnumerable<TSolution> results = GetInternalS(problem);
+                foreach ((TSolution, object) solution in Refine(problem, results.Select((x) => (x, (object)null)).ToArray()))
                 {
                     Register(problem, solution.Item1);
                 }
             }
             else
             {
-                var results = GetInternalM(problem);
-                foreach (var solution in Refine(problem, results.Select((x) => (x.Item1, x)).ToArray()))
+                IEnumerable<(TSolution, int, int)> results = GetInternalM(problem);
+                foreach ((TSolution, (TSolution, int, int)) solution in Refine(problem, results.Select((x) => (x.Item1, x)).ToArray()))
                 {
                     //HERE to help with debugging, keep track of solutions with no parents (3 of 3) (may not work currently)
                     //if (lParentsOf.ContainsKey((solution.Item2.Item3, default))) lParentsOf.Remove((solution.Item2.Item3, default));
@@ -97,7 +97,7 @@ namespace mus.Gen
         //children must be solved already
         private IEnumerable<(TSolution, int, int)> GetInternalM(TProblem problem)
         {
-            TSolution tempSol = default;
+            TSolution tempSol;
             if (Right(Left(problem)) == null)
             {
                 for (int left = 0; left < allSolutionsTo[Left(problem)].Count; left++)
@@ -116,8 +116,8 @@ namespace mus.Gen
                     //TODO could speed this up.
                     if (!lParentsOf.ContainsKey((child, Left(problem))) ||
                         !rParentsOf.ContainsKey((child, Right(problem)))) continue;
-                    var l = lParentsOf[(child, Left(problem))];
-                    var r = rParentsOf[(child, Right(problem))];
+                    List<int> l = lParentsOf[(child, Left(problem))];
+                    List<int> r = rParentsOf[(child, Right(problem))];
                     foreach (var left in l)
                     {
                         foreach (var right in r)
@@ -132,10 +132,8 @@ namespace mus.Gen
 
         private IEnumerable<TSolution> GetInternalS(TProblem problem)
         {
-            foreach (var solution in SolveSingleton(problem))
-            {
-                yield return solution;
-            }
+            return from solution in SolveSingleton(problem)
+                   select solution;
         }
 
         #endregion
@@ -143,7 +141,7 @@ namespace mus.Gen
         protected StringSolver(IEqualityComparer<TProblem> comparer)
         {
             allSolutionsTo = new Dictionary<TProblem, List<TSolution>>(comparer);
-            var wcomparer = Equate.When<(int, TProblem)>(
+            XEqualityComparer<(int, TProblem)> wcomparer = Equate.When<(int, TProblem)>(
                 (x, y) => x.Item1 == y.Item1 && comparer.Equals(x.Item2, y.Item2),
                 (x) => 0x6B89D32A + x.Item1 * 0x45555529 + comparer.GetHashCode(x.Item2));
             lParentsOf = new Dictionary<(int, TProblem), List<int>>(wcomparer);

@@ -31,8 +31,8 @@ namespace Notation
             public int Voice { get => -1; }
             public (string, string) Text { get; set; }
 
-            private static Font BigFont = new Font("calibri", 12);
-            private static Font SmallFont = new Font("calibri", 9);
+            private static readonly Font BigFont = new Font("calibri", 12);
+            private static readonly Font SmallFont = new Font("calibri", 9);
 
             public void Draw(Graphics g, Bar Info, int[][] arrStems, int[][] arrRestRankFromTopLine)
             {

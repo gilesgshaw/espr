@@ -4,7 +4,7 @@ using System.Linq;
 namespace mus.Gen
 {
 
-    public abstract class StringValuer<TProblem, TSolution> : StringSolver<TProblem, TSolution> where TSolution : Valuable
+    public abstract class StringValuer<TProblem, TSolution> : StringSolver<TProblem, TSolution> where TSolution : IValuable
     {
         protected override IEnumerable<(TSolution, T)> Refine<T>(TProblem problem, (TSolution, T)[] solutions)
         {

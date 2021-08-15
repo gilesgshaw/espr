@@ -14,13 +14,13 @@ namespace mus
         public int Q6 { get; }
         public int Q7 { get; }
 
-        public override int? PQ1 => this.Q1;
-        public override int? PQ2 => this.Q2;
-        public override int? PQ3 => this.Q3;
-        public override int? PQ4 => this.Q4;
-        public override int? PQ5 => this.Q5;
-        public override int? PQ6 => this.Q6;
-        public override int? PQ7 => this.Q7;
+        public override int? PQ1 => Q1;
+        public override int? PQ2 => Q2;
+        public override int? PQ3 => Q3;
+        public override int? PQ4 => Q4;
+        public override int? PQ5 => Q5;
+        public override int? PQ6 => Q6;
+        public override int? PQ7 => Q7;
 
         public Mode(int q1, int q2, int q3, int q4, int q5, int q6, int q7, (bool, string) symbol) : base(symbol)
         {
