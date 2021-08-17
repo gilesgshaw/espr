@@ -164,15 +164,15 @@ namespace mus.Chorale
                     //Bad chords
                     if (ReferenceEquals(LContext[0], RContext[0]))
                     {
-                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
-                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
+                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 45;
+                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 25;
                     }
                     else
                     {
-                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 45;
-                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 25;
-                        if (RChords[0].Root.ResidueNumber == 5 && RVerts[0].Voicing.B.ResidueNumber == 2) tr += 45;
-                        if (RChords[0].Root.ResidueNumber == 1 && RVerts[0].Voicing.B.ResidueNumber == 0) tr += 25;
+                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
+                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
+                        if (RChords[0].Root.ResidueNumber == 5 && RVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
+                        if (RChords[0].Root.ResidueNumber == 1 && RVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
                     }
 
                     //Doubling 5th or root in chord 7
