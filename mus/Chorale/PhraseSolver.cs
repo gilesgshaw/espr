@@ -80,7 +80,7 @@ namespace mus.Chorale
                                 ctR.Tonic,
                                 l,
                                 r,
-                                (new Pitch(l.Chord.Root + l.Voicing.S + ctL.Tonic),
+                                new Sound(new Pitch(l.Chord.Root + l.Voicing.S + ctL.Tonic),
                                 new Pitch(l.Chord.Root + l.Voicing.A + ctL.Tonic),
                                 new Pitch(l.Chord.Root + l.Voicing.T + ctL.Tonic),
                                 new Pitch(l.Chord.Root + l.Voicing.B + ctL.Tonic)));

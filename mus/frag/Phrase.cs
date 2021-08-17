@@ -25,7 +25,7 @@ namespace mus.Chorale
         public ReadOnlyCollection<(IntervalS Root, Variety Variety)> Chords { get; }     // for convenience
         public ReadOnlyCollection<Chord> LChords { get; }                                // for convenience
         public ReadOnlyCollection<Chord> RChords { get; }                                // for convenience
-        public ReadOnlyCollection<(Pitch S, Pitch A, Pitch T, Pitch B)> Pitches { get; } // for convenience
+        public ReadOnlyCollection<Sound> Pitches { get; }                                // for convenience
 
         public Phrase Left { get; }                                // references to children if applicable,
         public Phrase Right { get; }                                                      // otherwise null
@@ -39,7 +39,7 @@ namespace mus.Chorale
             ReadOnlyCollection<(IntervalS Root, Variety Variety)> chords,
             ReadOnlyCollection<Chord> lChords,
             ReadOnlyCollection<Chord> rChords,
-            ReadOnlyCollection<(Pitch S, Pitch A, Pitch T, Pitch B)> pitches,
+            ReadOnlyCollection<Sound> pitches,
             Phrase left,
             Phrase right)
             : base()
@@ -57,7 +57,7 @@ namespace mus.Chorale
             Right = right;
         }
 
-        public Phrase(IntervalS tonicL, IntervalS tonicR, Vert vertL, Vert vertR, (Pitch S, Pitch A, Pitch T, Pitch B) pitches)
+        public Phrase(IntervalS tonicL, IntervalS tonicR, Vert vertL, Vert vertR, Sound pitches)
             : base(new (double, TreeValued)[] { (0.5, vertL), (0.5, vertR) })
         {
 
