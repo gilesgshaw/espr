@@ -8,13 +8,8 @@ namespace mus.Chorale
     //counts from root
     //constructor trusts the information given.
     // immutable
-    public class VoicingC : TreeValued
+    public class VoicingC : VQuad<IntervalC>
     {
-        public IntervalC S { get; }
-        public IntervalC A { get; }
-        public IntervalC T { get; }
-        public IntervalC B { get; }
-
         public override double IntrinsicPenalty
         {
             get
@@ -44,17 +39,9 @@ namespace mus.Chorale
             }
         }
 
-        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(new TreeValued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
+        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(
+            s, a, t, b, new TreeValued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
         {
-            S = s;
-            A = a;
-            T = t;
-            B = b;
-        }
-
-        public override string ToString()
-        {
-            return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
         }
 
         //Bounds are min and max on semis. Non-decreasing.

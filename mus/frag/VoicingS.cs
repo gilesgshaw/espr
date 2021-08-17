@@ -7,13 +7,8 @@ namespace mus.Chorale
     //counts from root
     //constructor trusts the information given.
     // immutable, provided 'Variety' is
-    public class VoicingS : TreeValued
+    public class VoicingS : VQuad<IntervalS>
     {
-        public IntervalS S { get; }
-        public IntervalS A { get; }
-        public IntervalS T { get; }
-        public IntervalS B { get; }
-
         public Variety Variety { get; }
 
         public override double IntrinsicPenalty
@@ -39,18 +34,9 @@ namespace mus.Chorale
             }
         }
 
-        public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b, Variety variety) : base()
+        public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b, Variety variety) : base(s, a, t, b, 0)
         {
-            S = s;
-            A = a;
-            T = t;
-            B = b;
             Variety = variety;
-        }
-
-        public override string ToString()
-        {
-            return B.ToString() + "; " + T.ToString() + "; " + A.ToString() + "; " + S.ToString();
         }
 
         public static IEnumerable<VoicingS> FromVariety(Variety c)
