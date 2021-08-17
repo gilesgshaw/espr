@@ -64,7 +64,7 @@ namespace mus.Chorale
         protected override PassageSt Left(PassageSt parent) => parent.Left;
         protected override PassageSt Right(PassageSt parent) => parent.Right;
         protected override IEnumerable<Passage> SolveSingleton(PassageSt problem) =>
-            problem.Context.Bank[problem.Sop[0]].Select((x) => new Passage(problem.Context.Tonic, Array.AsReadOnly(new[] { x }), null, null));
+            problem.Context.Bank(problem.Sop[0]).Select((x) => new Passage(problem.Context.Tonic, Array.AsReadOnly(new[] { x.Value }), null, null));
     }
 
 }

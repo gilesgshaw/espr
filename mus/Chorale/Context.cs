@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace mus.Chorale
@@ -8,57 +9,50 @@ namespace mus.Chorale
     public class Context
     {
         public IntervalS Tonic { get; }
-        public (int, int) RangeB { get; } //relative to tonic.
-        public (int, int) RangeT { get; } //relative to tonic.
-        public (int, int) RangeA { get; } //relative to tonic.
-        public (int, int) RangeS { get; } //relative to tonic.
+        public Quad<(int, int)> Ranges; //relative to tonic.
         public Chord[] Chords { get; }
-        public Vert[][] Bank { get; } //key is MIDI pitches
+
+        private readonly Dictionary<Sound, Vert>[] iBank; //by MIDI pitches, 0-127
+        private readonly ReadOnlyDictionary<Sound, Vert>[] iBanks;
+        public ReadOnlyDictionary<Sound, Vert> Bank(int sop) => iBanks[sop];
 
         public Context(IntervalS tonic, IEnumerable<Chord> chords)
         {
 
             Tonic = tonic;
 
-            RangeB = (29 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis);
-            RangeT = (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis);
-            RangeA = (45 - Tonic.ResidueSemis, 59 - Tonic.ResidueSemis);
-            RangeS = (48 - Tonic.ResidueSemis, 65 - Tonic.ResidueSemis);
+            Ranges = new Quad<(int, int)>(
+                (48 - Tonic.ResidueSemis, 65 - Tonic.ResidueSemis),
+                (45 - Tonic.ResidueSemis, 59 - Tonic.ResidueSemis),
+                (42 - Tonic.ResidueSemis, 53 - Tonic.ResidueSemis),
+                (29 - Tonic.ResidueSemis, 45 - Tonic.ResidueSemis));
 
             Chords = chords.ToArray();
 
-            var tBank = new List<Vert>[128];
-            for (int i = 0; i < 128; i++)
-            {
-                tBank[i] = new List<Vert>();
-            }
+            iBank = Enumerable.Range(0, 127).Select((x) => new Dictionary<Sound, Vert>()).ToArray();
+            iBanks = iBank.Select((x) => new ReadOnlyDictionary<Sound, Vert>(x)).ToArray();
+
             foreach (Chord chord in Chords)
             {
-                foreach (VoicingC inst in Instances(chord, RangeB, RangeT, RangeA, RangeS))
+                foreach (VoicingC voicing in Instances(chord, Ranges))
                 {
-                    var item = new Vert(chord, inst);
-                    tBank[12 + Tonic.ResidueSemis + item.Chord.Root.ResidueSemis + item.Voicing.S.Semis].Add(item);
+                    var sound = new Sound(new Pitch(((IntervalC)Tonic) + chord.Root), voicing.S, voicing.A, voicing.T, voicing.B);
+                    iBank[sound.S.MIDI][sound] = new Vert(chord, voicing);
                 }
-            }
-
-            Bank = new Vert[128][];
-            for (int i = 0; i < 128; i++)
-            {
-                Bank[i] = tBank[i].ToArray();
             }
 
         }
 
         //I think ranges count from tonic.
         //returns relative voicings
-        private static IEnumerable<VoicingC> Instances(Chord ch, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
+        private static IEnumerable<VoicingC> Instances(Chord ch, Quad<(int, int)> Ranges)
         {
             return from v in VoicingS.FromVariety(ch.Variety)
                    from V in VoicingC.FromSimple(v,
-                       (bRange.Item1 - ch.Root.ResidueSemis, bRange.Item2 - ch.Root.ResidueSemis),
-                       (tRange.Item1 - ch.Root.ResidueSemis, tRange.Item2 - ch.Root.ResidueSemis),
-                       (aRange.Item1 - ch.Root.ResidueSemis, aRange.Item2 - ch.Root.ResidueSemis),
-                       (sRange.Item1 - ch.Root.ResidueSemis, sRange.Item2 - ch.Root.ResidueSemis))
+                       (Ranges.B.Item1 - ch.Root.ResidueSemis, Ranges.B.Item2 - ch.Root.ResidueSemis),
+                       (Ranges.T.Item1 - ch.Root.ResidueSemis, Ranges.T.Item2 - ch.Root.ResidueSemis),
+                       (Ranges.A.Item1 - ch.Root.ResidueSemis, Ranges.A.Item2 - ch.Root.ResidueSemis),
+                       (Ranges.S.Item1 - ch.Root.ResidueSemis, Ranges.S.Item2 - ch.Root.ResidueSemis))
                    select V;
         }
     }

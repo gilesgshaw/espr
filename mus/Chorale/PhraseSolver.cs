@@ -67,9 +67,9 @@ namespace mus.Chorale
             {
                 foreach (var ctR in problem.Contexts)
                 {
-                    foreach (var l in ctL.Bank[problem.Sop[0]])
+                    foreach (var l in ctL.Bank(problem.Sop[0]).Values)
                     {
-                        foreach (var r in ctR.Bank[problem.Sop[0]])
+                        foreach (var r in ctR.Bank(problem.Sop[0]).Values)
                         {
                             if (l.Chord.Root + l.Voicing.S + ctL.Tonic != r.Chord.Root + r.Voicing.S + ctR.Tonic) continue;
                             if (l.Chord.Root + l.Voicing.A + ctL.Tonic != r.Chord.Root + r.Voicing.A + ctR.Tonic) continue;
