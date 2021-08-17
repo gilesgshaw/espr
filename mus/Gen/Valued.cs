@@ -100,6 +100,7 @@ namespace mus.Gen
             Children = children;
         }
 
+        // be wary of using this constructor accidentally.
         protected TreeValued()
         {
             Serial = NextSerial;
