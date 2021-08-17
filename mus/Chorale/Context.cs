@@ -6,6 +6,8 @@ namespace mus.Chorale
 {
 
     //TODO: make immutable (as promised to rest of code)
+    // no comparisons / hash code implemented
+    // should create 'once and for all' and then simply compare by reference
     public class Context
     {
         public IntervalS Tonic { get; }
