@@ -16,8 +16,8 @@ namespace mus.Chorale
     {
         public int Length { get; }                                                            // at least 1
 
-        public ReadOnlyCollection<IntervalS> LTonic { get; }
-        public ReadOnlyCollection<IntervalS> RTonic { get; }              // l/r redundancy for convenience
+        public ReadOnlyCollection<Context> LContext { get; }
+        public ReadOnlyCollection<Context> RContext { get; }              // l/r redundancy for convenience
 
         public ReadOnlyCollection<Vert> LVerts { get; }
         public ReadOnlyCollection<Vert> RVerts { get; }
@@ -32,8 +32,8 @@ namespace mus.Chorale
 
         private Phrase(
             int length,
-            ReadOnlyCollection<IntervalS> lTonic,
-            ReadOnlyCollection<IntervalS> rTonic,
+            ReadOnlyCollection<Context> lContext,
+            ReadOnlyCollection<Context> rContext,
             ReadOnlyCollection<Vert> lVerts,
             ReadOnlyCollection<Vert> rVerts,
             ReadOnlyCollection<(IntervalS Root, Variety Variety)> chords,
@@ -45,8 +45,8 @@ namespace mus.Chorale
             : base()
         {
             Length = length;
-            LTonic = lTonic;
-            RTonic = rTonic;
+            LContext = lContext;
+            RContext = rContext;
             LVerts = lVerts;
             RVerts = rVerts;
             Chords = chords;
@@ -57,19 +57,19 @@ namespace mus.Chorale
             Right = right;
         }
 
-        public Phrase(IntervalS tonicL, IntervalS tonicR, Vert vertL, Vert vertR, Sound pitches)
+        public Phrase(Context lContext, Context rContext, Vert vertL, Vert vertR, Sound pitches)
             : base(new (double, TreeValued)[] { (0.5, vertL), (0.5, vertR) })
         {
 
             Length = 1;
 
             Pitches = Array.AsReadOnly(new[] { pitches });
-            LTonic = Array.AsReadOnly(new[] { tonicL });
-            RTonic = Array.AsReadOnly(new[] { tonicR });
+            LContext = Array.AsReadOnly(new[] { lContext });
+            RContext = Array.AsReadOnly(new[] { rContext });
             LVerts = Array.AsReadOnly(new[] { vertL });
             RVerts = Array.AsReadOnly(new[] { vertR });
 
-            Chords = Array.AsReadOnly(Enumerable.Zip(LVerts, LTonic, (x, y) =>
+            Chords = Array.AsReadOnly(Enumerable.Zip(LVerts, LContext.Select((x) => x.Tonic), (x, y) =>
                           (x.Chord.Root + y, x.Chord.Variety)
                       ).ToArray());
             LChords = Array.AsReadOnly(LVerts.Select((x) =>
@@ -85,12 +85,12 @@ namespace mus.Chorale
         {
             full = null;
 
-            if (l.Length == 1 && l.RTonic[0] != r.LTonic[0]) return false;
+            if (l.Length == 1 && !(ReferenceEquals(l.RContext[0], r.LContext[0]))) return false;
 
             full = new Phrase(
 
-                lTonic: Comb(l.LTonic, r.LTonic),
-                rTonic: Comb(l.RTonic, r.RTonic),
+                lContext: Comb(l.LContext, r.LContext),
+                rContext: Comb(l.RContext, r.RContext),
                 lVerts: Comb(l.LVerts, r.LVerts),
                 rVerts: Comb(l.RVerts, r.RVerts),
                 chords: Comb(l.Chords, r.Chords),
@@ -162,7 +162,7 @@ namespace mus.Chorale
                 {
 
                     //Bad chords
-                    if (LTonic[0] == RTonic[0])
+                    if (ReferenceEquals(LContext[0], RContext[0]))
                     {
                         if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
                         if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
@@ -320,8 +320,8 @@ namespace mus.Chorale
                 (
                     !EqualityComparer<Vert>.Default.Equals(LVerts[i], other.LVerts[i]) ||
                     !EqualityComparer<Vert>.Default.Equals(RVerts[i], other.RVerts[i]) ||
-                    !EqualityComparer<IntervalS>.Default.Equals(LTonic[i], other.LTonic[i]) ||
-                    !EqualityComparer<IntervalS>.Default.Equals(RTonic[i], other.RTonic[i])
+                    !EqualityComparer<Context>.Default.Equals(LContext[i], other.LContext[i]) ||
+                    !EqualityComparer<Context>.Default.Equals(RContext[i], other.RContext[i])
                 )
                     return false;
 
@@ -335,8 +335,8 @@ namespace mus.Chorale
             {
                 hashCode = hashCode * -1521134295 + EqualityComparer<Vert>.Default.GetHashCode(LVerts[i]);
                 hashCode = hashCode * -1521134295 + EqualityComparer<Vert>.Default.GetHashCode(RVerts[i]);
-                hashCode = hashCode * -1521134295 + EqualityComparer<IntervalS>.Default.GetHashCode(LTonic[i]);
-                hashCode = hashCode * -1521134295 + EqualityComparer<IntervalS>.Default.GetHashCode(RTonic[i]);
+                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(LContext[i]);
+                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(RContext[i]);
             }
             return hashCode;
         }

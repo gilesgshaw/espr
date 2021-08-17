@@ -36,7 +36,8 @@ namespace mus.Chorale
             {
                 return base.Refine(problem, solutions.Where((x) =>
                 {
-                    return x.Item1.LTonic[0] == x.Item1.RTonic[0];         // no modulations
+                    return ReferenceEquals(
+                        x.Item1.LContext[0], x.Item1.RContext[0]);         // no modulations
                 }
                 ).ToArray());
             }
@@ -76,8 +77,8 @@ namespace mus.Chorale
                             if (l.Chord.Root + l.Voicing.T + ctL.Tonic != r.Chord.Root + r.Voicing.T + ctR.Tonic) continue;
                             if (l.Chord.Root + l.Voicing.B + ctL.Tonic != r.Chord.Root + r.Voicing.B + ctR.Tonic) continue;
                             yield return new Phrase(
-                                ctL.Tonic,
-                                ctR.Tonic,
+                                ctL,
+                                ctR,
                                 l,
                                 r,
                                 new Sound(new Pitch(l.Chord.Root + l.Voicing.S + ctL.Tonic),
