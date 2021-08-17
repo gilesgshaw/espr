@@ -3,19 +3,17 @@
 namespace mus.Chorale
 {
 
-    //'based off of' tonic
     // immutable, provided 'Chord' and 'VoicingC' are
     // currently vunerable to invalid inputs
-    public class Vert : VQuad<IntervalC>
+    // 'actual' pitches are implied relative to tonic,
+    // but will go down by an octave if Tonic+Root overflows
+    // i.e. pitch = (tonic +s root) +c voicing
+    public class Vert : TreeValued
     {
         public Chord Chord { get; }
         public VoicingC Voicing { get; }
 
         public Vert(Chord chord, VoicingC voicing) : base(
-            chord.Root + voicing.S,
-            chord.Root + voicing.A,
-            chord.Root + voicing.T,
-            chord.Root + voicing.B,
             new TreeValued[] { voicing, chord })
         {
             Chord = chord;

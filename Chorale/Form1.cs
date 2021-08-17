@@ -145,10 +145,10 @@ namespace Chorale
             for (int i = 0; i < result.Length; i++)
             {
 
-                S[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.S)));
-                A[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.A)));
-                T[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.T)));
-                B[i] = new ChoraleData.Beat(new Pitch(result[i].Item1 + (result[i].Item2.Chord.Root + result[i].Item2.Voicing.B)));
+                S[i] = new ChoraleData.Beat(new Pitch((result[i].Item1 + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.S));
+                A[i] = new ChoraleData.Beat(new Pitch((result[i].Item1 + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.A));
+                T[i] = new ChoraleData.Beat(new Pitch((result[i].Item1 + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.T));
+                B[i] = new ChoraleData.Beat(new Pitch((result[i].Item1 + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.B));
 
                 //if (data.Chords[i].Variety.Symbol.Item1)
                 //{ //lower

@@ -45,17 +45,17 @@ namespace mus.Chorale
         }
 
         //Bounds are min and max on semis. Non-decreasing.
-        public static IEnumerable<VoicingC> FromSimple(VoicingS v, (int, int) bRange, (int, int) tRange, (int, int) aRange, (int, int) sRange)
+        public static IEnumerable<VoicingC> FromSimple(VoicingS v, Quad<(int, int)> ranges)
         {
-            var bMin = (int)Ceiling(((double)(bRange.Item1 - v.B.ResidueSemis)) / 12);
-            var tMin = (int)Ceiling(((double)(tRange.Item1 - v.T.ResidueSemis)) / 12);
-            var aMin = (int)Ceiling(((double)(aRange.Item1 - v.A.ResidueSemis)) / 12);
-            var sMin = (int)Ceiling(((double)(sRange.Item1 - v.S.ResidueSemis)) / 12);
+            var bMin = (int)Ceiling(((double)(ranges.B.Item1 - v.B.ResidueSemis)) / 12);
+            var tMin = (int)Ceiling(((double)(ranges.T.Item1 - v.T.ResidueSemis)) / 12);
+            var aMin = (int)Ceiling(((double)(ranges.A.Item1 - v.A.ResidueSemis)) / 12);
+            var sMin = (int)Ceiling(((double)(ranges.S.Item1 - v.S.ResidueSemis)) / 12);
 
-            var bMax = (int)Ceiling(((double)(bRange.Item2 + 1 - v.B.ResidueSemis)) / 12);
-            var tMax = (int)Ceiling(((double)(tRange.Item2 + 1 - v.T.ResidueSemis)) / 12);
-            var aMax = (int)Ceiling(((double)(aRange.Item2 + 1 - v.A.ResidueSemis)) / 12);
-            var sMax = (int)Ceiling(((double)(sRange.Item2 + 1 - v.S.ResidueSemis)) / 12);
+            var bMax = (int)Ceiling(((double)(ranges.B.Item2 + 1 - v.B.ResidueSemis)) / 12);
+            var tMax = (int)Ceiling(((double)(ranges.T.Item2 + 1 - v.T.ResidueSemis)) / 12);
+            var aMax = (int)Ceiling(((double)(ranges.A.Item2 + 1 - v.A.ResidueSemis)) / 12);
+            var sMax = (int)Ceiling(((double)(ranges.S.Item2 + 1 - v.S.ResidueSemis)) / 12);
 
             for (int b = bMin; b < bMax; b++)
             {

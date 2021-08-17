@@ -72,19 +72,20 @@ namespace mus.Chorale
                     {
                         foreach (var r in ctR.Bank(problem.Sop[0]).Values)
                         {
-                            if (l.Chord.Root + l.Voicing.S + ctL.Tonic != r.Chord.Root + r.Voicing.S + ctR.Tonic) continue;
-                            if (l.Chord.Root + l.Voicing.A + ctL.Tonic != r.Chord.Root + r.Voicing.A + ctR.Tonic) continue;
-                            if (l.Chord.Root + l.Voicing.T + ctL.Tonic != r.Chord.Root + r.Voicing.T + ctR.Tonic) continue;
-                            if (l.Chord.Root + l.Voicing.B + ctL.Tonic != r.Chord.Root + r.Voicing.B + ctR.Tonic) continue;
+                            if (ctL.Tonic + l.Chord.Root + l.Voicing.S != ctR.Tonic + r.Chord.Root + r.Voicing.S) continue;
+                            if (ctL.Tonic + l.Chord.Root + l.Voicing.A != ctR.Tonic + r.Chord.Root + r.Voicing.A) continue;
+                            if (ctL.Tonic + l.Chord.Root + l.Voicing.T != ctR.Tonic + r.Chord.Root + r.Voicing.T) continue;
+                            if (ctL.Tonic + l.Chord.Root + l.Voicing.B != ctR.Tonic + r.Chord.Root + r.Voicing.B) continue;
                             yield return new Phrase(
                                 ctL,
                                 ctR,
                                 l,
                                 r,
-                                new Sound(new Pitch(l.Chord.Root + l.Voicing.S + ctL.Tonic),
-                                new Pitch(l.Chord.Root + l.Voicing.A + ctL.Tonic),
-                                new Pitch(l.Chord.Root + l.Voicing.T + ctL.Tonic),
-                                new Pitch(l.Chord.Root + l.Voicing.B + ctL.Tonic)));
+                                new Sound(
+                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.S),
+                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.A),
+                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.T),
+                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.B)));
                         }
                     }
                 }

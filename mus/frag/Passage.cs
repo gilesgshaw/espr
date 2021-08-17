@@ -219,10 +219,10 @@ namespace mus.Chorale
             ).ToArray());
 
             Pitches = Array.AsReadOnly(verts.Select((x) => (
-                S: new Pitch(Tonic + (x.Chord.Root + x.Voicing.S)),
-                A: new Pitch(Tonic + (x.Chord.Root + x.Voicing.A)),
-                T: new Pitch(Tonic + (x.Chord.Root + x.Voicing.T)),
-                B: new Pitch(Tonic + (x.Chord.Root + x.Voicing.B)))
+                S: new Pitch((Tonic + x.Chord.Root) + x.Voicing.S),
+                A: new Pitch((Tonic + x.Chord.Root) + x.Voicing.A),
+                T: new Pitch((Tonic + x.Chord.Root) + x.Voicing.T),
+                B: new Pitch((Tonic + x.Chord.Root) + x.Voicing.B))
             ).ToArray());
 
             Left = left;
