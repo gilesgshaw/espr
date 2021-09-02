@@ -132,7 +132,7 @@ namespace Chorale
 
 
 
-        private PictureBox CreatePB(IEnumerable<(IntervalS, Vert)> Data, (IntervalS, Mode) Key)
+        private PictureBox CreatePB(IEnumerable<(IntervalS, Vert)> Data, Display.Key Key)
         {
 
             var result = Data.ToArray();
@@ -184,7 +184,7 @@ namespace Chorale
                 T = T,
                 B = B,
                 ChordNames = C,
-                Key = new Display.Key(Key.Item1, Key.Item2)
+                Key = Key
             };
 
             var pb = new PictureBox();
