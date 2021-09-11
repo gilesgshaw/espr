@@ -6,7 +6,7 @@ namespace mus
     {
 
         //should this throw the exception?
-        public static string AccidentalSymbol(int alt, bool giveNatural)
+        public static string AccidentalSymbol(int alt, bool giveNatural, bool fancy)
         {
             switch (alt)
             {
@@ -17,7 +17,7 @@ namespace mus
 
                 case -1:
                     {
-                        return "♭";
+                        return fancy ? "♭" : "b";
                     }
 
                 case 0:
@@ -27,7 +27,7 @@ namespace mus
 
                 case 1:
                     {
-                        return "♯";
+                        return fancy ? "♯" : "#";
                     }
 
                 case 2:

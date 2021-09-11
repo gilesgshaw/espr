@@ -40,7 +40,7 @@ namespace mus
         //should this throw the exception?
         public override string ToString()
         {
-            string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0), false);
+            string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0), false, false);
             switch (FromC0.ResidueNumber)
             {
                 case 0:
