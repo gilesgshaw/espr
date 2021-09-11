@@ -37,49 +37,12 @@ namespace mus
         public override int GetHashCode() => 649032966 + FromC0.GetHashCode();
 
 
-        //should this throw the exception?
+        public static readonly string NAMES = "CDEFGAB";
+
         public override string ToString()
         {
             string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0), false, false);
-            switch (FromC0.ResidueNumber)
-            {
-                case 0:
-                    {
-                        return "C" + acc + FromC0.Octaves;
-                    }
-
-                case 1:
-                    {
-                        return "D" + acc + FromC0.Octaves;
-                    }
-
-                case 2:
-                    {
-                        return "E" + acc + FromC0.Octaves;
-                    }
-
-                case 3:
-                    {
-                        return "F" + acc + FromC0.Octaves;
-                    }
-
-                case 4:
-                    {
-                        return "G" + acc + FromC0.Octaves;
-                    }
-
-                case 5:
-                    {
-                        return "A" + acc + FromC0.Octaves;
-                    }
-
-                case 6:
-                    {
-                        return "B" + acc + FromC0.Octaves;
-                    }
-
-            }
-            throw new ArgumentException();
+            return NAMES[FromC0.ResidueNumber] + acc + FromC0.Octaves;
         }
     }
 
