@@ -68,22 +68,18 @@ namespace mus.Chorale
             {
                 foreach (var ctR in problem.Contexts)
                 {
-                    foreach (var l in ctL.Bank(problem.Sop[0]).Values)
+                    foreach (var l in ctL.Bank(problem.Sop[0]).Keys)
                     {
-                        foreach (var r in ctR.Bank(problem.Sop[0]).Values)
+                        foreach (var r in ctR.Bank(problem.Sop[0]).Keys)
                         {
-                            if (ctL.Tonic + l.Chord.Root + l.Voicing.S != ctR.Tonic + r.Chord.Root + r.Voicing.S) continue;
-                            if (ctL.Tonic + l.Chord.Root + l.Voicing.A != ctR.Tonic + r.Chord.Root + r.Voicing.A) continue;
-                            if (ctL.Tonic + l.Chord.Root + l.Voicing.T != ctR.Tonic + r.Chord.Root + r.Voicing.T) continue;
-                            if (ctL.Tonic + l.Chord.Root + l.Voicing.B != ctR.Tonic + r.Chord.Root + r.Voicing.B) continue;
+                            if (l.S != r.S) continue;
+                            if (l.A != r.A) continue;
+                            if (l.T != r.T) continue;
+                            if (l.B != r.B) continue;
                             yield return new Phrase(
                                 ctL,
                                 ctR,
-                                new Sound(
-                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.S),
-                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.A),
-                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.T),
-                                    new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.B)));
+                                l);
                         }
                     }
                 }
