@@ -79,8 +79,6 @@ namespace mus.Chorale
                             yield return new Phrase(
                                 ctL,
                                 ctR,
-                                l,
-                                r,
                                 new Sound(
                                     new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.S),
                                     new Pitch(ctL.Tonic + l.Chord.Root + l.Voicing.A),

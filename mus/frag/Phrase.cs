@@ -57,11 +57,14 @@ namespace mus.Chorale
             Right = right;
         }
 
-        public Phrase(Context lContext, Context rContext, Vert vertL, Vert vertR, Sound pitches)
-            : base(new (double, TreeValued)[] { (0.5, vertL), (0.5, vertR) })
+        public Phrase(Context lContext, Context rContext, Sound pitches)
+            : base(new (double, TreeValued)[] { (0.5, lContext.GetVert(pitches)), (0.5, rContext.GetVert(pitches)) })
         {
 
             Length = 1;
+
+            Vert vertL = lContext.GetVert(pitches);
+            Vert vertR = rContext.GetVert(pitches);
 
             Pitches = Array.AsReadOnly(new[] { pitches });
             LContext = Array.AsReadOnly(new[] { lContext });

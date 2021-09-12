@@ -17,6 +17,7 @@ namespace mus.Chorale
         private readonly Dictionary<Sound, Vert>[] iBank; //by MIDI pitches, 0-127
         private readonly ReadOnlyDictionary<Sound, Vert>[] iBanks;
         public ReadOnlyDictionary<Sound, Vert> Bank(int sop) => iBanks[sop];
+        public Vert GetVert(Sound sound) => iBank[sound.S.MIDI][sound];
 
         public Context(IntervalS tonic, IEnumerable<Chord> chords)
         {
