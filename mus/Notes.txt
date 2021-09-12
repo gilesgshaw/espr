@@ -8,6 +8,7 @@
 
 //idea - work on bits of chorale that are 'narrowing down' the best...
 
+// Chord has forgotten to use penaulty i.e. on serialisation
 
 //private static string GetOrdinalSuffix(int n)
 //{
