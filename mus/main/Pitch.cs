@@ -39,11 +39,7 @@ namespace mus
 
         public static readonly string NAMES = "CDEFGAB";
 
-        public override string ToString()
-        {
-            string acc = AccidentalSymbol(Mode.Zero.Accidental((IntervalS)FromC0), false, false);
-            return NAMES[FromC0.ResidueNumber] + acc + FromC0.Octaves;
-        }
+        public override string ToString() => FromC0.Residue.PitchName() + FromC0.Octaves.ToString();
     }
 
 }
