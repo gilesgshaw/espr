@@ -69,15 +69,9 @@ namespace mus.Chorale
             LVerts = Array.AsReadOnly(new[] { vertL });
             RVerts = Array.AsReadOnly(new[] { vertR });
 
-            Chords = Array.AsReadOnly(Enumerable.Zip(LVerts, LContext.Select((x) => x.Tonic), (x, y) =>
-                          (x.Chord.Root + y, x.Chord.Variety)
-                      ).ToArray());
-            LChords = Array.AsReadOnly(LVerts.Select((x) =>
-                          x.Chord
-                      ).ToArray());
-            RChords = Array.AsReadOnly(RVerts.Select((x) =>
-                          x.Chord
-                      ).ToArray());
+            Chords = Array.AsReadOnly(new[] { (vertL.Chord.Root + lContext.Tonic, vertL.Chord.Variety) });
+            LChords = Array.AsReadOnly(new[] { vertL.Chord });
+            RChords = Array.AsReadOnly(new[] { vertR.Chord });
 
         }
 
