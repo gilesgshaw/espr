@@ -35,7 +35,7 @@ namespace mus.Chorale
             {
                 var offset = (Tonic + chord.Root).ResidueSemis;
                 var relativeRanges = Quad.Select(Ranges, (x) => (x.Item1 - offset, x.Item2 - offset));
-                foreach (VoicingC voicing in Instances(chord, relativeRanges))
+                foreach (VoicingC voicing in Instances(chord.Variety, relativeRanges))
                 {
                     var sound = new Sound(new Pitch(Tonic + chord.Root), voicing.S, voicing.A, voicing.T, voicing.B);
                     iBank[sound.S.MIDI][sound] = new Vert(chord, voicing, this);
@@ -46,9 +46,9 @@ namespace mus.Chorale
 
         //ranges measures from ROOT OF CHORD
         //returns relative voicings
-        private static IEnumerable<VoicingC> Instances(Chord ch, Quad<(int, int)> ranges)
+        private static IEnumerable<VoicingC> Instances(Variety Variety, Quad<(int, int)> ranges)
         {
-            return from v in VoicingS.FromVariety(ch.Variety)
+            return from v in VoicingS.FromVariety(Variety)
                    from V in VoicingC.FromSimple(v, ranges)
                    select V;
         }

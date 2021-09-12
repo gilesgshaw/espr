@@ -1,32 +1,40 @@
 ﻿using System.Collections.Generic;
 using mus.Gen;
+using System;
 
-namespace mus.Chorale
+namespace mus
 {
 
-    //Root is relative to tonic
-    // immutable, provided 'Variety' is
+    // Is simply (IntervalS Root, Variety)
+    // Root might be relative to 'tonic', or to 'C'
+    // immutable (struct), provided 'Variety' is
     // currently vunerable to invalid inputs
-    public class Chord : TreeValued
+    public struct Chord : IEquatable<Chord>
     {
         public IntervalS Root { get; }
         public Variety Variety { get; }
 
-        public Chord(IntervalS root, Variety variety, double intrinsicPenalty) : base(intrinsicPenalty)
+        public Chord(IntervalS root, Variety variety)
         {
             Root = root;
             Variety = variety;
         }
 
-        public override double IntrinsicPenalty
+        public override bool Equals(object obj) => obj is Chord chord && Equals(chord);
+
+        public bool Equals(Chord other)
         {
-            get
-            {
-                var tr = base.IntrinsicPenalty;
-                return tr;
-            }
+            return Root == other.Root
+                && EqualityComparer<Variety>.Default.Equals(Variety, other.Variety);
         }
 
+        public override int GetHashCode()
+        {
+            int hashCode = 2139337724;
+            hashCode = hashCode * -1521134295 + Root.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Variety>.Default.GetHashCode(Variety);
+            return hashCode;
+        }
     }
 
 }

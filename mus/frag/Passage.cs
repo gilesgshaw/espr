@@ -7,7 +7,7 @@ using mus.Gen;
 namespace mus.Chorale
 {
 
-    // immutable, provided 'Chord' and 'Vert' are
+    // immutable, provided 'Vert' is
     // currently vunerable to invalid inputs
     public class Passage : TreeValued, IEquatable<Passage>
     {

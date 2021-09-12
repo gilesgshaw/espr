@@ -3,7 +3,7 @@
 namespace mus.Chorale
 {
 
-    // immutable, provided 'Chord', 'VoicingC' and 'Context' are
+    // immutable, provided 'VoicingC' and 'Context' are
     // currently vunerable to invalid inputs
     // 'actual' pitches are implied relative to tonic,
     // but will go down by an octave if Tonic+Root overflows
@@ -16,7 +16,7 @@ namespace mus.Chorale
         public Context Context { get; }
 
         public Vert(Chord chord, VoicingC voicing, Context context) : base(
-            new TreeValued[] { voicing, chord })
+            new TreeValued[] { voicing })
         {
             Chord = chord;
             Voicing = voicing;

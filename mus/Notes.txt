@@ -8,7 +8,8 @@
 
 //idea - work on bits of chorale that are 'narrowing down' the best...
 
-// Chord has forgotten to use penaulty i.e. on serialisation
+// Have temporarily removed valuation of 'Chords'
+// need to add this back in, using a dictionary in 'Context'
 
 //private static string GetOrdinalSuffix(int n)
 //{

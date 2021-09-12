@@ -10,7 +10,7 @@ using static System.Math;
 namespace mus.Chorale
 {
 
-    // immutable, provided 'Chord', 'Variety' and 'Vert' are
+    // immutable, provided 'Variety' and 'Vert' are
     // currently vunerable to invalid inputs (in various ways)
     public class Phrase : TreeValued, IEquatable<Phrase>
     {
