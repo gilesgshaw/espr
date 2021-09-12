@@ -38,7 +38,7 @@ namespace mus.Chorale
                 foreach (VoicingC voicing in Instances(chord, relativeRanges))
                 {
                     var sound = new Sound(new Pitch(Tonic + chord.Root), voicing.S, voicing.A, voicing.T, voicing.B);
-                    iBank[sound.S.MIDI][sound] = new Vert(chord, voicing);
+                    iBank[sound.S.MIDI][sound] = new Vert(chord, voicing, this);
                 }
             }
 
