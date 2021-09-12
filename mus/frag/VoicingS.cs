@@ -34,6 +34,8 @@ namespace mus.Chorale
             }
         }
 
+        public static explicit operator Variety(VoicingS obj) => obj.Variety;
+
         public VoicingS(IntervalS s, IntervalS a, IntervalS t, IntervalS b, Variety variety) : base(s, a, t, b, 0)
         {
             Variety = variety;

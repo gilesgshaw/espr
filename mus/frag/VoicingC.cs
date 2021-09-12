@@ -39,9 +39,17 @@ namespace mus.Chorale
             }
         }
 
-        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety) : base(
-            s, a, t, b, new TreeValued[] { new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety) })
+        public VoicingS Simple { get; }
+
+        public static explicit operator VoicingS(VoicingC obj) => obj.Simple;
+
+        public static explicit operator Variety(VoicingC obj) => obj.Simple.Variety;
+
+        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety)
+            : base(s, a, t, b, 0)
         {
+            Simple = new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety);
+            AddChildren(new TreeValued[] { Simple });
         }
 
         //Bounds are min and max on semis. Non-decreasing.
