@@ -201,10 +201,11 @@ namespace Chorale
 
         private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = tempClass.test();
+            var result = tempClass.test(tempClass.defMaxes(), tempClass.defTols(), tempClass.defLine(), tempClass.defCts());
             foreach (var item in result)
             {
-                CreatePB(item.Item1, item.Item2);
+                // here
+                CreatePB(item, new Display.Key(default, Mode.Zero));
             }
         }
 
