@@ -57,8 +57,6 @@ namespace mus
         public static IntervalS operator -(IntervalS a) => new IntervalS(-a.ResidueNumber, -a.ResidueSemis);
 
         public static IntervalS operator -(IntervalS a, IntervalS b) => new IntervalS(a.ResidueNumber - b.ResidueNumber, a.ResidueSemis - b.ResidueSemis);
-
-        public string PitchName() => Pitch.NAMES[ResidueNumber] + AccidentalSymbol(Mode.Zero.Accidental(this), false, false);
     }
 
 }

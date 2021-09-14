@@ -21,6 +21,9 @@ namespace mus
         public Pitch(IntervalC fromC0) => FromC0 = fromC0;
 
 
+        public Note Residue => new Note(new IntervalS(FromMC));
+
+
         public static IntervalC operator -(Pitch a, Pitch b) => a.FromC0 - b.FromC0;
         public static Pitch operator +(Pitch a, IntervalC b) => new Pitch(a.FromC0 + b);
 
@@ -37,9 +40,7 @@ namespace mus
         public override int GetHashCode() => 649032966 + FromC0.GetHashCode();
 
 
-        public static readonly string NAMES = "CDEFGAB";
-
-        public override string ToString() => FromC0.Residue.PitchName() + FromC0.Octaves.ToString();
+        public override string ToString() => Residue.ToString() + FromC0.Octaves.ToString();
     }
 
 }

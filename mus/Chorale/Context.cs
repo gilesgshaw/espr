@@ -10,7 +10,7 @@ namespace mus.Chorale
     // should create 'once and for all' and then simply compare by reference
     public class Context
     {
-        public IntervalS Tonic { get; }
+        public Note Tonic { get; }
         public Quad<(int, int)> Ranges; //absolute, from C0
         public Chord[] Chords { get; }
 
@@ -19,7 +19,7 @@ namespace mus.Chorale
         public ReadOnlyDictionary<Sound, Vert> Bank(int sop) => iBanks[sop];
         public Vert GetVert(Sound sound) => iBank[sound.S.MIDI][sound];
 
-        public Context(IntervalS tonic, IEnumerable<Chord> chords)
+        public Context(Note tonic, IEnumerable<Chord> chords)
         {
 
             Tonic = tonic;
@@ -33,11 +33,11 @@ namespace mus.Chorale
 
             foreach (Chord chord in Chords)
             {
-                var offset = (Tonic + chord.Root).ResidueSemis;
+                var offset = (Tonic.FromC + chord.Root).ResidueSemis;
                 var relativeRanges = Quad.Select(Ranges, (x) => (x.Item1 - offset, x.Item2 - offset));
                 foreach (VoicingC voicing in Instances(chord.Variety, relativeRanges))
                 {
-                    var sound = new Sound(new Pitch(Tonic + chord.Root), voicing.S, voicing.A, voicing.T, voicing.B);
+                    var sound = new Sound(new Pitch(Tonic.FromC + chord.Root), voicing.S, voicing.A, voicing.T, voicing.B);
                     iBank[sound.S.MIDI][sound] = new Vert(chord, voicing, this);
                 }
             }

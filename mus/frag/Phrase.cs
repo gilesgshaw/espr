@@ -72,7 +72,7 @@ namespace mus.Chorale
             LVerts = Array.AsReadOnly(new[] { vertL });
             RVerts = Array.AsReadOnly(new[] { vertR });
 
-            Chords = Array.AsReadOnly(new[] { (vertL.Chord.Root + lContext.Tonic, vertL.Chord.Variety) });
+            Chords = Array.AsReadOnly(new[] { (vertL.Chord.Root + lContext.Tonic.FromC, vertL.Chord.Variety) });
             LChords = Array.AsReadOnly(new[] { vertL.Chord });
             RChords = Array.AsReadOnly(new[] { vertR.Chord });
 

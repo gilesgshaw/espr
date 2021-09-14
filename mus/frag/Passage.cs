@@ -11,7 +11,7 @@ namespace mus.Chorale
     // currently vunerable to invalid inputs
     public class Passage : TreeValued, IEquatable<Passage>
     {
-        public IntervalS Tonic { get; }
+        public Note Tonic { get; }
         public ReadOnlyCollection<Vert> Verts { get; } //length at least 1
 
         public ReadOnlyCollection<Chord> Chords { get; } // for convenience
@@ -208,7 +208,7 @@ namespace mus.Chorale
             }
         }
 
-        public Passage(IntervalS tonic, ReadOnlyCollection<Vert> verts, Passage left, Passage right) : base()
+        public Passage(Note tonic, ReadOnlyCollection<Vert> verts, Passage left, Passage right) : base()
         {
 
             Tonic = tonic;
@@ -219,10 +219,10 @@ namespace mus.Chorale
             ).ToArray());
 
             Pitches = Array.AsReadOnly(verts.Select((x) => (
-                S: new Pitch((Tonic + x.Chord.Root) + x.Voicing.S),
-                A: new Pitch((Tonic + x.Chord.Root) + x.Voicing.A),
-                T: new Pitch((Tonic + x.Chord.Root) + x.Voicing.T),
-                B: new Pitch((Tonic + x.Chord.Root) + x.Voicing.B))
+                S: new Pitch((Tonic.FromC + x.Chord.Root) + x.Voicing.S),
+                A: new Pitch((Tonic.FromC + x.Chord.Root) + x.Voicing.A),
+                T: new Pitch((Tonic.FromC + x.Chord.Root) + x.Voicing.T),
+                B: new Pitch((Tonic.FromC + x.Chord.Root) + x.Voicing.B))
             ).ToArray());
 
             Left = left;
