@@ -28,7 +28,7 @@ namespace mus.Chorale
             {
                 return base.Refine(problem, solutions.Where((x) =>
                 {
-                    return x.Item1.LChords[0].Root.ResidueNumber == 0 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0;
+                    return x.Item1.LVerts[0].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0;
                 }
                 ).ToArray());                                              // should be I(a)
             }
@@ -46,11 +46,11 @@ namespace mus.Chorale
                 return base.Refine(problem, solutions.Where((x) =>
                 {
                     return                                                 // perfect V-I
-                    (x.Item1.LChords[0].Root.ResidueNumber == 4 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0 &&
-                    x.Item1.LChords[1].Root.ResidueNumber == 0 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0)
+                    (x.Item1.LVerts[0].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0 &&
+                    x.Item1.LVerts[1].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0)
                     ||                                                     // imperfect ?-V
                     (!x.Item1.LVerts[1].Chord.Variety.PQ7.HasValue &&
-                    x.Item1.LChords[1].Root.ResidueNumber == 4 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0);
+                    x.Item1.LVerts[1].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0);
                 }
                 ).ToArray());
             }

@@ -23,8 +23,6 @@ namespace mus.Chorale
         public ReadOnlyCollection<Vert> RVerts { get; }
 
         public ReadOnlyCollection<(IntervalS Root, Variety Variety)> Chords { get; }     // for convenience
-        public ReadOnlyCollection<Chord> LChords { get; }                                // for convenience
-        public ReadOnlyCollection<Chord> RChords { get; }                                // for convenience
         public ReadOnlyCollection<Sound> Pitches { get; }                                // for convenience
 
         public Phrase Left { get; }                                // references to children if applicable,
@@ -37,8 +35,6 @@ namespace mus.Chorale
             ReadOnlyCollection<Vert> lVerts,
             ReadOnlyCollection<Vert> rVerts,
             ReadOnlyCollection<(IntervalS Root, Variety Variety)> chords,
-            ReadOnlyCollection<Chord> lChords,
-            ReadOnlyCollection<Chord> rChords,
             ReadOnlyCollection<Sound> pitches,
             Phrase left,
             Phrase right)
@@ -50,8 +46,6 @@ namespace mus.Chorale
             LVerts = lVerts;
             RVerts = rVerts;
             Chords = chords;
-            LChords = lChords;
-            RChords = rChords;
             Pitches = pitches;
             Left = left;
             Right = right;
@@ -73,8 +67,6 @@ namespace mus.Chorale
             RVerts = Array.AsReadOnly(new[] { vertR });
 
             Chords = Array.AsReadOnly(new[] { (vertL.Chord.Root + lContext.Tonic.FromC, vertL.Chord.Variety) });
-            LChords = Array.AsReadOnly(new[] { vertL.Chord });
-            RChords = Array.AsReadOnly(new[] { vertR.Chord });
 
         }
 
@@ -91,8 +83,6 @@ namespace mus.Chorale
                 lVerts: Comb(l.LVerts, r.LVerts),
                 rVerts: Comb(l.RVerts, r.RVerts),
                 chords: Comb(l.Chords, r.Chords),
-                lChords: Comb(l.LChords, r.LChords),
-                rChords: Comb(l.RChords, r.RChords),
                 pitches: Comb(l.Pitches, r.Pitches),
 
                 length: l.Length + 1,
@@ -161,19 +151,19 @@ namespace mus.Chorale
                     //Bad chords
                     if (ReferenceEquals(LContext[0], RContext[0]))
                     {
-                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 45;
-                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 25;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 45;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 25;
                     }
                     else
                     {
-                        if (LChords[0].Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
-                        if (LChords[0].Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
-                        if (RChords[0].Root.ResidueNumber == 5 && RVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
-                        if (RChords[0].Root.ResidueNumber == 1 && RVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 5 && LVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 1 && LVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 5 && RVerts[0].Voicing.B.ResidueNumber == 2) tr += 35;
+                        if (LVerts[0].Chord.Root.ResidueNumber == 1 && RVerts[0].Voicing.B.ResidueNumber == 0) tr += 15;
                     }
 
                     //Doubling 5th or root in chord 7
-                    if (LChords[0].Root.ResidueNumber == 6 || RChords[0].Root.ResidueNumber == 6)
+                    if (LVerts[0].Chord.Root.ResidueNumber == 6 || RVerts[0].Chord.Root.ResidueNumber == 6)
                     {
                         int[] profile = new int[7];
                         profile[LVerts[0].Voicing.B.ResidueNumber]++;
