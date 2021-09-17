@@ -8,9 +8,6 @@
 
 //idea - work on bits of chorale that are 'narrowing down' the best...
 
-// Have temporarily removed valuation of 'Chords'
-// need to add this back in, using a dictionary in 'Context'
-
 //private static string GetOrdinalSuffix(int n)
 //{
 //    if (n < 0)
