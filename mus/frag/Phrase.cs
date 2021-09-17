@@ -22,7 +22,7 @@ namespace mus.Chorale
         public ReadOnlyCollection<Vert> LVerts { get; }
         public ReadOnlyCollection<Vert> RVerts { get; }
 
-        public ReadOnlyCollection<(IntervalS Root, Variety Variety)> Chords { get; }     // for convenience
+        public ReadOnlyCollection<absChord> Chords { get; }                              // for convenience
         public ReadOnlyCollection<Sound> Pitches { get; }                                // for convenience
 
         public Phrase Left { get; }                                // references to children if applicable,
@@ -34,7 +34,7 @@ namespace mus.Chorale
             ReadOnlyCollection<Context> rContext,
             ReadOnlyCollection<Vert> lVerts,
             ReadOnlyCollection<Vert> rVerts,
-            ReadOnlyCollection<(IntervalS Root, Variety Variety)> chords,
+            ReadOnlyCollection<absChord> chords,
             ReadOnlyCollection<Sound> pitches,
             Phrase left,
             Phrase right)
@@ -66,7 +66,7 @@ namespace mus.Chorale
             LVerts = Array.AsReadOnly(new[] { vertL });
             RVerts = Array.AsReadOnly(new[] { vertR });
 
-            Chords = Array.AsReadOnly(new[] { (vertL.Chord.Root + lContext.Tonic.FromC, vertL.Chord.Variety) });
+            Chords = Array.AsReadOnly(new[] { new absChord(lContext.Tonic + vertL.Chord.Root, vertL.Chord.Variety) });
 
         }
 

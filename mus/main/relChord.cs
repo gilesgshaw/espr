@@ -1,28 +1,27 @@
 ﻿using System.Collections.Generic;
-using mus.Gen;
 using System;
 
 namespace mus
 {
 
     // Is simply (IntervalS Root, Variety)
-    // Root might be relative to 'tonic', or to 'C'
+    // Root is generally relative to tonic
     // immutable (struct), provided 'Variety' is
     // currently vunerable to invalid inputs
-    public struct Chord : IEquatable<Chord>
+    public struct relChord : IEquatable<relChord>
     {
         public IntervalS Root { get; }
         public Variety Variety { get; }
 
-        public Chord(IntervalS root, Variety variety)
+        public relChord(IntervalS root, Variety variety)
         {
             Root = root;
             Variety = variety;
         }
 
-        public override bool Equals(object obj) => obj is Chord chord && Equals(chord);
+        public override bool Equals(object obj) => obj is relChord chord && Equals(chord);
 
-        public bool Equals(Chord other)
+        public bool Equals(relChord other)
         {
             return Root == other.Root
                 && EqualityComparer<Variety>.Default.Equals(Variety, other.Variety);

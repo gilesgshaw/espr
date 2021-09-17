@@ -14,7 +14,7 @@ namespace mus.Chorale
         public Note Tonic { get; }
         public ReadOnlyCollection<Vert> Verts { get; } //length at least 1
 
-        public ReadOnlyCollection<Chord> Chords { get; } // for convenience
+        public ReadOnlyCollection<relChord> Chords { get; } // for convenience
         public ReadOnlyCollection<(Pitch S, Pitch A, Pitch T, Pitch B)> Pitches { get; } // for convenience
 
         //accepts these as trusted redundant information:

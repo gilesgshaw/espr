@@ -12,14 +12,14 @@ namespace mus.Chorale
     {
         public Note Tonic { get; }
         public Quad<(int, int)> Ranges; //absolute, from C0
-        public Chord[] Chords { get; }
+        public relChord[] Chords { get; }
 
         private readonly Dictionary<Sound, Vert>[] iBank; //by MIDI pitches, 0-127
         private readonly ReadOnlyDictionary<Sound, Vert>[] iBanks;
         public ReadOnlyDictionary<Sound, Vert> Bank(int sop) => iBanks[sop];
         public Vert GetVert(Sound sound) => iBank[sound.S.MIDI][sound];
 
-        public Context(Note tonic, IEnumerable<Chord> chords)
+        public Context(Note tonic, IEnumerable<relChord> chords)
         {
 
             Tonic = tonic;
@@ -31,7 +31,7 @@ namespace mus.Chorale
             iBank = Enumerable.Range(0, 127).Select((x) => new Dictionary<Sound, Vert>()).ToArray();
             iBanks = iBank.Select((x) => new ReadOnlyDictionary<Sound, Vert>(x)).ToArray();
 
-            foreach (Chord chord in Chords)
+            foreach (relChord chord in Chords)
             {
                 var offset = (Tonic.FromC + chord.Root).ResidueSemis;
                 var relativeRanges = Quad.Select(Ranges, (x) => (x.Item1 - offset, x.Item2 - offset));

@@ -11,11 +11,11 @@ namespace mus.Chorale
     // retains reference to owner, i.e. 'Context', for valuation
     public class Vert : TreeValued
     {
-        public Chord Chord { get; }
+        public relChord Chord { get; }
         public VoicingC Voicing { get; }
         public Context Context { get; }
 
-        public Vert(Chord chord, VoicingC voicing, Context context) : base(
+        public Vert(relChord chord, VoicingC voicing, Context context) : base(
             new TreeValued[] { voicing })
         {
             Chord = chord;
