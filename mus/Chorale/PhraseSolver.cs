@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using mus.Gen;
 
@@ -24,41 +25,68 @@ namespace mus.Chorale
 
         protected override IEnumerable<(Phrase, T)> Refine<T>(PhraseSt problem, (Phrase, T)[] solutions)
         {
-            if (problem.Sop.Count == 1 && problem.Initial)                 // opening chord
+            // could also short circuit on final chord...
+            // [here] what if both opening and cadence...
+
+            //           -----------------------   prepare predicates   ------------------------------
+
+            Func<(Phrase, T), bool> ValidCadence = (x) =>
             {
-                return base.Refine(problem, solutions.Where((x) =>
-                {
-                    return x.Item1.LVerts[0].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0;
-                }
-                ).ToArray());                                              // should be I(a)
-            }
-            else if (problem.Sop.Count == 1 && problem.Displacement < 2)   // last or penultimate chord
+                return                                                 //  perfect  V-I
+                        (x.Item1.LVerts[0].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0 &&
+                        x.Item1.LVerts[1].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0)
+                        ||                                             // imperfect ?-V
+                        (!x.Item1.LVerts[1].Chord.Variety.PQ7.HasValue &&
+                        x.Item1.LVerts[1].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0);
+            };
+
+            Func<(Phrase, T), bool> ValidOpening = (x) =>
+            {                                                          //  opening  I(a)
+                return x.Item1.LVerts[0].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0;
+            };
+
+            Func<(Phrase, T), bool> NoModulation = (x) =>
             {
-                return base.Refine(problem, solutions.Where((x) =>
-                {
-                    return ReferenceEquals(
-                        x.Item1.LContext[0], x.Item1.RContext[0]);         // no modulations
-                }
-                ).ToArray());
-            }
-            else if (problem.Sop.Count == 2 && problem.Displacement == 0)  // cadence
+                return ReferenceEquals(x.Item1.RContext[0], x.Item1.LContext[1]);
+            };
+
+            Func<(Phrase, T), bool> NoPivotingMd = (x) =>
             {
-                return base.Refine(problem, solutions.Where((x) =>
-                {
-                    return                                                 // perfect V-I
-                    (x.Item1.LVerts[0].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[0].Voicing.B.ResidueNumber == 0 &&
-                    x.Item1.LVerts[1].Chord.Root.ResidueNumber == 0 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0)
-                    ||                                                     // imperfect ?-V
-                    (!x.Item1.LVerts[1].Chord.Variety.PQ7.HasValue &&
-                    x.Item1.LVerts[1].Chord.Root.ResidueNumber == 4 && x.Item1.LVerts[1].Voicing.B.ResidueNumber == 0);
-                }
-                ).ToArray());
-            }
-            else                                                           // anything else
+                return ReferenceEquals(x.Item1.LContext[0], x.Item1.RContext[0]);
+            };
+
+
+            //           -----------------------       then apply       ------------------------------
+
+            switch (problem.Sop.Count)
             {
-                return base.Refine(problem, solutions);                    // is fine.
-            }
-            //could also check if this is a final chord (i.e. should be I or V)
+                case 1:
+
+                    if (problem.Initial)                 // opening chord
+                    {
+                        return base.Refine(problem, solutions.Where(ValidOpening).ToArray());
+                    }
+                    else if (problem.Displacement < 2)   // last or penultimate chord
+                    {
+                        return base.Refine(problem, solutions.Where(NoPivotingMd).ToArray());
+                    }
+
+                    break;
+                case 2:
+
+                    switch (problem.Displacement)
+                    {
+                        case 0:                          // tail of cadence
+                            return base.Refine(problem, solutions.Where(ValidCadence).Where(NoModulation).ToArray());
+
+                        case 1:                          // head of cadence
+                            return base.Refine(problem, solutions.Where(NoModulation).ToArray());
+                    }
+
+                    break;
+            }                                            // anything else
+            return base.Refine(problem, solutions);
+
         }
 
         //WIP

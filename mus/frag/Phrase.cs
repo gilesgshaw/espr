@@ -67,9 +67,10 @@ namespace mus.Chorale
 
         public static bool Combine(Phrase l, Phrase r, out Phrase full)
         {
-            full = null;
 
-            if (l.Length == 1 && !(ReferenceEquals(l.RContext[0], r.LContext[0]))) return false;
+            // this will disallow abrupt modulations:
+            // full = null;
+            // if (l.Length == 1 && !(ReferenceEquals(l.RContext[0], r.LContext[0]))) return false;
 
             full = new Phrase(
 
@@ -263,6 +264,12 @@ namespace mus.Chorale
                         {
                             tr += 45;
                         }
+                    }
+
+                    // Abrupt modulation
+                    if (!(ReferenceEquals(RContext[0], LContext[1])))
+                    {
+                        tr += 45;
                     }
 
                 }
