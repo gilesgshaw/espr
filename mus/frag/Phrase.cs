@@ -10,23 +10,22 @@ using static System.Math;
 namespace mus.Chorale
 {
 
-    // immutable, provided 'Variety' and 'Vert' are
+    // immutable
     // currently vunerable to invalid inputs (in various ways)
     public class Phrase : TreeValued, IEquatable<Phrase>
     {
         public int Length { get; }                                                            // at least 1
 
+        public ReadOnlyCollection<Moment> Moments { get; }
         public ReadOnlyCollection<Context> LContext { get; }
-        public ReadOnlyCollection<Context> RContext { get; }              // l/r redundancy for convenience
+        public ReadOnlyCollection<Context> RContext { get; }
 
-        public ReadOnlyCollection<Vert> LVerts { get; }
-        public ReadOnlyCollection<Vert> RVerts { get; }
-
-        public ReadOnlyCollection<absChord> Chords { get; }                              // for convenience
-        public ReadOnlyCollection<Moment> Pitches { get; }                                // for convenience
+        public ReadOnlyCollection<Vert> LVerts { get; }                                  // for convenience
+        public ReadOnlyCollection<Vert> RVerts { get; }                                  // for convenience
 
         public Phrase Left { get; }                                // references to children if applicable,
         public Phrase Right { get; }                                                      // otherwise null
+
 
         private Phrase(
             int length,
@@ -34,8 +33,7 @@ namespace mus.Chorale
             ReadOnlyCollection<Context> rContext,
             ReadOnlyCollection<Vert> lVerts,
             ReadOnlyCollection<Vert> rVerts,
-            ReadOnlyCollection<absChord> chords,
-            ReadOnlyCollection<Moment> pitches,
+            ReadOnlyCollection<Moment> moments,
             Phrase left,
             Phrase right)
             : base()
@@ -45,8 +43,7 @@ namespace mus.Chorale
             RContext = rContext;
             LVerts = lVerts;
             RVerts = rVerts;
-            Chords = chords;
-            Pitches = pitches;
+            Moments = moments;
             Left = left;
             Right = right;
         }
@@ -60,13 +57,11 @@ namespace mus.Chorale
             Vert vertL = lContext.GetVert(pitches);
             Vert vertR = rContext.GetVert(pitches);
 
-            Pitches = Array.AsReadOnly(new[] { pitches });
+            Moments = Array.AsReadOnly(new[] { pitches });
             LContext = Array.AsReadOnly(new[] { lContext });
             RContext = Array.AsReadOnly(new[] { rContext });
             LVerts = Array.AsReadOnly(new[] { vertL });
             RVerts = Array.AsReadOnly(new[] { vertR });
-
-            Chords = Array.AsReadOnly(new[] { new absChord(lContext.Tonic + vertL.Chord.Root, vertL.Chord.Variety) });
 
         }
 
@@ -82,8 +77,7 @@ namespace mus.Chorale
                 rContext: Comb(l.RContext, r.RContext),
                 lVerts: Comb(l.LVerts, r.LVerts),
                 rVerts: Comb(l.RVerts, r.RVerts),
-                chords: Comb(l.Chords, r.Chords),
-                pitches: Comb(l.Pitches, r.Pitches),
+                moments: Comb(l.Moments, r.Moments),
 
                 length: l.Length + 1,
                 left: l,
@@ -103,14 +97,14 @@ namespace mus.Chorale
                 var tr = base.IntrinsicPenalty;
 
                 // setup
-                Pitch[][] PitchMx = Array.ConvertAll(Pitches.ToArray(),
+                Pitch[][] PitchMx = Array.ConvertAll(Moments.ToArray(),
                     (x) => new Pitch[] {
                             x.S,
                             x.A,
                             x.T,
                             x.B
                     });
-                IntervalS[][] PitchMxR = Array.ConvertAll(Pitches.ToArray(),
+                IntervalS[][] PitchMxR = Array.ConvertAll(Moments.ToArray(),
                     (x) => new IntervalS[] {
                             x.S.FromC0.Residue,
                             x.A.FromC0.Residue,
@@ -136,7 +130,7 @@ namespace mus.Chorale
                     }
                     ).ToArray();
                 (IntervalC S, IntervalC A, IntervalC T, IntervalC B)[] TrsAr =
-                    Enumerable.Zip(Pitches, Pitches.Skip(1),
+                    Enumerable.Zip(Moments, Moments.Skip(1),
                     (x, y) => (
                         S: y.S - x.S,
                         A: y.A - x.A,
@@ -221,14 +215,14 @@ namespace mus.Chorale
                     if (LVerts[1].Voicing.B.ResidueNumber == 6 && Abs(TrsAr[0].B.Number) == 0) tr -= 6;
 
                     //Movement after dim 7
-                    if (Chords[0].Variety.PQ7 == -2 &&
-                        (Pitches[0].B) > (Pitches[1].B)) tr += 13;
-                    if (Chords[0].Variety.PQ7 == -2 &&
-                        (Pitches[0].S) < (Pitches[1].S)) tr += 13;
+                    if (Moments[0].Chord.Variety.PQ7 == -2 &&
+                        (Moments[0].B) > (Moments[1].B)) tr += 13;
+                    if (Moments[0].Chord.Variety.PQ7 == -2 &&
+                        (Moments[0].S) < (Moments[1].S)) tr += 13;
 
                     //Chord transition
-                    if (Chords[1].Root == Chords[0].Root && Pitches[0].B == Pitches[1].B) tr += 65;
-                    switch ((Chords[1].Root - Chords[0].Root).ResidueNumber)
+                    if (Moments[1].Chord.Root == Moments[0].Chord.Root && Moments[0].B == Moments[1].B) tr += 65;
+                    switch ((Moments[1].Chord.Root - Moments[0].Chord.Root).ResidueNumber)
                     {
                         case 3: tr += -10; break;
                         case 5: tr += -5; break;
@@ -278,7 +272,7 @@ namespace mus.Chorale
                 {
 
                     //Chord transition 1 to 3
-                    if (Chords[2].Root == Chords[0].Root && Pitches[0].B == Pitches[2].B) tr += 40;
+                    if (Moments[2].Chord.Root == Moments[0].Chord.Root && Moments[0].B == Moments[2].B) tr += 40;
 
                     //Bass jumping
                     tr += 2.5 * Max(0, TrsAr[0].B.Semis - 2) * Max(0, TrsAr[1].B.Semis - 2);
@@ -305,8 +299,7 @@ namespace mus.Chorale
             for (int i = 0; i < Length; i++)
                 if
                 (
-                    !EqualityComparer<Vert>.Default.Equals(LVerts[i], other.LVerts[i]) ||
-                    !EqualityComparer<Vert>.Default.Equals(RVerts[i], other.RVerts[i]) ||
+                    !EqualityComparer<Moment>.Default.Equals(Moments[i], other.Moments[i]) ||
                     !EqualityComparer<Context>.Default.Equals(LContext[i], other.LContext[i]) ||
                     !EqualityComparer<Context>.Default.Equals(RContext[i], other.RContext[i])
                 )
@@ -320,8 +313,7 @@ namespace mus.Chorale
             int hashCode = -87926583;
             for (int i = 0; i < Length; i++)
             {
-                hashCode = hashCode * -1521134295 + EqualityComparer<Vert>.Default.GetHashCode(LVerts[i]);
-                hashCode = hashCode * -1521134295 + EqualityComparer<Vert>.Default.GetHashCode(RVerts[i]);
+                hashCode = hashCode * -1521134295 + EqualityComparer<Moment>.Default.GetHashCode(Moments[i]);
                 hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(LContext[i]);
                 hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(RContext[i]);
             }
