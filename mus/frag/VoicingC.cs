@@ -40,15 +40,17 @@ namespace mus.Chorale
         }
 
         public VoicingS Simple { get; }
+        public Variety Variety { get; }
 
         public static explicit operator VoicingS(VoicingC obj) => obj.Simple;
 
-        public static explicit operator Variety(VoicingC obj) => obj.Simple.Variety;
+        public static explicit operator Variety(VoicingC obj) => obj.Variety;
 
-        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, Variety variety)
+        public VoicingC(IntervalC s, IntervalC a, IntervalC t, IntervalC b, VoicingS child)
             : base(s, a, t, b, 0)
         {
-            Simple = new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, variety);
+            Simple = new VoicingS(s.Residue, a.Residue, t.Residue, b.Residue, child.Variety);
+            Variety = child.Variety;
             AddChildren(new TreeValued[] { Simple });
         }
 
@@ -84,7 +86,7 @@ namespace mus.Chorale
                             var S = new IntervalC(v.S.ResidueNumber, v.S.Quality, s);
                             if (S < A) continue;
 
-                            yield return new VoicingC(S, A, T, B, v.Variety);
+                            yield return new VoicingC(S, A, T, B, v);
                         }
                     }
                 }

@@ -23,7 +23,7 @@ namespace mus.Chorale
         public ReadOnlyCollection<Vert> RVerts { get; }
 
         public ReadOnlyCollection<absChord> Chords { get; }                              // for convenience
-        public ReadOnlyCollection<Sound> Pitches { get; }                                // for convenience
+        public ReadOnlyCollection<Moment> Pitches { get; }                                // for convenience
 
         public Phrase Left { get; }                                // references to children if applicable,
         public Phrase Right { get; }                                                      // otherwise null
@@ -35,7 +35,7 @@ namespace mus.Chorale
             ReadOnlyCollection<Vert> lVerts,
             ReadOnlyCollection<Vert> rVerts,
             ReadOnlyCollection<absChord> chords,
-            ReadOnlyCollection<Sound> pitches,
+            ReadOnlyCollection<Moment> pitches,
             Phrase left,
             Phrase right)
             : base()
@@ -51,7 +51,7 @@ namespace mus.Chorale
             Right = right;
         }
 
-        public Phrase(Context lContext, Context rContext, Sound pitches)
+        public Phrase(Context lContext, Context rContext, Moment pitches)
             : base(new (double, TreeValued)[] { (0.5, lContext.GetVert(pitches)), (0.5, rContext.GetVert(pitches)) })
         {
 

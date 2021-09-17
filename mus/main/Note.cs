@@ -10,6 +10,8 @@ namespace mus
         public IntervalS FromC { get; set; }
         public Note(IntervalS fromC) => FromC = fromC;
 
+        public static implicit operator Pitch(Note obj) => new Pitch(obj.FromC);
+
         public static Note C { get; } = new Note(new IntervalS(0, 0));
 
         public static bool operator ==(Note left, Note right) => left.FromC == right.FromC;
