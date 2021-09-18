@@ -96,20 +96,11 @@ namespace mus.Chorale
             {
                 foreach (var ctR in problem.Climate.Contexts)
                 {
-                    foreach (var l in ctL.Bank(problem.Sop[0]).Keys)
-                    {
-                        foreach (var r in ctR.Bank(problem.Sop[0]).Keys)
-                        {
-                            if (l.S != r.S) continue;
-                            if (l.A != r.A) continue;
-                            if (l.T != r.T) continue;
-                            if (l.B != r.B) continue;
-                            yield return new Phrase(
-                                ctL,
-                                ctR,
-                                l);
-                        }
-                    }
+                    foreach (var moment in ctL.Bank(problem.Sop[0]).Keys.Intersect(ctR.Bank(problem.Sop[0]).Keys))
+                        yield return new Phrase(
+                            ctL,
+                            ctR,
+                            moment);
                 }
             }
         }
