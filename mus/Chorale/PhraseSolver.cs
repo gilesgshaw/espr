@@ -92,9 +92,9 @@ namespace mus.Chorale
         //WIP
         protected override IEnumerable<Phrase> SolveSingleton(PhraseSt problem)
         {
-            foreach (var ctL in problem.Contexts)
+            foreach (var ctL in problem.Climate.Contexts)
             {
-                foreach (var ctR in problem.Contexts)
+                foreach (var ctR in problem.Climate.Contexts)
                 {
                     foreach (var l in ctL.Bank(problem.Sop[0]).Keys)
                     {

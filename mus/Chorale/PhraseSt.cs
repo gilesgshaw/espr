@@ -7,26 +7,27 @@ using mus.Gen;
 namespace mus.Chorale
 {
 
-    // immutable, provided 'Context' is
+    // immutable
     // currently vunerable to invalid inputs
     public class PhraseSt
     {
-        public ReadOnlyCollection<Context> Contexts { get; }
+        public Climate Climate { get; }
         public ReadOnlyCollection<int> Sop { get; } // length at least 1
         public int Displacement { get; }
         public bool Initial { get; }
+
         public PhraseSt Left { get; }            // null or  left child
         public PhraseSt Right { get; }           // null or right child
 
-        private PhraseSt(ReadOnlyCollection<Context> contexts, ReadOnlyCollection<int> sop, int displacement, bool initial)
+        private PhraseSt(Climate climate, ReadOnlyCollection<int> sop, int displacement, bool initial)
         {
-            Contexts = contexts;
+            Climate = climate;
             Sop = sop;
             Displacement = displacement;
             Initial = initial;
             if (Sop.Count == 1) return;
-            Left = Instance(contexts, Array.AsReadOnly(Sop.Take(Sop.Count - 1).ToArray()), displacement + 1, initial);
-            Right = Instance(contexts, Array.AsReadOnly(Sop.Skip(1).ToArray()), displacement, false);
+            Left = Instance(climate, Array.AsReadOnly(Sop.Take(Sop.Count - 1).ToArray()), displacement + 1, initial);
+            Right = Instance(climate, Array.AsReadOnly(Sop.Skip(1).ToArray()), displacement, false);
         }
 
         private static readonly HashSet<PhraseSt> instances = new HashSet<PhraseSt>(Equate.When<PhraseSt>((x, y) =>
@@ -36,7 +37,7 @@ namespace mus.Chorale
 
             if
             (
-                x.Contexts.Count != y.Contexts.Count ||
+                !EqualityComparer<Climate>.Default.Equals(x.Climate, y.Climate) ||
                 x.Displacement != y.Displacement ||
                 x.Initial != y.Initial ||
                 x.Sop.Count != y.Sop.Count
@@ -46,11 +47,6 @@ namespace mus.Chorale
             for (int i = 0; i < x.Sop.Count; i++)
             {
                 if (x.Sop[i] != y.Sop[i]) return false;
-            }
-
-            for (int i = 0; i < x.Contexts.Count; i++)
-            {
-                if (!EqualityComparer<Context>.Default.Equals(x.Contexts[i], y.Contexts[i])) return false;
             }
 
             return true;
@@ -64,10 +60,7 @@ namespace mus.Chorale
             hashCode = hashCode * -1521134295 + x.Displacement.GetHashCode();
             hashCode = hashCode * -1521134295 + x.Initial.GetHashCode();
 
-            for (int i = 0; i < x.Contexts.Count; i++)
-            {
-                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(x.Contexts[i]);
-            }
+            hashCode = hashCode * -1521134295 + EqualityComparer<Climate>.Default.GetHashCode(x.Climate);
 
             for (int i = 0; i < x.Sop.Count; i++)
             {
@@ -78,9 +71,9 @@ namespace mus.Chorale
 
         }));
 
-        public static PhraseSt Instance(ReadOnlyCollection<Context> contexts, ReadOnlyCollection<int> sop, int displacement, bool initial)
+        public static PhraseSt Instance(Climate climate, ReadOnlyCollection<int> sop, int displacement, bool initial)
         {
-            var tempNew = new PhraseSt(contexts, sop, displacement, initial);
+            var tempNew = new PhraseSt(climate, sop, displacement, initial);
             if (instances.Add(tempNew)) return tempNew;
             return instances.First((x) => instances.Comparer.Equals(x, tempNew));
         }
