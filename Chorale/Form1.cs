@@ -13,6 +13,7 @@ using mus.Chorale;
 using Notation;
 using static Notation.Ut;
 using System.Diagnostics;
+using static mus.Notation;
 
 namespace Chorale
 {
@@ -132,48 +133,23 @@ namespace Chorale
 
 
 
-        private PictureBox CreatePB(IEnumerable<(Note, Vert)> Data, Display.Key Key)
+        private PictureBox CreatePB(Phrase Data, Display.Key Key)
         {
 
-            var result = Data.ToArray();
-            var S = new ChoraleData.Beat[result.Length];
-            var A = new ChoraleData.Beat[result.Length];
-            var T = new ChoraleData.Beat[result.Length];
-            var B = new ChoraleData.Beat[result.Length];
-            var C = new (string, string)[result.Length];
+            var S = new ChoraleData.Beat[Data.Length];
+            var A = new ChoraleData.Beat[Data.Length];
+            var T = new ChoraleData.Beat[Data.Length];
+            var B = new ChoraleData.Beat[Data.Length];
+            var C = new (string, string)[Data.Length];
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < Data.Length; i++)
             {
 
-                S[i] = new ChoraleData.Beat(new Pitch((result[i].Item1.FromC + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.S));
-                A[i] = new ChoraleData.Beat(new Pitch((result[i].Item1.FromC + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.A));
-                T[i] = new ChoraleData.Beat(new Pitch((result[i].Item1.FromC + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.T));
-                B[i] = new ChoraleData.Beat(new Pitch((result[i].Item1.FromC + result[i].Item2.Chord.Root) + result[i].Item2.Voicing.B));
-
-                //if (data.Chords[i].Variety.Symbol.Item1)
-                //{ //lower
-                //    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToLower(), data.Chords[i].Variety.Symbol.Item2);
-                //}
-                //else
-                //{ //upper
-                //    C[i] = (Degree.Roman(data.Chords[i].Root.ResidueNumber).ToUpper(), data.Chords[i].Variety.Symbol.Item2);
-                //}
-                //switch (data.Verts[i].Voicing.B.ResidueNumber)
-                //{
-                //    case 0:
-                //        break;
-                //    case 2:
-                //        C[i].Item2 += "b";
-                //        break;
-                //    case 4:
-                //        C[i].Item2 += "c";
-                //        break;
-                //    case 6:
-                //        C[i].Item2 += "d";
-                //        break;
-                //    default:
-                //        throw new NotImplementedException();
-                //}
+                S[i] = new ChoraleData.Beat(Data.Moments[i].S);
+                A[i] = new ChoraleData.Beat(Data.Moments[i].A);
+                T[i] = new ChoraleData.Beat(Data.Moments[i].T);
+                B[i] = new ChoraleData.Beat(Data.Moments[i].B);
+                C[i] = NameChord(Data.RVerts[i]); // [here] left chord as well...
 
             }
 
@@ -197,6 +173,36 @@ namespace Chorale
             pb.Click += (s, e) => nData.Play();
 
             return pb;
+        }
+
+        private static (string, string) NameChord(Vert chord)
+        {
+            (string, string) tr;
+            if (chord.Chord.Variety.Symbol.Item1)
+            { //lower
+                tr = (Degree.Roman(chord.Chord.Root.ResidueNumber).ToLower(), chord.Chord.Variety.Symbol.Item2);
+            }
+            else
+            { //upper
+                tr = (Degree.Roman(chord.Chord.Root.ResidueNumber).ToUpper(), chord.Chord.Variety.Symbol.Item2);
+            }
+            switch (chord.Voicing.B.ResidueNumber)
+            {
+                case 0:
+                    break;
+                case 2:
+                    tr.Item2 += "b";
+                    break;
+                case 4:
+                    tr.Item2 += "c";
+                    break;
+                case 6:
+                    tr.Item2 += "d";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return tr;
         }
 
         private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
