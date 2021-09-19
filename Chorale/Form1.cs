@@ -131,6 +131,22 @@ namespace Chorale
 
         }
 
+        private class UserTonality
+        {
+            public string Name;
+            public Note Tonic;
+
+            public override string ToString()
+            {
+                return Tonic.ToString() + " " + Name;
+            }
+
+            public UserTonality(string name, Note tonic)
+            {
+                Name = name;
+                Tonic = tonic;
+            }
+        }
 
 
         private PictureBox CreatePB(Phrase Data, Display.Key Key)
