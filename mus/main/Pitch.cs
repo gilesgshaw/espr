@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using static mus.Notation;
 
 namespace mus
@@ -41,6 +42,30 @@ namespace mus
 
 
         public override string ToString() => Residue.ToString() + FromC0.Octaves.ToString();
+
+        public static bool TryParse(string value, out Pitch result)
+        {
+
+            result = default;
+            value = value.Trim();
+            // have string
+
+            int firstDigit = value.Length;
+            while (firstDigit > 0 && "0123456789-".Contains(value[firstDigit - 1])) firstDigit--;
+            // split into 2 parts
+
+            // parse note
+            Note note;
+            if (!Note.TryParse(value.Substring(0, firstDigit), out note)) return false;
+
+            // parse octave
+            int oct;
+            if (!int.TryParse(value.Substring(firstDigit), out oct)) return false;
+
+            // result
+            result = (Pitch)note + new IntervalC(0, 0, oct);
+            return true;
+        }
     }
 
 }

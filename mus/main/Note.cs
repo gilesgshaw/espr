@@ -46,6 +46,36 @@ namespace mus
         #endregion
 
         public override string ToString() => GetLetter(FromC.ResidueNumber) + AccidentalSymbol(Mode.Zero.Accidental(FromC), false, false);
+
+        public static bool TryParse(string value, out Note result)
+        {
+
+            result = default;
+            value = value.Trim().ToUpperInvariant();
+            if (value.Length == 1) value = value + " ";
+            if (value.Length != 2) return false;
+            // have length 2 string
+
+            // parse first character
+            int degree;
+            if (!TryGetDegree(value[0], out degree)) return false;
+
+            // parse second character
+            switch (value[1])
+            {
+                case 'B':
+                    result = new Note(IntervalS.GetNew(degree, -1));
+                    return true;
+                case '#':
+                    result = new Note(IntervalS.GetNew(degree, 1));
+                    return true;
+                case ' ':
+                    result = new Note(IntervalS.GetNew(degree, 0));
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 
 }
