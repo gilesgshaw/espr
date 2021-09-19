@@ -230,6 +230,21 @@ namespace Chorale
                 CreatePB(item, new Display.Key(default, Mode.Zero));
             }
         }
+        
+        private static bool ArrayParse<T>(string str, Parser<T> parser, out T[] result)
+        {
+            result = default;
+            var items = str.Split(" ,;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var tr = new T[items.Length];
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (!parser(items[i], out tr[i])) return false;
+            }
+            result = tr;
+            return true;
+        }
+
+        public delegate bool Parser<T>(string str, out T result);
 
         private void cacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
