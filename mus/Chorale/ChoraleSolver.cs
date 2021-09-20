@@ -55,7 +55,7 @@ namespace mus.Chorale
         }
 
 
-        protected override bool Combine(Passage l, Passage r, out Passage full)
+        protected override bool Combine(PassageSt parent, Passage l, Passage r, out Passage full)
         {
             full = new Passage(l.Tonic, Array.AsReadOnly(l.Verts.Concat(new Vert[] { r.Verts.Last() }).ToArray()), l, r);
             return true;

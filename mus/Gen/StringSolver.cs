@@ -11,7 +11,7 @@ namespace mus.Gen
         protected abstract TProblem Left(TProblem parent); //should return null if singleton //TODO stop calliign this and Right all the time.
         protected abstract TProblem Right(TProblem parent); //should return null if singleton
         protected abstract IEnumerable<(TSolution, T)> Refine<T>(TProblem problem, (TSolution, T)[] solutions);
-        protected abstract bool Combine(TSolution left, TSolution right, out TSolution full); //is only called with 'compatable' arguments
+        protected abstract bool Combine(TProblem parent, TSolution left, TSolution right, out TSolution full); //is only called with 'compatable' arguments
 
         #region Registry
 
@@ -104,7 +104,7 @@ namespace mus.Gen
                 {
                     for (int right = 0; right < allSolutionsTo[Right(problem)].Count; right++)
                     {
-                        if (Combine(allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
+                        if (Combine(problem, allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
                             yield return (tempSol, left, right);
                     }
                 }
@@ -122,7 +122,7 @@ namespace mus.Gen
                     {
                         foreach (var right in r)
                         {
-                            if (Combine(allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
+                            if (Combine(problem, allSolutionsTo[Left(problem)][left], allSolutionsTo[Right(problem)][right], out tempSol))
                                 yield return (tempSol, left, right);
                         }
                     }

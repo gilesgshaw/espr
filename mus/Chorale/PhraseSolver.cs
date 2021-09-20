@@ -98,6 +98,7 @@ namespace mus.Chorale
                 {
                     foreach (var moment in ctL.Bank(problem.Sop[0]).Keys.Intersect(ctR.Bank(problem.Sop[0]).Keys))
                         yield return new Phrase(
+                            problem,
                             ctL,
                             ctR,
                             moment);
@@ -105,7 +106,7 @@ namespace mus.Chorale
             }
         }
 
-        protected override bool Combine(Phrase left, Phrase right, out Phrase full) => Phrase.Combine(left, right, out full);
+        protected override bool Combine(PhraseSt parent, Phrase left, Phrase right, out Phrase full) => Phrase.Combine(parent, left, right, out full);
         protected override PhraseSt Left(PhraseSt parent) => parent.Left;
         protected override PhraseSt Right(PhraseSt parent) => parent.Right;
     }

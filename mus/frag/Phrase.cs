@@ -14,9 +14,11 @@ namespace mus.Chorale
     // currently vunerable to invalid inputs (in various ways)
     // currently no comparisons / hash code implemented,
     // since we intend to 'know' the identity of each instance generated
+    // keeps reference to 'Owner' i.e. PhraseSt instance.
     public class Phrase : TreeValued
     {
         public int Length { get; }                                                            // at least 1
+        public PhraseSt Owner { get; }
 
         public ReadOnlyCollection<Moment> Moments { get; }
         public ReadOnlyCollection<Context> LContext { get; }
@@ -31,6 +33,7 @@ namespace mus.Chorale
 
         private Phrase(
             int length,
+            PhraseSt owner,
             ReadOnlyCollection<Context> lContext,
             ReadOnlyCollection<Context> rContext,
             ReadOnlyCollection<Vert> lVerts,
@@ -41,6 +44,7 @@ namespace mus.Chorale
             : base()
         {
             Length = length;
+            Owner = owner;
             LContext = lContext;
             RContext = rContext;
             LVerts = lVerts;
@@ -50,11 +54,12 @@ namespace mus.Chorale
             Right = right;
         }
 
-        public Phrase(Context lContext, Context rContext, Moment pitches)
+        public Phrase(PhraseSt owner, Context lContext, Context rContext, Moment pitches)
             : base(new (double, TreeValued)[] { (0.5, lContext.GetVert(pitches)), (0.5, rContext.GetVert(pitches)) })
         {
 
             Length = 1;
+            Owner = owner;
 
             Vert vertL = lContext.GetVert(pitches);
             Vert vertR = rContext.GetVert(pitches);
@@ -67,7 +72,7 @@ namespace mus.Chorale
 
         }
 
-        public static bool Combine(Phrase l, Phrase r, out Phrase full)
+        public static bool Combine(PhraseSt parent, Phrase l, Phrase r, out Phrase full)
         {
 
             // this will disallow abrupt modulations:
@@ -75,6 +80,8 @@ namespace mus.Chorale
             // if (l.Length == 1 && !(ReferenceEquals(l.RContext[0], r.LContext[0]))) return false;
 
             full = new Phrase(
+
+                owner: parent,
 
                 lContext: Comb(l.LContext, r.LContext),
                 rContext: Comb(l.RContext, r.RContext),
