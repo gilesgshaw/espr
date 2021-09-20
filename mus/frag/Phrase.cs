@@ -12,7 +12,9 @@ namespace mus.Chorale
 
     // immutable
     // currently vunerable to invalid inputs (in various ways)
-    public class Phrase : TreeValued, IEquatable<Phrase>
+    // currently no comparisons / hash code implemented,
+    // since we intend to 'know' the identity of each instance generated
+    public class Phrase : TreeValued
     {
         public int Length { get; }                                                            // at least 1
 
@@ -289,42 +291,6 @@ namespace mus.Chorale
 
                 return tr;
             }
-        }
-
-
-        public override bool Equals(object obj) => Equals(obj as Phrase);
-
-        public bool Equals(Phrase other)
-        {
-            if
-            (
-                other == null ||
-                other.Length != Length
-            )
-                return false;
-
-            for (int i = 0; i < Length; i++)
-                if
-                (
-                    !EqualityComparer<Moment>.Default.Equals(Moments[i], other.Moments[i]) ||
-                    !EqualityComparer<Context>.Default.Equals(LContext[i], other.LContext[i]) ||
-                    !EqualityComparer<Context>.Default.Equals(RContext[i], other.RContext[i])
-                )
-                    return false;
-
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = -87926583;
-            for (int i = 0; i < Length; i++)
-            {
-                hashCode = hashCode * -1521134295 + EqualityComparer<Moment>.Default.GetHashCode(Moments[i]);
-                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(LContext[i]);
-                hashCode = hashCode * -1521134295 + EqualityComparer<Context>.Default.GetHashCode(RContext[i]);
-            }
-            return hashCode;
         }
     }
 
