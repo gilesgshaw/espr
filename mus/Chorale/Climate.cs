@@ -11,10 +11,12 @@ namespace mus.Chorale
     public class Climate
     {
         public ReadOnlyCollection<Context> Contexts { get; }
+        public Context Home { get; } // this should also be included in the above.
 
-        public Climate(IEnumerable<Context> contexts)
+        public Climate(IEnumerable<Context> contexts, Context home)
         {
             Contexts = Array.AsReadOnly(contexts.ToArray());
+            Home = home;
         }
     }
 

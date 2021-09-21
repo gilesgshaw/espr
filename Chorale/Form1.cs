@@ -238,10 +238,11 @@ namespace Chorale
                 return;
             }
             climate = new Climate(
-                lbContexts.CheckedItems.OfType<UserTonality>() // [here] home key is currently asked of user, but not used by program:
+                lbContexts.CheckedItems.OfType<UserTonality>()
                 .Concat(lbContexts.SelectedItems.OfType<UserTonality>())
                 .Select((x) => Contexts[x])
-                .ToArray());
+                .ToArray(),
+                Contexts[(UserTonality)lbContexts.SelectedItem]);
             disp = 0; // [here] currently no control uver these.
             initial = true;
 
@@ -266,8 +267,9 @@ namespace Chorale
             }
 
             ctr.Controls.Clear();
-            // [TODO] implement key signature
-            ctr.Controls.Add(CreatePB(solutions, new Display.Key(default, Mode.Zero)));
+            // takes key signature from first problem
+            var key = problems[0].Climate.Home;
+            ctr.Controls.Add(CreatePB(solutions, new Display.Key(key.Tonic.FromC, key.Tonality.SignatureMode)));
         }
 
         // chord symbols are currently disabled here.
