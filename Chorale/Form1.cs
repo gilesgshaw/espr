@@ -1,28 +1,20 @@
 ﻿using NAudio.Midi;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using mus;
 using mus.Chorale;
 using Notation;
-using static Notation.Ut;
-using System.Diagnostics;
 using static mus.Notation;
 
 namespace Chorale
 {
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-        }
+
 
         private class ChoraleData
         {
@@ -148,49 +140,6 @@ namespace Chorale
             }
         }
 
-
-        private PictureBox CreatePB(Phrase Data, Display.Key Key)
-        {
-
-            var S = new ChoraleData.Beat[Data.Length];
-            var A = new ChoraleData.Beat[Data.Length];
-            var T = new ChoraleData.Beat[Data.Length];
-            var B = new ChoraleData.Beat[Data.Length];
-            var C = new (string, string)[Data.Length];
-
-            for (int i = 0; i < Data.Length; i++)
-            {
-
-                S[i] = new ChoraleData.Beat(Data.Moments[i].S);
-                A[i] = new ChoraleData.Beat(Data.Moments[i].A);
-                T[i] = new ChoraleData.Beat(Data.Moments[i].T);
-                B[i] = new ChoraleData.Beat(Data.Moments[i].B);
-                C[i] = NameChord(Data.RVerts[i]); // [here] left chord as well...
-
-            }
-
-            var nData = new ChoraleData()
-            {
-                S = S,
-                A = A,
-                T = T,
-                B = B,
-                ChordNames = C,
-                Key = Key
-            };
-
-            var pb = new PictureBox();
-            pb.Image = nData.GetBitmap();
-            pb.Size = pb.Image.Size;
-
-            flowLayoutPanel1.Controls.Add(pb);
-            //toolTip1.SetToolTip(pb, data.Penalty.ToString());
-            //pb.DoubleClick += (s, e) => MessageBox.Show(data.Penalty.ToString());
-            pb.Click += (s, e) => nData.Play();
-
-            return pb;
-        }
-
         private static (string, string) NameChord(Vert chord)
         {
             (string, string) tr;
@@ -221,16 +170,8 @@ namespace Chorale
             return tr;
         }
 
-        private void getCadencesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var result = tempClass.test(tempClass.defMaxes(), tempClass.defTols(), tempClass.defLine(), tempClass.defCts());
-            foreach (var item in result)
-            {
-                // here
-                CreatePB(item, new Display.Key(default, Mode.Zero));
-            }
-        }
-        
+        private static string ArrayString<T>(T[] array) => string.Join(" ", Array.ConvertAll(array, (x) => x.ToString()));
+
         private static bool ArrayParse<T>(string str, Parser<T> parser, out T[] result)
         {
             result = default;
@@ -244,11 +185,112 @@ namespace Chorale
             return true;
         }
 
-        public delegate bool Parser<T>(string str, out T result);
+        private delegate bool Parser<T>(string str, out T result);
 
-        private void cacheToolStripMenuItem_Click(object sender, EventArgs e)
+
+
+        public Form1()
         {
-            tempClass.test2();
+            InitializeComponent();
+            btnHarmonise.Click += (s, e) => Harmonise();
+
+            foreach (var item in new[] { ("Major", 0, 0), ("Minor", 5, 9) })
+            {
+                for (int i = -6; i <= 6; i++)
+                {
+                    var interval = new Note(new IntervalS(new IntervalC(i * 4 + item.Item2, i * 7 + item.Item3)));
+                    lbContexts.Items.Add(new UserTonality(item.Item1, interval));
+                }
+            }
+            tbMelody.Text = ArrayString(Settings.S.lines[0]);
         }
+
+        private int[] maxes = Settings.S.maxes[0]; // [here] currently no control over this.
+        private double[] tols = Settings.S.tols[0]; // [here] currently no control over this.
+
+
+
+        private void Harmonise()
+        {
+
+            // user values
+            Pitch[] line;
+            Context[] contexts;
+            int disp;
+            bool initial;
+
+            // determine
+            if (!ArrayParse(tbMelody.Text, Pitch.TryParse, out line))
+            {
+                MessageBox.Show("failed to parse melody.");
+                return;
+            }
+            contexts =
+                lbContexts.CheckedItems.OfType<UserTonality>() // [here] home key is currently asked of user, but not used by program:
+                .Concat(lbContexts.SelectedItems.OfType<UserTonality>())
+                .Select((x) => new Context(x.Tonic, Settings.S.Tonalities[x.Name]))
+                .ToArray();
+            disp = 0; // [here] currently no control uver these.
+            initial = true;
+
+            // pass to main routine
+            var problem = PhraseSt.Instance(new Climate(contexts), Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial);
+            var solver = new PhraseSolver(maxes, tols);
+            Work(problem, solver);
+
+        }
+
+        private void Work(PhraseSt problem, PhraseSolver solver)
+        {
+            ctr.Controls.Clear();
+            foreach (var item in solver.Solve(problem))
+            {
+                // [TODO] implement key signature
+                ctr.Controls.Add(CreatePB(item, new Display.Key(default, Mode.Zero)));
+                break; // [here] currently only showing first option.
+            }
+        }
+
+        // chord symbols are currently disabled here.
+        private static PictureBox CreatePB(Phrase Data, Display.Key Key)
+        {
+
+            var S = new ChoraleData.Beat[Data.Length];
+            var A = new ChoraleData.Beat[Data.Length];
+            var T = new ChoraleData.Beat[Data.Length];
+            var B = new ChoraleData.Beat[Data.Length];
+            var C = new (string, string)[Data.Length];
+
+            for (int i = 0; i < Data.Length; i++)
+            {
+
+                S[i] = new ChoraleData.Beat(Data.Moments[i].S);
+                A[i] = new ChoraleData.Beat(Data.Moments[i].A);
+                T[i] = new ChoraleData.Beat(Data.Moments[i].T);
+                B[i] = new ChoraleData.Beat(Data.Moments[i].B);
+                //C[i] = NameChord(Data.RVerts[i]); // [here] left chord as well...
+
+            }
+
+            var nData = new ChoraleData()
+            {
+                S = S,
+                A = A,
+                T = T,
+                B = B,
+                ChordNames = C,
+                Key = Key
+            };
+
+            var pb = new PictureBox();
+            pb.Image = nData.GetBitmap();
+            pb.Size = pb.Image.Size;
+
+            pb.Click += (s, e) => nData.Play();
+
+            return pb;
+        }
+
+
     }
 }

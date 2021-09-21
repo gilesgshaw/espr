@@ -28,71 +28,96 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.getCadencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            System.Windows.Forms.Label label1;
+            System.Windows.Forms.Label label2;
+            this.ctr = new System.Windows.Forms.Panel();
+            this.lbContexts = new System.Windows.Forms.CheckedListBox();
+            this.tbMelody = new System.Windows.Forms.TextBox();
+            this.btnHarmonise = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // ctr
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.getCadencesToolStripMenuItem,
-            this.cacheToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(511, 24);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
+            this.ctr.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctr.Location = new System.Drawing.Point(12, 230);
+            this.ctr.Name = "ctr";
+            this.ctr.Size = new System.Drawing.Size(809, 189);
+            this.ctr.TabIndex = 4;
             // 
-            // getCadencesToolStripMenuItem
+            // lbContexts
             // 
-            this.getCadencesToolStripMenuItem.Name = "getCadencesToolStripMenuItem";
-            this.getCadencesToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
-            this.getCadencesToolStripMenuItem.Text = "&Go";
-            this.getCadencesToolStripMenuItem.Click += new System.EventHandler(this.getCadencesToolStripMenuItem_Click);
+            this.lbContexts.FormattingEnabled = true;
+            this.lbContexts.Location = new System.Drawing.Point(12, 12);
+            this.lbContexts.MultiColumn = true;
+            this.lbContexts.Name = "lbContexts";
+            this.lbContexts.Size = new System.Drawing.Size(246, 199);
+            this.lbContexts.TabIndex = 1;
             // 
-            // flowLayoutPanel1
+            // tbMelody
             // 
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 24);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(511, 267);
-            this.flowLayoutPanel1.TabIndex = 3;
+            this.tbMelody.AcceptsReturn = true;
+            this.tbMelody.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbMelody.Location = new System.Drawing.Point(274, 12);
+            this.tbMelody.Multiline = true;
+            this.tbMelody.Name = "tbMelody";
+            this.tbMelody.Size = new System.Drawing.Size(547, 138);
+            this.tbMelody.TabIndex = 2;
             // 
-            // cacheToolStripMenuItem
+            // label1
             // 
-            this.cacheToolStripMenuItem.Name = "cacheToolStripMenuItem";
-            this.cacheToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.cacheToolStripMenuItem.Text = "Cache";
-            this.cacheToolStripMenuItem.Click += new System.EventHandler(this.cacheToolStripMenuItem_Click);
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(286, 172);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(97, 39);
+            label1.TabIndex = 5;
+            label1.Text = "   <\r\nHighlight home key\r\nCheck other keys";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(403, 172);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(41, 26);
+            label2.TabIndex = 6;
+            label2.Text = "    ∧ \r\nMelody";
+            // 
+            // btnHarmonise
+            // 
+            this.btnHarmonise.Location = new System.Drawing.Point(470, 185);
+            this.btnHarmonise.Name = "btnHarmonise";
+            this.btnHarmonise.Size = new System.Drawing.Size(74, 26);
+            this.btnHarmonise.TabIndex = 3;
+            this.btnHarmonise.Text = "Harmonise";
+            this.btnHarmonise.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 291);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.ClientSize = new System.Drawing.Size(833, 431);
+            this.Controls.Add(this.btnHarmonise);
+            this.Controls.Add(label2);
+            this.Controls.Add(label1);
+            this.Controls.Add(this.tbMelody);
+            this.Controls.Add(this.lbContexts);
+            this.Controls.Add(this.ctr);
             this.Name = "Form1";
             this.Text = "Chorale";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem getCadencesToolStripMenuItem;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.ToolStripMenuItem cacheToolStripMenuItem;
+        private System.Windows.Forms.Panel ctr;
+        private System.Windows.Forms.CheckedListBox lbContexts;
+        private System.Windows.Forms.TextBox tbMelody;
+        private System.Windows.Forms.Button btnHarmonise;
     }
 }
 
