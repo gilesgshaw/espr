@@ -189,6 +189,8 @@ namespace Chorale
 
 
 
+        Dictionary<UserTonality, Context> Contexts = new Dictionary<UserTonality, Context>();
+
         public Form1()
         {
             InitializeComponent();
@@ -203,6 +205,11 @@ namespace Chorale
                 }
             }
             tbMelody.Text = ArrayString(Settings.S.lines[0]);
+
+            foreach (var item in lbContexts.Items.OfType<UserTonality>())
+            {
+                Contexts[item] = new Context(item.Tonic, Settings.S.Tonalities[item.Name]);
+            }
         }
 
         private int[] maxes = Settings.S.maxes[0]; // [here] currently no control over this.
@@ -228,7 +235,7 @@ namespace Chorale
             contexts =
                 lbContexts.CheckedItems.OfType<UserTonality>() // [here] home key is currently asked of user, but not used by program:
                 .Concat(lbContexts.SelectedItems.OfType<UserTonality>())
-                .Select((x) => new Context(x.Tonic, Settings.S.Tonalities[x.Name]))
+                .Select((x) => Contexts[x])
                 .ToArray();
             disp = 0; // [here] currently no control uver these.
             initial = true;
