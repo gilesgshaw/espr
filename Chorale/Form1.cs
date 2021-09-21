@@ -127,16 +127,18 @@ namespace Chorale
         {
             public string Name;
             public Note Tonic;
+            public double Brightness;
 
             public override string ToString()
             {
                 return Tonic.ToString() + " " + Name;
             }
 
-            public UserTonality(string name, Note tonic)
+            public UserTonality(string name, Note tonic, double brightness)
             {
                 Name = name;
                 Tonic = tonic;
+                Brightness = brightness;
             }
         }
 
@@ -194,19 +196,20 @@ namespace Chorale
 
 
 
-        Dictionary<UserTonality, Context> Contexts = new Dictionary<UserTonality, Context>();
+        private Dictionary<UserTonality, Context> Contexts = new Dictionary<UserTonality, Context>();
+        private Dictionary<(Context, Context), double> Metric = new Dictionary<(Context, Context), double>();
 
         public Form1()
         {
             InitializeComponent();
             btnHarmonise.Click += (s, e) => Harmonise();
 
-            foreach (var item in new[] { ("Major", 0, 0), ("Minor", 5, 9) })
+            foreach (var item in new[] { ("Major", 0, 0, 0D), ("Minor", 5, 9, 0.5D) })
             {
                 for (int i = -6; i <= 6; i++)
                 {
                     var interval = new Note(new IntervalS(new IntervalC(i * 4 + item.Item2, i * 7 + item.Item3)));
-                    lbContexts.Items.Add(new UserTonality(item.Item1, interval));
+                    lbContexts.Items.Add(new UserTonality(item.Item1, interval, i + item.Item4));
                 }
             }
             tbMelody.Lines = Array.ConvertAll(Settings.S.lines, ArrayString);
@@ -214,6 +217,14 @@ namespace Chorale
             foreach (var item in lbContexts.Items.OfType<UserTonality>())
             {
                 Contexts[item] = new Context(item.Tonic, Settings.S.Tonalities[item.Name]);
+            }
+            foreach (var A in lbContexts.Items.OfType<UserTonality>())
+            {
+                foreach (var B in lbContexts.Items.OfType<UserTonality>())
+                {
+                    if (ReferenceEquals(A, B)) continue;
+                    Metric[(Contexts[A], Contexts[B])] = Math.Abs(A.Brightness - B.Brightness);
+                }
             }
         }
 
@@ -240,7 +251,8 @@ namespace Chorale
                 .Concat(lbContexts.SelectedItems.OfType<UserTonality>())
                 .Select((x) => Contexts[x])
                 .ToArray(),
-                Contexts[(UserTonality)lbContexts.SelectedItem]);
+                Contexts[(UserTonality)lbContexts.SelectedItem],
+                Metric);
 
             // pass to main routine
             var problems = new PhraseSt[lines.Length];
