@@ -172,17 +172,22 @@ namespace Chorale
 
         private static string ArrayString<T>(T[] array) => string.Join(" ", Array.ConvertAll(array, (x) => x.ToString()));
 
-        private static bool ArrayParse<T>(string str, Parser<T> parser, out T[] result)
+        private static bool ArrayParse<T>(string[] strs, Parser<T> parser, out T[] result)
         {
             result = default;
-            var items = str.Split(" ,;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            var tr = new T[items.Length];
-            for (int i = 0; i < items.Length; i++)
+            var tr = new T[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
             {
-                if (!parser(items[i], out tr[i])) return false;
+                if (!parser(strs[i], out tr[i])) return false;
             }
             result = tr;
             return true;
+        }
+
+        private static bool ArrayParse<T>(string str, Parser<T> parser, out T[] result)
+        {
+            var items = str.Split(" ,;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            return ArrayParse(items, parser, out result);
         }
 
         private delegate bool Parser<T>(string str, out T result);
