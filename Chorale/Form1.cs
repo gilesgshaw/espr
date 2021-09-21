@@ -253,14 +253,18 @@ namespace Chorale
             foreach (var item in solver.Solve(problem))
             {
                 // [TODO] implement key signature
-                ctr.Controls.Add(CreatePB(item, new Display.Key(default, Mode.Zero)));
+                ctr.Controls.Add(CreatePB(new[] { item }, new Display.Key(default, Mode.Zero)));
                 break; // [here] currently only showing first option.
             }
         }
 
         // chord symbols are currently disabled here.
-        private static PictureBox CreatePB(Phrase Data, Display.Key Key)
+        private static PictureBox CreatePB(Phrase[] input, Display.Key Key)
         {
+
+            var Data = input
+                .SelectMany((x) => Enumerable.Zip(Enumerable.Zip(x.Moments, x.LContext, (m, l) => (m, l)), x.RContext, (ml, r) => (ml.m, ml.l, r)))
+                .ToArray();
 
             var S = new ChoraleData.Beat[Data.Length];
             var A = new ChoraleData.Beat[Data.Length];
@@ -271,10 +275,10 @@ namespace Chorale
             for (int i = 0; i < Data.Length; i++)
             {
 
-                S[i] = new ChoraleData.Beat(Data.Moments[i].S);
-                A[i] = new ChoraleData.Beat(Data.Moments[i].A);
-                T[i] = new ChoraleData.Beat(Data.Moments[i].T);
-                B[i] = new ChoraleData.Beat(Data.Moments[i].B);
+                S[i] = new ChoraleData.Beat(Data[i].m.S);
+                A[i] = new ChoraleData.Beat(Data[i].m.A);
+                T[i] = new ChoraleData.Beat(Data[i].m.T);
+                B[i] = new ChoraleData.Beat(Data[i].m.B);
                 //C[i] = NameChord(Data.RVerts[i]); // [here] left chord as well...
 
             }
