@@ -209,7 +209,7 @@ namespace Chorale
                     lbContexts.Items.Add(new UserTonality(item.Item1, interval));
                 }
             }
-            tbMelody.Text = ArrayString(Settings.S.lines[0]);
+            tbMelody.Lines = Array.ConvertAll(Settings.S.lines, ArrayString);
 
             foreach (var item in lbContexts.Items.OfType<UserTonality>())
             {
@@ -226,13 +226,13 @@ namespace Chorale
         {
 
             // user values
-            Pitch[] line;
+            Pitch[][] lines;
             Context[] contexts;
             int disp;
             bool initial;
 
             // determine
-            if (!ArrayParse(tbMelody.Text, Pitch.TryParse, out line))
+            if (!ArrayParse(tbMelody.Lines, (string x, out Pitch[] o) => ArrayParse(x, Pitch.TryParse, out o), out lines))
             {
                 MessageBox.Show("failed to parse melody.");
                 return;
@@ -246,9 +246,9 @@ namespace Chorale
             initial = true;
 
             // pass to main routine
-            var problem = PhraseSt.Instance(new Climate(contexts), Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial);
+            var problems = Array.ConvertAll(lines, (line) => PhraseSt.Instance(new Climate(contexts), Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial));
             var solver = new PhraseSolver(maxes, tols);
-            Work(new[] { problem }, solver);
+            Work(problems, solver);
 
         }
 
