@@ -227,7 +227,7 @@ namespace Chorale
 
             // user values
             Pitch[][] lines;
-            Context[] contexts;
+            Climate climate;
             int disp;
             bool initial;
 
@@ -237,16 +237,16 @@ namespace Chorale
                 MessageBox.Show("failed to parse melody.");
                 return;
             }
-            contexts =
+            climate = new Climate(
                 lbContexts.CheckedItems.OfType<UserTonality>() // [here] home key is currently asked of user, but not used by program:
                 .Concat(lbContexts.SelectedItems.OfType<UserTonality>())
                 .Select((x) => Contexts[x])
-                .ToArray();
+                .ToArray());
             disp = 0; // [here] currently no control uver these.
             initial = true;
 
             // pass to main routine
-            var problems = Array.ConvertAll(lines, (line) => PhraseSt.Instance(new Climate(contexts), Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial));
+            var problems = Array.ConvertAll(lines, (line) => PhraseSt.Instance(climate, Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial));
             var solver = new PhraseSolver(maxes, tols);
             Work(problems, solver);
 
