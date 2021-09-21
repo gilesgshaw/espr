@@ -9,15 +9,21 @@ namespace mus.Chorale
     // currently no comparisons / hashing implemented
     public class Tonality
     {
-        private readonly Dictionary<relChord, double> _Chords;
-
         public ReadOnlyDictionary<relChord, double> Chords { get; }
 
-        public Tonality(Dictionary<relChord, double> chords)
+        public Mode SignatureMode { get; }
+
+
+        // does not wrap dictionary
+        public Tonality(ReadOnlyDictionary<relChord, double> chords, Mode signatureMode)
         {
-            _Chords = chords;
-            Chords = new ReadOnlyDictionary<relChord, double>(_Chords);
+            Chords = chords;
+            SignatureMode = signatureMode;
         }
+
+        // wraps dictionary
+        public Tonality(IDictionary<relChord, double> chords, Mode signatureMode)
+            : this(new ReadOnlyDictionary<relChord, double>(chords), signatureMode) { }
     }
 
 }
