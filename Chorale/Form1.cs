@@ -243,19 +243,26 @@ namespace Chorale
             // pass to main routine
             var problem = PhraseSt.Instance(new Climate(contexts), Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial);
             var solver = new PhraseSolver(maxes, tols);
-            Work(problem, solver);
+            Work(new[] { problem }, solver);
 
         }
 
-        private void Work(PhraseSt problem, PhraseSolver solver)
+        private void Work(PhraseSt[] problems, PhraseSolver solver)
         {
-            ctr.Controls.Clear();
-            foreach (var item in solver.Solve(problem))
+
+            var solutions = new Phrase[problems.Length];
+            for (int i = 0; i < problems.Length; i++)
             {
-                // [TODO] implement key signature
-                ctr.Controls.Add(CreatePB(new[] { item }, new Display.Key(default, Mode.Zero)));
-                break; // [here] currently only showing first option.
+                foreach (var item in solver.Solve(problems[i]))
+                {
+                    solutions[i] = item;
+                    break; // [here] currently only considering the first option.
+                }
             }
+
+            ctr.Controls.Clear();
+            // [TODO] implement key signature
+            ctr.Controls.Add(CreatePB(solutions, new Display.Key(default, Mode.Zero)));
         }
 
         // chord symbols are currently disabled here.
