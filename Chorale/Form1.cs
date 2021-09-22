@@ -228,8 +228,6 @@ namespace Chorale
             // user values
             Pitch[][] lines;
             Climate climate;
-            int disp;
-            bool initial;
 
             // determine
             if (!ArrayParse(tbMelody.Lines, (string x, out Pitch[] o) => ArrayParse(x, Pitch.TryParse, out o), out lines))
@@ -243,11 +241,13 @@ namespace Chorale
                 .Select((x) => Contexts[x])
                 .ToArray(),
                 Contexts[(UserTonality)lbContexts.SelectedItem]);
-            disp = 0; // [here] currently no control uver these.
-            initial = true;
 
             // pass to main routine
-            var problems = Array.ConvertAll(lines, (line) => PhraseSt.Instance(climate, Array.AsReadOnly(Array.ConvertAll(line, (x) => x.MIDI)), disp, initial));
+            var problems = new PhraseSt[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                problems[i] = PhraseSt.Instance(climate, Array.AsReadOnly(Array.ConvertAll(lines[i], (x) => x.MIDI)), 0, 0, i == 0, i + 1 == lines.Length);
+            }
             var solver = new PhraseSolver(maxes, tols);
             Work(problems, solver);
 

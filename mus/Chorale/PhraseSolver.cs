@@ -62,11 +62,11 @@ namespace mus.Chorale
             {
                 case 1:
 
-                    if (problem.Initial)                 // opening chord
+                    if (problem.Initial && problem.MarginL == 0) // first chord, opening phrase
                     {
                         return base.Refine(problem, solutions.Where(ValidOpening).ToArray());
                     }
-                    else if (problem.Displacement < 2)   // last or penultimate chord
+                    else if (problem.MarginR < 2)                // last or penultimate chord
                     {
                         return base.Refine(problem, solutions.Where(NoPivotingMd).ToArray());
                     }
@@ -74,17 +74,17 @@ namespace mus.Chorale
                     break;
                 case 2:
 
-                    switch (problem.Displacement)
+                    switch (problem.MarginR)
                     {
-                        case 0:                          // tail of cadence
+                        case 0:                                  // tail of cadence
                             return base.Refine(problem, solutions.Where(ValidCadence).Where(NoModulation).ToArray());
 
-                        case 1:                          // head of cadence
+                        case 1:                                  // head of cadence
                             return base.Refine(problem, solutions.Where(NoModulation).ToArray());
                     }
 
                     break;
-            }                                            // anything else
+            }                                                    // anything else
             return base.Refine(problem, solutions);
 
         }
